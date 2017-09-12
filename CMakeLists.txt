@@ -1,0 +1,32 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 3.9)
+PROJECT(AliceO2_Balancer)
+
+SET(AliceO2_Balancer_MAJOR_VERSION 0)
+SET(AliceO2_Balancer_MINOR_VERSION 1)
+SET(AliceO2_Balancer_PATCH_VERSION 0)
+
+SET(SIMPATH $ENV{SIMPATH})
+SET(FAIRROOTPATH $ENV{FAIRROOTPATH})
+
+#Use the same boost as FairSoft...
+SET(BOOST_ROOT $ENV{SIMPATH})
+SET(CMAKE_CXX_STANDARD 14)
+
+# where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/
+SET(CMAKE_MODULE_PATH "${FAIRROOTPATH}/share/fairbase/cmake/modules" ${CMAKE_MODULE_PATH})
+SET(CMAKE_MODULE_PATH "${FAIRROOTPATH}/share/fairbase/cmake/modules_old" ${CMAKE_MODULE_PATH})
+SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules" ${CMAKE_MODULE_PATH})
+
+SET(LINK_DIRECTORIES
+    ${FAIRROOT_LIBRARY_DIR}
+)
+
+LINK_DIRECTORIES( ${LINK_DIRECTORIES})
+FIND_PACKAGE(FairRoot REQUIRED)
+FIND_PACKAGE(Boost 1.59 COMPONENTS thread system timer program_options random filesystem chrono exception regex serialization log log_setup unit_test_framework date_time REQUIRED)
+FIND_PACKAGE(Threads REQUIRED)
+
+ADD_SUBDIRECTORY(AliceO2Lib)
+ADD_SUBDIRECTORY(EPN)
+ADD_SUBDIRECTORY(FLP)
+ADD_SUBDIRECTORY(Scripts)

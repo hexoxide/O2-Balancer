@@ -1,0 +1,27 @@
+PROJECT(FLP)
+
+SET(
+    FLP_SOURCES
+    ./src/FLPDevice.cxx
+    ./src/Main.cxx
+)
+
+GET_DIRECTORY_PROPERTY(
+    AliceO2Lib_INCLUDE_DIRS 
+    DIRECTORY ${CMAKE_SOURCE_DIR}/AliceO2Lib/ 
+    DEFINITION AliceO2Lib_INCLUDE_DIRS  
+)
+
+SET(
+    FLP_HEADERS
+    ./include
+    ${AliceO2Lib_INCLUDE_DIRS}
+)
+
+INCLUDE_DIRECTORIES(${FLP_HEADERS} )
+ADD_EXECUTABLE(flp ${FLP_SOURCES})
+
+TARGET_LINK_LIBRARIES(
+    flp
+    AliceO2
+)

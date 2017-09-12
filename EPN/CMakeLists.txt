@@ -1,0 +1,28 @@
+PROJECT(EPN)
+
+SET(
+    EPN_SOURCES
+    ./src/EPNDevice.cxx
+    ./src/Main.cxx
+)
+
+GET_DIRECTORY_PROPERTY(
+    AliceO2Lib_INCLUDE_DIRS 
+    DIRECTORY ${CMAKE_SOURCE_DIR}/AliceO2Lib/ 
+    DEFINITION AliceO2Lib_INCLUDE_DIRS  
+)
+
+SET(
+    EPN_HEADERS
+    ./include
+    ${AliceO2Lib_INCLUDE_DIRS}
+)
+
+INCLUDE_DIRECTORIES(${EPN_HEADERS})
+
+ADD_EXECUTABLE(epn ${EPN_SOURCES})
+
+TARGET_LINK_LIBRARIES(
+    epn
+    AliceO2
+)
