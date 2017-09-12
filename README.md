@@ -3,8 +3,8 @@ In collaboration with the Amsterdam University of Applied sciences and CERN a lo
 This program is part of my thesis.
 
 ## Table of contents
-  [Introduction](#Introduction)
-  [Compilation and installation](#Compilation-and-installation)
+  * [Introduction](#Introduction)
+  * [Compilation and installation](#Compilation-and-installation)
 
 
 ## Introduction
