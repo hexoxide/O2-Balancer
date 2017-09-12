@@ -6,6 +6,7 @@ This program is part of my thesis.
 * [Introduction](#introduction)
 * [License](#license)
 * [Compilation and installation](#compilation-and-installation)
+* [Modules](#modules)
 
 
 
@@ -29,4 +30,14 @@ The license is [GPL version 3](LICENSE.md), for a more up to date version or inf
 This program requires you to install [FairRoot](https://fairroot.gsi.de/). Just follow the regular installation instructions.
 The proper configuration for [FairSoft](https://github.com/FairRootGroup/FairSoft) is to enable debug without optimization and geant4.
 Since FairSoft comes with it's own version of Boost, this program will set the boost root to use the same as FairSoft.
+
+## Modules
+The project is divided in the following modules:
+1. [AliceO2Lib, Library containing the common methods and classes](AliceO2Lib/README.md)
+2. Sampler, mocking and generating random data, acting as the detector
+3. [First Level Processors(FLP)](FLP/README.md)
+4. [Event Processing Nodes(EPN)](EPN/README.md)
+5. [Configuration files for some tests](Config/README.md)
+6. [Scripts for testing and experimentations](Scripts/README.md)
+
 
