@@ -6,8 +6,6 @@ SET(
     ./src/InformationDevice.cxx
 )
 
-SET(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
-
 GET_DIRECTORY_PROPERTY(
     AliceO2Lib_INCLUDE_DIRS 
     DIRECTORY ${CMAKE_SOURCE_DIR}/AliceO2Lib/ 
