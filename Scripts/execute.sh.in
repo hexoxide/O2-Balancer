@@ -2,11 +2,11 @@
 
 cfg="@CMAKE_SOURCE_DIR@/Config/epnflpconfig.json"
 
-SAMPLER="flpSyncSampler"
+SAMPLER="InformationNode"
 SAMPLER+=" --id flpSyncSampler"
 SAMPLER+=" --mq-config $cfg"
 SAMPLER+=" --event-rate 100"
-#xterm -geometry 80x25+0+0 -hold -e @CMAKE_BINARY_DIR@/bin/$SAMPLER &
+xterm -geometry 80x25+0+0  -e @InformationNode_BINARY_DIR@/$SAMPLER &
 
 
 FLP0="flp"
@@ -17,7 +17,7 @@ FLP0+=" --event-size 1000000"
 FLP0+=" --num-epns 3"
 FLP0+=" --test-mode 1"
 FLP0+=" --send-offset 0"
-xterm -geometry 80x25+500+0 -hold -e @FLP_BINARY_DIR@/$FLP0 &
+xterm -geometry 80x25+500+0 -e @FLP_BINARY_DIR@/$FLP0 &
 
 FLP1="flp"
 FLP1+=" --id flpSender2"
@@ -27,7 +27,7 @@ FLP1+=" --event-size 1000000"
 FLP1+=" --num-epns 3"
 FLP1+=" --test-mode 1"
 FLP1+=" --send-offset 0"
-xterm -geometry 80x25+500+350 -hold -e @FLP_BINARY_DIR@/$FLP1 &
+xterm -geometry 80x25+500+350 -e @FLP_BINARY_DIR@/$FLP1 &
 
 FLP2="flp"
 FLP2+=" --id flpSender3"
@@ -37,25 +37,25 @@ FLP2+=" --event-size 1000000"
 FLP2+=" --num-epns 3"
 FLP2+=" --test-mode 1"
 FLP2+=" --send-offset 0"
-xterm -geometry 80x25+500+700 -hold -e @FLP_BINARY_DIR@/$FLP2 &
+xterm -geometry 80x25+500+700  -e @FLP_BINARY_DIR@/$FLP2 &
 
 EPN0="epn"
 EPN0+=" --id epnReceiver1"
 EPN0+=" --mq-config $cfg"
 EPN0+=" --num-flps 3"
 EPN0+=" --test-mode 1"
-xterm -geometry 80x25+1000+0 -hold -e @EPN_BINARY_DIR@/$EPN0 &
+xterm -geometry 80x25+1000+0 -e @EPN_BINARY_DIR@/$EPN0 &
 
 EPN1="epn"
 EPN1+=" --id epnReceiver2"
 EPN1+=" --mq-config $cfg"
 EPN1+=" --num-flps 3"
 EPN1+=" --test-mode 1"
-xterm -geometry 80x25+1000+350 -hold -e @EPN_BINARY_DIR@/$EPN1 &
+xterm -geometry 80x25+1000+350 -e @EPN_BINARY_DIR@/$EPN1 &
 
 EPN2="epn"
 EPN2+=" --id epnReceiver3"
 EPN2+=" --mq-config $cfg"
 EPN2+=" --num-flps 3"
 EPN2+=" --test-mode 1"
-xterm -geometry 80x25+1000+700 -hold -e @EPN_BINARY_DIR@/$EPN2 &
+xterm -geometry 80x25+1000+700  -e @EPN_BINARY_DIR@/$EPN2 &

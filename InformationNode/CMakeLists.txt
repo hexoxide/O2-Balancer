@@ -1,0 +1,29 @@
+PROJECT(InformationNode)
+
+SET(
+    INFORMATION_NODE_SOURCES
+    ./src/Main.cxx
+    ./src/InformationDevice.cxx
+)
+
+SET(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
+
+GET_DIRECTORY_PROPERTY(
+    AliceO2Lib_INCLUDE_DIRS 
+    DIRECTORY ${CMAKE_SOURCE_DIR}/AliceO2Lib/ 
+    DEFINITION AliceO2Lib_INCLUDE_DIRS  
+)
+
+SET(
+    INFORMATION_NODE_HEADERS
+    ./include
+    ${AliceO2Lib_INCLUDE_DIRS}
+)
+
+INCLUDE_DIRECTORIES(${INFORMATION_NODE_HEADERS} )
+ADD_EXECUTABLE(InformationNode ${INFORMATION_NODE_SOURCES})
+
+TARGET_LINK_LIBRARIES(
+    InformationNode
+    AliceO2
+)

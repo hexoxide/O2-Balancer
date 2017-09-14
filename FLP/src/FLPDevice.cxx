@@ -26,19 +26,19 @@ FLPDevice::FLPDevice(){
 
         
 void FLPDevice::InitTask(){
-  /*  this->mIndex = GetConfig()->GetValue<int>("flp-index");
+    this->mIndex = GetConfig()->GetValue<int>("flp-index");
     this->mEventSize = GetConfig()->GetValue<int>("event-size");
     this->mNumEPNs = GetConfig()->GetValue<int>("num-epns");
     this->mTestMode = GetConfig()->GetValue<int>("test-mode");
     this->mSendOffset = GetConfig()->GetValue<int>("send-offset");
     this->mSendDelay = GetConfig()->GetValue<int>("send-delay");
     this->mInChannelName = GetConfig()->GetValue<std::string>("in-chan-name");
-    this->mOutChannelName = GetConfig()->GetValue<std::string>("out-chan-name");*/
+    this->mOutChannelName = GetConfig()->GetValue<std::string>("out-chan-name");
 }
 
             
-std::string* FLPDevice::createSTF() const{
-    uint16_t id = 0;
+std::string* FLPDevice::createSTF(const uint16_t& id) const{
+    return new std::string("HALLO!!");
     std::time_t currentTime = std::time(nullptr);
 
     std::tm* utc = std::gmtime(&currentTime);
@@ -50,7 +50,7 @@ std::string* FLPDevice::createSTF() const{
    
     std::ifstream stream = std::ifstream("/dev/random", std::ifstream::binary | std::ios::in);
     
-    constexpr int DATA_SIZE = 1000;
+    constexpr int DATA_SIZE = 100000;
     
     if(stream.good()){
         unsigned char data[DATA_SIZE];
@@ -75,15 +75,7 @@ int FLPDevice::balanceEPN(const FairMQMessagePtr& stf){
 }
 
 bool FLPDevice::ConditionalRun(){
-   
-    std::string* text = this->createSTF();
-    FairMQMessagePtr msg(NewMessage(const_cast<char*>(text->c_str()),
-        text->length(),
-        [](void* /*data*/, void* object) { delete static_cast<std::string*>(object); },
-        text)
-    );
-
-    this->balanceEPN(msg);
+  
 
   // std::string stf = this->createSTF();
     //FairMQMessagePtr msg(
@@ -91,7 +83,7 @@ bool FLPDevice::ConditionalRun(){
     //);
 
  // base buffer, to be copied from for every timeframe body (zero-copy)
-  /*  FairMQMessagePtr baseMsg(NewMessage(mEventSize));
+    FairMQMessagePtr baseMsg(NewMessage(mEventSize));
  
    // store the channel reference to avoid traversing the map on every loop iteration
    FairMQChannel& dataInChannel = fChannels.at(mInChannelName).at(0);
@@ -121,9 +113,14 @@ bool FLPDevice::ConditionalRun(){
      }
  
      FairMQParts parts;
- 
+     std::string* dat = createSTF(0);
      parts.AddPart(NewMessage(header, sizeof(f2eHeader), [](void* data, void* hint){ delete static_cast<f2eHeader*>(hint); }, header));
      parts.AddPart(NewMessage());
+     parts.AddPart(NewMessage(
+       const_cast<char*>(dat->c_str()), 
+       dat->length(),
+       [](void* /*data*/, void* object) { delete static_cast<std::string*>(object); }, 
+       dat ));
  
      // save the arrival time of the message.
      mArrivalTime.push(std::chrono::steady_clock::now());
@@ -152,10 +149,10 @@ bool FLPDevice::ConditionalRun(){
          // LOG(INFO) << "buffering...";
        }
      }
- }*/
+ }
 }
 
-/*
+
 inline void FLPDevice::sendFrontData()
 {
   f2eHeader header = *(static_cast<f2eHeader*>(mSTFBuffer.front().At(0)->GetData()));
@@ -171,6 +168,6 @@ inline void FLPDevice::sendFrontData()
   mSTFBuffer.pop();
   mArrivalTime.pop();
 }
-*/
+
 
 FLPDevice::~FLPDevice() = default;

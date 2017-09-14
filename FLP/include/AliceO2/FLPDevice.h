@@ -18,9 +18,9 @@ namespace AliceO2{
 
           private:
 
-            std::string* createSTF() const;
+            std::string* createSTF(const uint16_t& id) const;
             int balanceEPN(const FairMQMessagePtr& stf);
-            /*
+            
             void sendFrontData();
 
             std::queue<FairMQParts> mSTFBuffer; ///< Buffer for sub-timeframes
@@ -36,7 +36,7 @@ namespace AliceO2{
             uint16_t mTimeFrameId;
         
             std::string mInChannelName;
-            std::string mOutChannelName;*/
+            std::string mOutChannelName;
         };
     }
 }

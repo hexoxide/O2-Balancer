@@ -63,6 +63,7 @@ void EPNDevice::DiscardIncompleteTimeframes(){
 }
 
 void EPNDevice::Run(){
+  
   // DEBUG: store receive intervals per FLP
   // vector<vector<int>> rcvIntervals(fNumFLPs, vector<int>());
   // vector<std::chrono::steady_clock::time_point> rcvTimestamp(fNumFLPs);
@@ -80,6 +81,9 @@ void EPNDevice::Run(){
       // store the received ID
       f2eHeader& header = *(static_cast<f2eHeader*>(parts.At(0)->GetData()));
       id = header.timeFrameId;
+      std::string second = std::string(
+        static_cast<char*>(parts.At(2)->GetData()), parts.At(2)->GetSize());
+      LOG(INFO) << second;
       // LOG(INFO) << "Received sub-time frame #" << id << " from FLP" << header.flpIndex;
 
       // DEBUG:: store receive intervals per FLP
