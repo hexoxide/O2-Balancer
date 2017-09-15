@@ -113,15 +113,15 @@ bool FLPDevice::ConditionalRun(){
      }
  
      FairMQParts parts;
-     std::string* dat = createSTF(0);
+    // std::string* dat = createSTF(0);
      parts.AddPart(NewMessage(header, sizeof(f2eHeader), [](void* data, void* hint){ delete static_cast<f2eHeader*>(hint); }, header));
      parts.AddPart(NewMessage());
-     parts.AddPart(NewMessage(
+   /*  parts.AddPart(NewMessage(
        const_cast<char*>(dat->c_str()), 
        dat->length(),
-       [](void* /*data*/, void* object) { delete static_cast<std::string*>(object); }, 
+       [](void*, void* object) { delete static_cast<std::string*>(object); }, 
        dat ));
- 
+    */
      // save the arrival time of the message.
      mArrivalTime.push(std::chrono::steady_clock::now());
  

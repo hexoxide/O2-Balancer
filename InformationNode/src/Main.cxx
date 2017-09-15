@@ -16,7 +16,8 @@ void addCustomOptions(bpo::options_description& options)
     ("out-chan-name", bpo::value<std::string>()->default_value("stf1"), "Name of the output channel (sub-time frames)");
 }
 
-FairMQDevice* getDevice(const FairMQProgOptions& config)
-{
+FairMQDevice* getDevice(const FairMQProgOptions& config){
+
+  
   return new AliceO2::InformationDevice();
 }

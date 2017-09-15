@@ -6,7 +6,7 @@ SAMPLER="InformationNode"
 SAMPLER+=" --id flpSyncSampler"
 SAMPLER+=" --mq-config $cfg"
 SAMPLER+=" --event-rate 100"
-xterm -geometry 80x25+0+0  -e @InformationNode_BINARY_DIR@/$SAMPLER &
+xterm -geometry 80x25+0+0 -hold -e @InformationNode_BINARY_DIR@/$SAMPLER &
 
 
 FLP0="flp"

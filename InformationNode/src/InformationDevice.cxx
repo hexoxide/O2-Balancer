@@ -46,6 +46,7 @@ void InformationDevice::InitTask(){
   // LOG(INFO) << "Waiting 10 seconds...";
   // this_thread::sleep_for(seconds(10));
   // LOG(INFO) << "Done!";
+  //GetConfig()->SetValue("")
   mEventRate = GetConfig()->GetValue<int>("event-rate");
   mMaxEvents = GetConfig()->GetValue<int>("max-events");
   mStoreRTTinFile = GetConfig()->GetValue<int>("store-rtt-in-file");
@@ -93,19 +94,19 @@ void InformationDevice::PostRun(){
 void InformationDevice::ListenForAcknowledgement(){
   uint16_t id = 0;
 
-  //std::ofstream ofsFrames;
-  //std::ofstream ofsTimes;
+  std::ofstream ofsFrames;
+  std::ofstream ofsTimes;
 
   // store round trip time measurements in a file
- // if (mStoreRTTinFile > 0) {
-   // std::time_t t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-   // std::tm utc = *gmtime(&t);
-   // std::stringstream s;
-   // s << utc.tm_year + 1900 << "-" << utc.tm_mon + 1 << "-" << utc.tm_mday << "-" << utc.tm_hour << "-" << utc.tm_min << "-" << utc.tm_sec;
-   // std::string name = s.str();
-    //ofsFrames.open(name + "-frames.log");
-    //ofsTimes.open(name + "-times.log");
-//  }
+  if (mStoreRTTinFile > 0) {
+    std::time_t t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    std::tm utc = *gmtime(&t);
+    std::stringstream s;
+    s << utc.tm_year + 1900 << "-" << utc.tm_mon + 1 << "-" << utc.tm_mday << "-" << utc.tm_hour << "-" << utc.tm_min << "-" << utc.tm_sec;
+    std::string name = s.str();
+    ofsFrames.open(name + "-frames.log");
+    ofsTimes.open(name + "-times.log");
+  }
 
   while (!mLeaving) {
     FairMQMessagePtr idMsg(NewMessage());
@@ -117,8 +118,8 @@ void InformationDevice::ListenForAcknowledgement(){
       auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(mTimeframeRTT.at(id).end - mTimeframeRTT.at(id).start);
 
       if (mStoreRTTinFile > 0) {
-     //   ofsFrames << id << "\n";
-     //   ofsTimes  << elapsed.count() << "\n";
+        ofsFrames << id << "\n";
+        ofsTimes  << elapsed.count() << "\n";
       }
 
       LOG(INFO) << "Timeframe #" << id << " acknowledged after " << elapsed.count() << " μs.";
@@ -127,8 +128,8 @@ void InformationDevice::ListenForAcknowledgement(){
 
   // store round trip time measurements in a file
   if (mStoreRTTinFile > 0) {
-   // ofsFrames.close();
-  //  ofsTimes.close();
+    ofsFrames.close();
+    ofsTimes.close();
   }
   LOG(INFO) << "Exiting Ack listener";
 }
