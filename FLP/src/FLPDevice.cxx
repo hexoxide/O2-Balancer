@@ -36,7 +36,7 @@ void FLPDevice::InitTask(){
     this->mOutChannelName = GetConfig()->GetValue<std::string>("out-chan-name");
 }
 
-            
+/*
 std::string* FLPDevice::createSTF(const uint16_t& id) const{
     return new std::string("HALLO!!");
     std::time_t currentTime = std::time(nullptr);
@@ -60,8 +60,8 @@ std::string* FLPDevice::createSTF(const uint16_t& id) const{
     stream.close();
     
     return new std::string(result.str());
-}
-
+}*/
+/*
 int FLPDevice::balanceEPN(const FairMQMessagePtr& stf){
 
     f2eHeader* header = new f2eHeader;
@@ -72,7 +72,7 @@ int FLPDevice::balanceEPN(const FairMQMessagePtr& stf){
     //static_cast<char*>(stf->GetData());
    // return currentTimeframeId % fNumEPNs;
     return 0;
-}
+}*/
 
 bool FLPDevice::ConditionalRun(){
   

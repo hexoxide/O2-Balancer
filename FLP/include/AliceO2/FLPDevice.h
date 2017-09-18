@@ -18,8 +18,8 @@ namespace AliceO2{
 
           private:
 
-            std::string* createSTF(const uint16_t& id) const;
-            int balanceEPN(const FairMQMessagePtr& stf);
+            //std::string* createSTF(const uint16_t& id) const;
+           // int balanceEPN(const FairMQMessagePtr& stf);
             
             void sendFrontData();
 
