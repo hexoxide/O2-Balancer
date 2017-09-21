@@ -28,8 +28,6 @@ class InformationDevice : public FairMQDevice{
     /// Default destructor
     ~InformationDevice() override;
 
-    /// Controls the send rate of the timeframe IDs
-    void ResetEventCounter();
 
     /// Listens for acknowledgements from the epnReceivers when they collected full timeframe
     void ListenForAcknowledgement();
@@ -44,13 +42,12 @@ class InformationDevice : public FairMQDevice{
     void PostRun() override;
 
     std::array<timeframeDuration, UINT16_MAX> mTimeframeRTT; ///< Container for the roundtrip values per timeframe ID
-    int mEventRate; ///< Publishing rate of the timeframe IDs
     int mMaxEvents; ///< Maximum number of events to send (0 - unlimited)
     int mStoreRTTinFile; ///< Store round trip time measurements in a file.
     int mEventCounter; ///< Controls the send rate of the timeframe IDs
+    int heartbeat;
     uint16_t mTimeFrameId;
     std::thread mAckListener;
-    std::thread mResetEventCounter;
     std::atomic<bool> mLeaving;
 
     std::string mAckChannelName;

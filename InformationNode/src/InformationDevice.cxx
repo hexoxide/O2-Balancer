@@ -26,13 +26,12 @@ using namespace AliceO2;
 
 InformationDevice::InformationDevice()
   : mTimeframeRTT()
-  , mEventRate(1)
   , mMaxEvents(0)
   , mStoreRTTinFile(0)
   , mEventCounter(0)
   , mTimeFrameId(0)
+  , heartbeat(0)
   , mAckListener()
-  , mResetEventCounter()
   , mLeaving(false)
   , mAckChannelName()
   , mOutChannelName()
@@ -43,12 +42,8 @@ InformationDevice::~InformationDevice()
 = default;
 
 void InformationDevice::InitTask(){
-  // LOG(INFO) << "Waiting 10 seconds...";
-  // this_thread::sleep_for(seconds(10));
-  // LOG(INFO) << "Done!";
-  //GetConfig()->SetValue("")
-  mEventRate = GetConfig()->GetValue<int>("event-rate");
   mMaxEvents = GetConfig()->GetValue<int>("max-events");
+  heartbeat = GetConfig()->GetValue<int>("heartbeat");
   mStoreRTTinFile = GetConfig()->GetValue<int>("store-rtt-in-file");
   mAckChannelName = GetConfig()->GetValue<std::string>("ack-chan-name");
   mOutChannelName = GetConfig()->GetValue<std::string>("out-chan-name");
@@ -57,7 +52,6 @@ void InformationDevice::InitTask(){
 void InformationDevice::PreRun(){
     mLeaving = false;
     mAckListener = std::thread(&InformationDevice::ListenForAcknowledgement, this);
-    mResetEventCounter = std::thread(&InformationDevice::ResetEventCounter, this);
 }
 
 bool InformationDevice::ConditionalRun(){
@@ -71,11 +65,7 @@ bool InformationDevice::ConditionalRun(){
     }
   }
 
-  // rate limiting
-  --mEventCounter;
-  while (mEventCounter == 0) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(1));
-  }
+  std::this_thread::sleep_for(std::chrono::milliseconds(heartbeat));
 
   if (mMaxEvents > 0 && mTimeFrameId >= mMaxEvents) {
     LOG(INFO) << "Reached configured maximum number of events (" << mMaxEvents << "). Exiting Run().";
@@ -87,7 +77,6 @@ bool InformationDevice::ConditionalRun(){
 
 void InformationDevice::PostRun(){
     mLeaving = true;
-    mResetEventCounter.join();
     mAckListener.join();
 }
 
@@ -132,14 +121,4 @@ void InformationDevice::ListenForAcknowledgement(){
     ofsTimes.close();
   }
   LOG(INFO) << "Exiting Ack listener";
-}
-
-void InformationDevice::ResetEventCounter(){
-    //Makes sure it doesn't spam huge amounts of data..
-
-  while (!mLeaving) {
-    mEventCounter = mEventRate / 100;
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
-  }
-  LOG(INFO) << "Exiting ResetEventCounter";
 }
