@@ -34,57 +34,58 @@ void FLPDevice::InitTask(){
     this->mSendDelay = GetConfig()->GetValue<int>("send-delay");
     this->mInChannelName = GetConfig()->GetValue<std::string>("in-chan-name");
     this->mOutChannelName = GetConfig()->GetValue<std::string>("out-chan-name");
+    LOG(INFO) << this->mOutChannelName;
 }
 
-/*
-std::string* FLPDevice::createSTF(const uint16_t& id) const{
-    return new std::string("HALLO!!");
-    std::time_t currentTime = std::time(nullptr);
 
-    std::tm* utc = std::gmtime(&currentTime);
-    
-
-    std::stringstream result;
-    result << id;
-    result << utc->tm_year + 1900 << "-" << utc->tm_mon + 1 << "-" << utc->tm_mday << "-" << utc->tm_hour << "-" << utc->tm_min << "-" << utc->tm_sec;
-   
-    std::ifstream stream = std::ifstream("/dev/random", std::ifstream::binary | std::ios::in);
-    
-    constexpr int DATA_SIZE = 100000;
-    
-    if(stream.good()){
-        unsigned char data[DATA_SIZE];
-        stream.read((char*)data, DATA_SIZE); 
-        result << data;
-    }
-    stream.close();
-    
-    return new std::string(result.str());
-}*/
-/*
-int FLPDevice::balanceEPN(const FairMQMessagePtr& stf){
-
-    f2eHeader* header = new f2eHeader;
-    std::string id;
-   // auto tmp =  std::memcpy(&id, stf->GetData(), sizeof());
-    
-    LOG(INFO) << id;
-    //static_cast<char*>(stf->GetData());
-   // return currentTimeframeId % fNumEPNs;
-    return 0;
-}*/
 
 bool FLPDevice::ConditionalRun(){
-  
-
-  // std::string stf = this->createSTF();
-    //FairMQMessagePtr msg(
-    //    NewMessage(stf)
-    //);
-
  // base buffer, to be copied from for every timeframe body (zero-copy)
-    FairMQMessagePtr baseMsg(NewMessage(mEventSize));
+  FairMQChannel& dataInChannel = fChannels.at(mInChannelName).at(0);
+  std::fstream fstream("/dev/null",  std::ifstream::binary | std::ios::in);
+  //while (CheckCurrentState(RUNNING)) {
+    if(fstream.good()){
+      FairMQParts parts;
+      const int size = this->mEventSize * 1024 * 1024;
+      //constexpr int size = 90;
+      char* buffer = new char[size];  
+      fstream.read(buffer,size);
+
+      parts.AddPart(NewMessage());
+      parts.AddPart(NewMessage(
+        buffer,
+        size,
+        [](void* /*data*/, void* object) {delete[] static_cast<char*> (object); },
+        buffer
+      ));
+      if (dataInChannel.Receive(parts.At(0)) >= 0) {
+        uint16_t currentTimeFrameid = *(static_cast<uint16_t*>(parts.At(0)->GetData()));
+        LOG(INFO) << "Current id " << currentTimeFrameid;
+        int direction = currentTimeFrameid % mNumEPNs;
+        if (Send(parts, mOutChannelName, direction, 0) < 0) {
+           LOG(ERROR) << "booom";
+        }
+      } else {
+        // if nothing was received, try again
+       // continue;
+      }
+     
+
+    }
+
+
+    //Send(baseMsg, "test");
  
+ // }
+  fstream.close();
+
+  return true;
+
+
+   
+  
+/*
+ FairMQMessagePtr baseMsg(NewMessage(mEventSize));
    // store the channel reference to avoid traversing the map on every loop iteration
    FairMQChannel& dataInChannel = fChannels.at(mInChannelName).at(0);
  
@@ -113,16 +114,9 @@ bool FLPDevice::ConditionalRun(){
      }
  
      FairMQParts parts;
-    // std::string* dat = createSTF(0);
      parts.AddPart(NewMessage(header, sizeof(f2eHeader), [](void* data, void* hint){ delete static_cast<f2eHeader*>(hint); }, header));
      parts.AddPart(NewMessage());
-   /*  parts.AddPart(NewMessage(
-       const_cast<char*>(dat->c_str()), 
-       dat->length(),
-       [](void*, void* object) { delete static_cast<std::string*>(object); }, 
-       dat ));
-    */
-     // save the arrival time of the message.
+
      mArrivalTime.push(std::chrono::steady_clock::now());
  
      if (mTestMode > 0) {
@@ -150,11 +144,13 @@ bool FLPDevice::ConditionalRun(){
        }
      }
  }
+ */
 }
 
 
 inline void FLPDevice::sendFrontData()
 {
+  /*
   f2eHeader header = *(static_cast<f2eHeader*>(mSTFBuffer.front().At(0)->GetData()));
   uint16_t currentTimeframeId = header.timeFrameId;
 
@@ -166,7 +162,7 @@ inline void FLPDevice::sendFrontData()
     LOG(ERROR) << "Failed to queue sub-timeframe #" << currentTimeframeId << " to EPN[" << direction << "]";
   }
   mSTFBuffer.pop();
-  mArrivalTime.pop();
+  mArrivalTime.pop();*/
 }
 
 

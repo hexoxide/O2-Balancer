@@ -9,9 +9,6 @@
 
 namespace AliceO2{
     namespace EPN{
-
-        
-
         class EPNDevice : public FairMQDevice{
         protected:
             struct TFBuffer
@@ -25,14 +22,10 @@ namespace AliceO2{
             EPNDevice();
             virtual ~EPNDevice();
             
-            /// Prints the contents of the timeframe container
-            void PrintBuffer(const std::unordered_map<uint16_t, TFBuffer> &buffer) const;
-    
             /// Discared incomplete timeframes after \p fBufferTimeoutInMs.
             void DiscardIncompleteTimeframes();
           protected:
             virtual void InitTask() override;
-            /// Overloads the Run() method of FairMQDevice
             void Run() override;
     
             std::unordered_map<uint16_t, TFBuffer> mTimeframeBuffer; ///< Stores (sub-)timeframes
