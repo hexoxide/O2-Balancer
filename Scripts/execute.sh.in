@@ -5,7 +5,7 @@ cfg="@CMAKE_SOURCE_DIR@/Config/epnflpconfig.json"
 SAMPLER="InformationNode"
 SAMPLER+=" --id flpSyncSampler"
 SAMPLER+=" --mq-config $cfg"
-SAMPLER+=" --heartbeat 200"
+SAMPLER+=" --heartbeat 20"
 xterm -geometry 80x25+0+0 -hold -e @InformationNode_BINARY_DIR@/$SAMPLER &
 
 
@@ -14,28 +14,28 @@ FLP0+=" --id flpSender1"
 FLP0+=" --mq-config $cfg"
 #FLP0+=" --out-chan-name zero"
 FLP0+=" --flp-index 0"
-FLP0+=" --event-size 20"
+FLP0+=" --event-size 1"
 FLP0+=" --num-epns 3"
 FLP0+=" --test-mode 1"
 FLP0+=" --send-offset 0"
-xterm -geometry 80x25+500+0 -e @FLP_BINARY_DIR@/$FLP0 &
+#xterm -geometry 80x25+500+0 -e @FLP_BINARY_DIR@/$FLP0 &
 
 FLP1="flp"
 FLP1+=" --id flpSender2"
 FLP1+=" --mq-config $cfg"
 FLP1+=" --flp-index 1"
-FLP1+=" --event-size 20"
+FLP1+=" --event-size 1"
 FLP1+=" --num-epns 3"
 FLP1+=" --test-mode 1"
 #FLP1+=" --out-chan-name first"
 FLP1+=" --send-offset 0"
-xterm -geometry 80x25+500+350 -e @FLP_BINARY_DIR@/$FLP1 &
+#xterm -geometry 80x25+500+350 -e @FLP_BINARY_DIR@/$FLP1 &
 
 FLP2="flp"
 FLP2+=" --id flpSender3"
 FLP2+=" --mq-config $cfg"
 FLP2+=" --flp-index 2"
-FLP2+=" --event-size 20"
+FLP2+=" --event-size 1"
 FLP2+=" --num-epns 3"
 FLP2+=" --test-mode 1"
 FLP2+=" --send-offset 0"

@@ -9,15 +9,19 @@ SET(header_version_out ${CMAKE_CURRENT_BINARY_DIR}/include/AliceO2/AliceO2.h)
 CONFIGURE_FILE(${header_version_in} ${header_version_out})
 
 SET(AliceO2Lib_INCLUDE_DIRS 
-    ${AliceO2Lib_SOURCE_DIR}/include/  
+    ${AliceO2Lib_SOURCE_DIR}/include  
     ${CMAKE_CURRENT_BINARY_DIR}/include/
     ${FAIRROOT_INCLUDE_DIR}
     ${Boost_INCLUDE_DIR}
 )
 
+INCLUDE_DIRECTORIES(
+    ${AliceO2Lib_INCLUDE_DIRS}
+)
+
 SET(
     ALICEO2_LIB_SRC
-    ./src/test.cxx
+    ./src/ResultManager.cxx
 )
 
 ADD_LIBRARY(
@@ -27,6 +31,7 @@ ADD_LIBRARY(
 
 TARGET_LINK_LIBRARIES(
     AliceO2
+    
     ${Boost_SYSTEM_LIBRARY}
     ${Boost_LOG_LIBRARY}
     ${Boost_LOG_SETUP_LIBRARY}

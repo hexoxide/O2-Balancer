@@ -1,4 +1,4 @@
-#include "AliceO2/FLPDevice.h"
+#include "O2/FLPDevice.h"
 #include <cstdint> // UINT64_MAX
 #include <cassert>
 #include <chrono>
@@ -18,10 +18,10 @@ struct f2eHeader {
   int      flpIndex;
 };
 
-using namespace AliceO2::FLP;
+using namespace O2::FLP;
 
 FLPDevice::FLPDevice(){
-
+  this->results = std::unique_ptr<O2::ResultManager>(new O2::ResultManager("flp.csv"));
 }
 
         
@@ -60,6 +60,7 @@ bool FLPDevice::ConditionalRun(){
       ));
       if (dataInChannel.Receive(parts.At(0)) >= 0) {
         uint16_t currentTimeFrameid = *(static_cast<uint16_t*>(parts.At(0)->GetData()));
+        this->results->addTimeFrame(currentTimeFrameid);
         LOG(INFO) << "Current id " << currentTimeFrameid;
         int direction = currentTimeFrameid % mNumEPNs;
         if (Send(parts, mOutChannelName, direction, 0) < 0) {
@@ -165,5 +166,9 @@ inline void FLPDevice::sendFrontData()
   mArrivalTime.pop();*/
 }
 
+FLPDevice::~FLPDevice(){
+  LOG(INFO) << "closing";
+  this->results.reset();
+}
 
-FLPDevice::~FLPDevice() = default;
+//FLPDevice::~FLPDevice() = default;

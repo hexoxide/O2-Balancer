@@ -1,11 +1,13 @@
-#ifndef ALICEO2_FLP_DEVICE_H
-#define ALICEO2_FLP_DEVICE_H
+#ifndef O2_FLP_DEVICE_H
+#define O2_FLP_DEVICE_H
 
 #include <FairMQDevice.h>
 #include <queue>
 #include <string>
+#include <memory>
+#include <O2/ResultManager.h>
 
-namespace AliceO2{
+namespace O2{
     namespace FLP{
         class FLPDevice : public FairMQDevice{
           public:
@@ -17,6 +19,7 @@ namespace AliceO2{
             virtual bool ConditionalRun() override;
 
           private:
+            std::unique_ptr<ResultManager> results;
 
             
             void sendFrontData();
