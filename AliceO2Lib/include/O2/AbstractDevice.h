@@ -7,22 +7,13 @@
 // In applying this license CERN does not waive the privileges and immunities
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
-#ifndef O2_RESULT_MANAGER_H
-#define O2_RESULT_MANAGER_H
+#ifndef O2_ABSTRACT_DEVICE_H
+#define O2_ABSTRACT_DEVICE_H
 
-#include <string>
-#include <fstream>
-#include <chrono>
-namespace O2{
-    class ResultManager{
-    private:
-        std::ofstream output;
-        std::chrono::time_point<std::chrono::system_clock> last;
-    public:
-        ResultManager(const std::string& fileName = "results.csv");
-        void addTimeFrame(uint16_t frame);
+#include <FairMQDevice.h>
+namespace O2{        
+    class AbstractDevice : public FairMQDevice {
 
-        ~ResultManager();
     };
 }
 

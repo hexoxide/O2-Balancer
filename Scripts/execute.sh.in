@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+export O2Transport="dnanomsg"
 cfg="@CMAKE_SOURCE_DIR@/Config/epnflpconfig.json"
 
 SAMPLER="InformationNode"
@@ -18,7 +19,7 @@ FLP0+=" --event-size 1"
 FLP0+=" --num-epns 3"
 FLP0+=" --test-mode 1"
 FLP0+=" --send-offset 0"
-#xterm -geometry 80x25+500+0 -e @FLP_BINARY_DIR@/$FLP0 &
+xterm -geometry 80x25+500+0 -e @FLP_BINARY_DIR@/$FLP0 &
 
 FLP1="flp"
 FLP1+=" --id flpSender2"
@@ -29,7 +30,7 @@ FLP1+=" --num-epns 3"
 FLP1+=" --test-mode 1"
 #FLP1+=" --out-chan-name first"
 FLP1+=" --send-offset 0"
-#xterm -geometry 80x25+500+350 -e @FLP_BINARY_DIR@/$FLP1 &
+xterm -geometry 80x25+500+350 -e @FLP_BINARY_DIR@/$FLP1 &
 
 FLP2="flp"
 FLP2+=" --id flpSender3"

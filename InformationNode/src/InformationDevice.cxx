@@ -8,21 +8,19 @@
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
 
-/**
- * FLPSyncSampler.cpp
- *
- * @since 2013-04-23
- * @author D. Klein, A. Rybalchenko
- */
-
+/*
+* InformationDevice.cxx
+* @author H.J.M van der Heijden
+* @since 25-08-2017
+*/
 #include <fstream>
 #include <ctime>
 
 #include <FairMQLogger.h>
 #include <FairMQProgOptions.h>
-#include "AliceO2/InformationDevice.h"
+#include "O2/InformationDevice.h"
 
-using namespace AliceO2;
+using namespace O2;
 
 InformationDevice::InformationDevice()
   : mTimeframeRTT()
@@ -36,17 +34,39 @@ InformationDevice::InformationDevice()
   , mAckChannelName()
   , mOutChannelName()
 {
+  FairMQChannel channel("pub","bind","tcp://127.0.0.1:5550" );
+
+  FairMQChannel ack ("pull", "bind", "tcp://127.0.0.1:5990"); 
+  std::vector<FairMQChannel> stf;
+  stf.push_back(channel);
+  this->fChannels.insert(
+    std::pair<std::string,
+    std::vector<FairMQChannel>>("stf1",stf));
+
+  std::vector<FairMQChannel> ackn;
+  ackn.push_back(ack);
+  this->fChannels.insert(
+    std::pair<std::string,
+    std::vector<FairMQChannel>>("ack",ackn)
+  );
+
+  this->fId = "me";
+  this->fNetworkInterface = "dasf";
+  this->fNumIoThreads = 1;
+  this->fPortRangeMin = 0;
+  this->fPortRangeMax = 1;
+  this->fInitializationTimeoutInS = 0;
 }
 
 InformationDevice::~InformationDevice()
 = default;
 
 void InformationDevice::InitTask(){
-  mMaxEvents = GetConfig()->GetValue<int>("max-events");
-  heartbeat = GetConfig()->GetValue<int>("heartbeat");
-  mStoreRTTinFile = GetConfig()->GetValue<int>("store-rtt-in-file");
-  mAckChannelName = GetConfig()->GetValue<std::string>("ack-chan-name");
-  mOutChannelName = GetConfig()->GetValue<std::string>("out-chan-name");
+  mMaxEvents = 100;//GetConfig()->GetValue<int>("max-events");
+  heartbeat =  100;//GetConfig()->GetValue<int>("heartbeat");
+  mStoreRTTinFile = 100;//GetConfig()->GetValue<int>("store-rtt-in-file");
+   mAckChannelName = "ack";//GetConfig()->GetValue<std::string>("ack-chan-name");
+   mOutChannelName = "stf1";//GetConfig()->GetValue<std::string>("out-chan-name");
 }
 
 void InformationDevice::PreRun(){
@@ -55,6 +75,7 @@ void InformationDevice::PreRun(){
 }
 
 bool InformationDevice::ConditionalRun(){
+  //return true;
   FairMQMessagePtr msg(NewSimpleMessage(mTimeFrameId));
 
   if (fChannels.at(mOutChannelName).at(0).Send(msg) >= 0) {
@@ -81,7 +102,8 @@ void InformationDevice::PostRun(){
 }
 
 void InformationDevice::ListenForAcknowledgement(){
-  uint16_t id = 0;
+  
+   uint16_t id = 0;
 
   std::ofstream ofsFrames;
   std::ofstream ofsTimes;

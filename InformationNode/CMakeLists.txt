@@ -1,9 +1,17 @@
 PROJECT(InformationNode)
 
+
+IF( CMAKE_COMPILER_IS_GNUCC )
+    SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wall")
+ENDIF ( CMAKE_COMPILER_IS_GNUCC )
+
+
 SET(
     INFORMATION_NODE_SOURCES
     ./src/Main.cxx
     ./src/InformationDevice.cxx
+    ./src/HeartbeatConnection.cxx
+    ./src/AcknowledgeConnection.cxx
 )
 
 GET_DIRECTORY_PROPERTY(

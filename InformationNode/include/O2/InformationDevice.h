@@ -8,9 +8,11 @@
 #include <atomic>
 #include <chrono>
 
-#include <FairMQDevice.h>
+//#include <FairMQDevice.h>
 
-namespace AliceO2{
+#include <O2/AbstractDevice.h>
+
+namespace O2{
 /// Stores measurment for roundtrip time of a timeframe
 
 struct timeframeDuration{
@@ -20,7 +22,7 @@ struct timeframeDuration{
 
 /// Publishes timeframes IDs for flpSenders (used only in test mode)
 
-class InformationDevice : public FairMQDevice{
+class InformationDevice : public AbstractDevice{
   public:
     /// Default constructor
     InformationDevice();
