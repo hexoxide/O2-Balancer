@@ -1,6 +1,11 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
 PROJECT(AliceO2_Balancer)
 
+IF(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+    # Check if you're in the root directory of the project, and give an error.
+    MESSAGE(FATAL_ERROR "Please create a dedicated build directory for this load balancer. (You may need remove the CmakeCache.txt)")
+ENDIF()
+
 SET(AliceO2_Balancer_MAJOR_VERSION 0)
 SET(AliceO2_Balancer_MINOR_VERSION 2)
 SET(AliceO2_Balancer_PATCH_VERSION 0)
