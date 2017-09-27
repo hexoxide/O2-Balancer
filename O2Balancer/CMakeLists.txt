@@ -54,3 +54,5 @@ TARGET_LINK_LIBRARIES(
     dl
     yaml-cpp
 )
+
+ADD_SUBDIRECTORY(tests)
