@@ -19,11 +19,12 @@ namespace O2{
     class DeviceManager{
         std::unique_ptr<T> device;
     public:
-        DeviceManager(){
+        template<typename... Arguments>
+        DeviceManager(Arguments... args){
             auto settings = SettingsManager::getInstance();
-            this->device = std::make_unique<T>();
-    
-
+            //this->device = std::make_unique<T>(args...);
+            this->device = std::unique_ptr<T>(new T(args...));
+            device->CatchSignals();
             this->device->SetTransport(settings->getDefaultTransport());
             this->device->ChangeState(T::INIT_DEVICE);
                 

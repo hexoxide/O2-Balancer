@@ -19,43 +19,17 @@
 #include <FairMQLogger.h>
 #include <FairMQProgOptions.h>
 #include "O2/InformationDevice.h"
+#include "O2/AcknowledgeConnection.h"
+#include "O2/HeartbeatConnection.h"
 
 using namespace O2;
 
-InformationDevice::InformationDevice()
-  : mTimeframeRTT()
-  , mMaxEvents(0)
-  , mStoreRTTinFile(0)
-  , mEventCounter(0)
-  , mTimeFrameId(0)
-  , heartbeat(0)
-  , mAckListener()
-  , mLeaving(false)
-  , mAckChannelName()
-  , mOutChannelName()
-{
-  FairMQChannel channel("pub","bind","tcp://127.0.0.1:5550" );
+InformationDevice::InformationDevice(int heartbeat, int acknowledgePort, int heartbeatPort) : AbstractDevice("Information"){
+  
+  this->heartbeat = heartbeat;
+  this->addConnection(HeartbeatConnection(heartbeatPort, this));
+  this->addConnection(AcknowledgeConnection(acknowledgePort,this));
 
-  FairMQChannel ack ("pull", "bind", "tcp://127.0.0.1:5990"); 
-  std::vector<FairMQChannel> stf;
-  stf.push_back(channel);
-  this->fChannels.insert(
-    std::pair<std::string,
-    std::vector<FairMQChannel>>("stf1",stf));
-
-  std::vector<FairMQChannel> ackn;
-  ackn.push_back(ack);
-  this->fChannels.insert(
-    std::pair<std::string,
-    std::vector<FairMQChannel>>("ack",ackn)
-  );
-
-  this->fId = "me";
-  this->fNetworkInterface = "dasf";
-  this->fNumIoThreads = 1;
-  this->fPortRangeMin = 0;
-  this->fPortRangeMax = 1;
-  this->fInitializationTimeoutInS = 0;
 }
 
 InformationDevice::~InformationDevice()
@@ -63,10 +37,9 @@ InformationDevice::~InformationDevice()
 
 void InformationDevice::InitTask(){
   mMaxEvents = 100;//GetConfig()->GetValue<int>("max-events");
-  heartbeat =  100;//GetConfig()->GetValue<int>("heartbeat");
   mStoreRTTinFile = 100;//GetConfig()->GetValue<int>("store-rtt-in-file");
-   mAckChannelName = "ack";//GetConfig()->GetValue<std::string>("ack-chan-name");
-   mOutChannelName = "stf1";//GetConfig()->GetValue<std::string>("out-chan-name");
+  mAckChannelName = "ack";//GetConfig()->GetValue<std::string>("ack-chan-name");
+  mOutChannelName = "stf1";//GetConfig()->GetValue<std::string>("out-chan-name");
 }
 
 void InformationDevice::PreRun(){
@@ -84,6 +57,8 @@ bool InformationDevice::ConditionalRun(){
     if (++mTimeFrameId == UINT16_MAX - 1) {
       mTimeFrameId = 0;
     }
+  } else {
+    LOG(ERROR) << "Could not send :(";
   }
 
   std::this_thread::sleep_for(std::chrono::milliseconds(heartbeat));

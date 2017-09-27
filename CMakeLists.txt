@@ -10,7 +10,7 @@ SET(FAIRROOTPATH $ENV{FAIRROOTPATH})
 
 #Use the same boost as FairSoft...
 
-SET(CMAKE_CXX_STANDARD 14)
+SET(CMAKE_CXX_STANDARD 11)
 
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/
 SET(CMAKE_MODULE_PATH "${FAIRROOTPATH}/share/fairbase/cmake/modules" ${CMAKE_MODULE_PATH})
@@ -23,7 +23,27 @@ SET(LINK_DIRECTORIES
 
 LINK_DIRECTORIES( ${LINK_DIRECTORIES})
 FIND_PACKAGE(FairRoot REQUIRED)
-FIND_PACKAGE(Boost 1.59 COMPONENTS thread system timer program_options random filesystem chrono exception regex serialization log log_setup unit_test_framework date_time REQUIRED)
+
+FIND_LIBRARY(YAML_CPP REQUIRED)
+
+FIND_PACKAGE(
+    Boost 1.59 COMPONENTS 
+    thread 
+    system 
+    timer 
+    program_options 
+    random 
+    filesystem 
+    chrono 
+    exception 
+    regex 
+    serialization 
+    log 
+    log_setup 
+    unit_test_framework 
+    date_time 
+    REQUIRED
+)
 FIND_PACKAGE(Threads REQUIRED)
 
 ADD_SUBDIRECTORY(AliceO2Lib)

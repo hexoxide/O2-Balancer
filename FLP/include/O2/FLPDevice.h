@@ -1,17 +1,17 @@
 #ifndef O2_FLP_DEVICE_H
 #define O2_FLP_DEVICE_H
 
-#include <FairMQDevice.h>
+#include <O2/AbstractDevice.h>
 #include <queue>
 #include <string>
 #include <memory>
 #include <O2/ResultManager.h>
-
+#include "./FLPSettings.h"
 namespace O2{
     namespace FLP{
-        class FLPDevice : public FairMQDevice{
+        class FLPDevice : public AbstractDevice{
           public:
-            FLPDevice();
+            FLPDevice(const FLPSettings& settings);
             virtual ~FLPDevice();
         
           protected:
@@ -20,24 +20,15 @@ namespace O2{
 
           private:
             std::unique_ptr<ResultManager> results;
-
-            
-            void sendFrontData();
-
             std::queue<FairMQParts> mSTFBuffer; ///< Buffer for sub-timeframes
             std::queue<std::chrono::steady_clock::time_point> mArrivalTime; ///< Stores arrival times of sub-timeframes
         
             int mNumEPNs; ///< Number of epnReceivers
-            unsigned int mIndex; ///< Index of the flpSender among other flpSenders
-            unsigned int mSendOffset; ///< Offset for staggering output
-            unsigned int mSendDelay; ///< Delay for staggering output
-        
+
             int mEventSize; ///< Size of the sub-timeframe body (only for test mode)
-            int mTestMode; ///< Run the device in test mode (only syncSampler+flpSender+epnReceiver)
-            uint16_t mTimeFrameId;
         
-            std::string mInChannelName;
-            std::string mOutChannelName;
+            uint16_t mTimeFrameId;
+
         };
     }
 }

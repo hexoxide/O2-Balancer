@@ -15,9 +15,29 @@
 */
 #include "O2/InformationDevice.h"
 #include <O2/DeviceManager.h>
+#include <O2/ProgramOptions.h>
+
+namespace po = boost::program_options;
+
 int main(int argc, char** argv){
+    constexpr char ACKNOWLEDGE_PORT[] = "acknowledge-port";
+    constexpr char HEARTBEAT_RATE[] = "heartbeat";
+    constexpr char HEARTBEAT_PORT[] = "heartbeat-port";
+
+    po::options_description options("Information node options");
+    options.add_options()
+    (HEARTBEAT_RATE, po::value<int>()->default_value(100), "Heartbeat frequency")
+    (ACKNOWLEDGE_PORT, po::value<int>()->default_value(5990), "Port that listens for acknowledge")
+    (HEARTBEAT_PORT, po::value<int>()->default_value(5550), "Port that publishes the heartbeat");
+    auto vm = O2::AddO2Options(options, argc, argv);
+    
+   
     try{
-        O2::DeviceManager<O2::InformationDevice> manager;
+        O2::DeviceManager<O2::InformationDevice> manager(
+            vm[HEARTBEAT_RATE].as<int>(),
+            vm[ACKNOWLEDGE_PORT].as<int>(),
+            vm[HEARTBEAT_PORT].as<int>()
+        );
         manager.run();
     } catch(O2::Exceptions::InitException exception){
         LOG(ERROR) << "Failed to initialize due, error :" << exception.getMessage();

@@ -5,7 +5,7 @@
 namespace O2{
     class HeartbeatConnection : public Connection{
     public:
-        HeartbeatConnection();
+        HeartbeatConnection(int port, AbstractDevice* device);
     };
 }
 

@@ -4,6 +4,9 @@ SET(
     FLP_SOURCES
     ./src/FLPDevice.cxx
     ./src/Main.cxx
+    ./src/HeartBeatConnection.cxx
+    ./src/EPNConnection.cxx
+    ./src/FLPSettings.cxx
 )
 
 GET_DIRECTORY_PROPERTY(

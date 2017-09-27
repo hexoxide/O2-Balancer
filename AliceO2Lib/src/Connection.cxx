@@ -1,17 +1,54 @@
 #include "O2/Connection.h"
 #include "O2/exceptions/UnimplementedException.h"
+#include "O2/AbstractDevice.h"
+#include <iostream>
 using namespace O2;
 
-Connection::Connection(const std::string& name){
+Connection::Connection(const std::string& name, AbstractDevice* device){
     this->name = name;
+    this->device = device;
+}
+
+void Connection::updateAllRateLogging(const int& logg){
+    for(auto& i : this->channels){
+        i.UpdateRateLogging(logg);
+    }
+}
+
+void Connection::updateAllReceiveBuffer(const int& buffer){
+    for(auto& i : this->channels){
+        i.UpdateRcvBufSize(buffer);
+    }
+}
+
+void Connection::updateAllSendBuffer(const int& buffer){
+    for(auto& i : this->channels){
+        i.UpdateSndBufSize(buffer);
+    }
+}
+
+void Connection::updateAllSendKernelSize(const int& size){
+    for(auto& i : this->channels){
+        i.UpdateSndKernelSize(size);
+    }
+}
+
+void Connection::updateAllReceiveKernelSize(const int& size){
+    for(auto& i : this->channels){
+        i.UpdateRcvKernelSize(size);
+    }
 }
 
 std::string Connection::typeToString(ConnectionType type) const{
     switch(type){
         case ConnectionType::Publish:
-        return "publish";
+        return "pub";
         case ConnectionType::Pull:
         return "pull";
+        case ConnectionType::Subscribe:
+        return "sub";
+        case ConnectionType::Push:
+        return "push";
         default:
         throw Exceptions::UnimplementedException("typeToString doesn't implement this case");
     }
@@ -28,14 +65,17 @@ std::string Connection::methodToString(ConnectionMethod method) const{
     }
 }
 
-void Connection::addChannel(ConnectionType type, ConnectionMethod method, int port){
-    //std::string stype = this->typeToString(type);
-    //std::string smethod = this->methodToString(method);
+std::vector<FairMQChannel> Connection::getChannels() const{
+    return this->channels;
+}
+
+void Connection::addChannel(ConnectionType type, ConnectionMethod method,const std::string& ip, int port){
+
     this->channels.push_back(
         FairMQChannel(
             this->typeToString(type),
             this->methodToString(method),
-            std::string("tcp://127.0.0.1:") + std::to_string(port)
+            "tcp://" + std::string(ip) + ":" + std::to_string(port)
         )
     );
 

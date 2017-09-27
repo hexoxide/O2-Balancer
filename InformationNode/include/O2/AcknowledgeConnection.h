@@ -6,7 +6,7 @@
 namespace O2{
     class AcknowledgeConnection : public Connection{
     public:
-        AcknowledgeConnection();
+        AcknowledgeConnection(int port, AbstractDevice* device);
     };
 }
 

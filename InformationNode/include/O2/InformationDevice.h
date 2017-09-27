@@ -7,9 +7,6 @@
 #include <thread>
 #include <atomic>
 #include <chrono>
-
-//#include <FairMQDevice.h>
-
 #include <O2/AbstractDevice.h>
 
 namespace O2{
@@ -25,7 +22,7 @@ struct timeframeDuration{
 class InformationDevice : public AbstractDevice{
   public:
     /// Default constructor
-    InformationDevice();
+    InformationDevice(int heartbeat, int acknowledgePort, int heartbeatPort);
 
     /// Default destructor
     ~InformationDevice() override;
