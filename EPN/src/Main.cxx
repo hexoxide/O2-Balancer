@@ -1,5 +1,28 @@
-#include "AliceO2/EPNDevice.h"
-#include <runFairMQDevice.h>
+#include "O2/EPN/EPNDevice.h"
+#include <O2/Balancer/DeviceManager.h>
+#include <O2/Balancer/ProgramOptions.h>
+
+namespace po = boost::program_options;
+
+int main(int argc, char** argv){
+    using namespace O2;
+    using namespace O2::EPN;
+    
+    po::options_description options("EPN options");
+    constexpr char CONFIG_FILE[] = "epn-config";
+
+
+    options.add_options()
+    (CONFIG_FILE, po::value<std::string>()->default_value("./epn.yaml"), "Configuration file");
+    auto vm = Balancer::AddO2Options(options, argc, argv);
+
+
+    Balancer::DeviceManager<EPNDevice> device;
+    device.run();
+    return EXIT_SUCCESS;
+}
+
+/*#include <runFairMQDevice.h>
 
 namespace bpo = boost::program_options;
 
@@ -13,6 +36,7 @@ void addCustomOptions(bpo::options_description& options){
         ("ack-chan-name", bpo::value<std::string>()->default_value("ack"), "Name of the acknowledgement channel");
 }
 
-FairMQDevicePtr getDevice(const FairMQProgOptions& /*config*/){
+FairMQDevicePtr getDevice(const FairMQProgOptions&){
     return new AliceO2::EPN::EPNDevice();
 }
+*/

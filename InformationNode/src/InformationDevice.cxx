@@ -18,13 +18,14 @@
 
 #include <FairMQLogger.h>
 #include <FairMQProgOptions.h>
-#include "O2/InformationDevice.h"
-#include "O2/AcknowledgeConnection.h"
-#include "O2/HeartbeatConnection.h"
+#include "O2/InformationNode/InformationDevice.h"
+#include "O2/InformationNode/AcknowledgeConnection.h"
+#include "O2/InformationNode/HeartbeatConnection.h"
 
 using namespace O2;
+using namespace O2::InformationNode;
 
-InformationDevice::InformationDevice(int heartbeat, int acknowledgePort, int heartbeatPort) : AbstractDevice("Information"){
+InformationDevice::InformationDevice(int heartbeat, int acknowledgePort, int heartbeatPort) : Balancer::AbstractDevice("Information"){
   
   this->heartbeat = heartbeat;
   this->addConnection(HeartbeatConnection(heartbeatPort, this));

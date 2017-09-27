@@ -1,15 +1,15 @@
-#ifndef ALICEO2_EPN_DEVICE_H
-#define ALICEO2_EPN_DEVICE_H
+#ifndef O2_EPN_EPNDEVICE_H
+#define O2_EPN_EPNDEVICE_H
 
-#include <FairMQDevice.h>
+#include <O2/Balancer/AbstractDevice.h>
 #include <unordered_map>
 #include <string>
 #include <chrono>
 #include <unordered_set>
 
-namespace AliceO2{
+namespace O2{
     namespace EPN{
-        class EPNDevice : public FairMQDevice{
+        class EPNDevice : public Balancer::AbstractDevice{
         protected:
             struct TFBuffer
             {

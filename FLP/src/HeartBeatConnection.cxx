@@ -1,12 +1,12 @@
-#include "O2/HeartBeatConnection.h"
-#include "O2/FLPDevice.h"
-#include "O2/FLPSettings.h"
+#include "O2/FLP/HeartBeatConnection.h"
+#include "O2/FLP/FLPDevice.h"
+#include "O2/FLP/FLPSettings.h"
 using namespace O2::FLP;
 
-HeartbeatConnection::HeartbeatConnection(const FLPSettings& settings, AbstractDevice* device) : Connection("stf1", device){
+HeartbeatConnection::HeartbeatConnection(const FLPSettings& settings, Balancer::AbstractDevice* device) : Balancer::Connection("stf1", device){
     this->addChannel(
-        ConnectionType::Subscribe,
-        ConnectionMethod::Connect,
+        Balancer::ConnectionType::Subscribe,
+        Balancer::ConnectionMethod::Connect,
         settings.getInformationNodeSetting()->ip,
         settings.getInformationNodeSetting()->port
     );

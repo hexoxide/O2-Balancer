@@ -8,14 +8,16 @@
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
 
-#include "O2/AcknowledgeConnection.h"
-#include "O2/InformationDevice.h"
-using namespace O2;
+#include "O2/InformationNode/AcknowledgeConnection.h"
+#include "O2/InformationNode/InformationDevice.h"
 
-AcknowledgeConnection::AcknowledgeConnection(int port, AbstractDevice* device) : Connection("ack",device){
+using namespace O2;
+using namespace O2::InformationNode;
+
+AcknowledgeConnection::AcknowledgeConnection(int port, Balancer::AbstractDevice* device) : Balancer::Connection("ack",device){
     this->addChannel(
-        ConnectionType::Pull,
-        ConnectionMethod::Bind,
+        Balancer::ConnectionType::Pull,
+        Balancer::ConnectionMethod::Bind,
         "127.0.0.1",
         port
     );

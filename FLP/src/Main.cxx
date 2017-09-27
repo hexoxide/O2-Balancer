@@ -1,7 +1,7 @@
-#include "O2/FLPDevice.h"
-#include <O2/DeviceManager.h>
-#include <O2/ProgramOptions.h>
-#include "O2/FLPSettings.h"
+#include "O2/FLP/FLPDevice.h"
+#include <O2/Balancer/DeviceManager.h>
+#include <O2/Balancer/ProgramOptions.h>
+#include "O2/FLP/FLPSettings.h"
 
 namespace po = boost::program_options;
 
@@ -14,15 +14,15 @@ int main(int argc, char** argv){
 
     options.add_options()
     (CONFIG_FILE, po::value<std::string>()->default_value("./flp.yaml"), "Configuration file");
-    auto vm = AddO2Options(options, argc, argv);
+    auto vm = Balancer::AddO2Options(options, argc, argv);
     //Load the settings
     FLPSettings settings( vm[CONFIG_FILE].as<std::string>());
     try{
-        DeviceManager<FLPDevice> manager(
+        Balancer::DeviceManager<FLPDevice> manager(
             settings
         );
         manager.run();
-    } catch (O2::Exceptions::AbstractException exception){
+    } catch (O2::Balancer::Exceptions::AbstractException exception){
         LOG(ERROR) << exception.getMessage();
         return EXIT_FAILURE;
     }

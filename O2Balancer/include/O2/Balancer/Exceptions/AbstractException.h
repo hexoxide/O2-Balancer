@@ -7,17 +7,24 @@
 // In applying this license CERN does not waive the privileges and immunities
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
+#ifndef O2_BALANCER_EXCEPTIONS_ABSTRACT_EXCEPTION_H
+#define O2_BALANCER_EXCEPTIONS_ABSTRACT_EXCEPTION_H
 
-#include "O2/InformationNode/HeartbeatConnection.h"
-
-using namespace O2;
-using namespace O2::InformationNode;
-
-HeartbeatConnection::HeartbeatConnection(int port, Balancer::AbstractDevice* device) : Balancer::Connection("stf1",device){
-    this->addChannel(
-        Balancer::ConnectionType::Publish,
-        Balancer::ConnectionMethod::Bind,
-        "127.0.0.1",
-        port
-    );
+#include <string>
+namespace O2{
+    namespace Balancer{
+        namespace Exceptions{
+            class AbstractException : public std::exception{
+                std::string msg;
+    
+            public:
+                AbstractException(const std::string& msg);
+                std::string getMessage() const;
+                
+            };
+        }
+    }
+    
 }
+
+#endif

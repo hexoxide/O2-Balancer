@@ -7,17 +7,21 @@
 // In applying this license CERN does not waive the privileges and immunities
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
+#ifndef O2_BALANCER_ABSTRACT_DEVICE_H
+#define O2_BALANCER_ABSTRACT_DEVICE_H
 
-#include "O2/InformationNode/HeartbeatConnection.h"
+#include <FairMQDevice.h>
 
-using namespace O2;
-using namespace O2::InformationNode;
+namespace O2{   
+    namespace Balancer{     
+        class Connection;
 
-HeartbeatConnection::HeartbeatConnection(int port, Balancer::AbstractDevice* device) : Balancer::Connection("stf1",device){
-    this->addChannel(
-        Balancer::ConnectionType::Publish,
-        Balancer::ConnectionMethod::Bind,
-        "127.0.0.1",
-        port
-    );
+        class AbstractDevice : public FairMQDevice {
+        public:
+            AbstractDevice(const std::string& name);
+            void addConnection(Connection connection);
+        };
+    }
 }
+
+#endif

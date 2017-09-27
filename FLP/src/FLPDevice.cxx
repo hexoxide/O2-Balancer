@@ -1,4 +1,4 @@
-#include "O2/FLPDevice.h"
+#include "O2/FLP/FLPDevice.h"
 #include <cstdint> // UINT64_MAX
 #include <cassert>
 #include <chrono>
@@ -9,8 +9,8 @@
 #include <iostream>
 #include <ctime>
 #include <cstring>
-#include "O2/HeartBeatConnection.h"
-#include "O2/EPNConnection.h"
+#include "O2/FLP/HeartBeatConnection.h"
+#include "O2/FLP/EPNConnection.h"
 
 
 
@@ -22,11 +22,8 @@ struct f2eHeader {
 
 using namespace O2::FLP;
 
-FLPDevice::FLPDevice(const FLPSettings& settings) : AbstractDevice("flpSender1"){
-
-  
-  
-  this->results = std::unique_ptr<O2::ResultManager>(new O2::ResultManager("flp.csv"));
+FLPDevice::FLPDevice(const FLPSettings& settings) : Balancer::AbstractDevice("flpSender"){
+  this->results = std::unique_ptr<O2::Balancer::ResultManager>(new O2::Balancer::ResultManager("flp.csv"));
   this->mNumEPNs = settings.getEPNSettings().size();
   this->addConnection(HeartbeatConnection(settings, this));
   this->addConnection(EPNConnection(settings,this));

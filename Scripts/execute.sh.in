@@ -18,23 +18,20 @@ xterm -geometry 80x25+500+0 -hold -e @FLP_BINARY_DIR@/$FLP &
 
 
 
-EPN0="epn"
-EPN0+=" --id epnReceiver1"
-EPN0+=" --mq-config $cfg"
-EPN0+=" --num-flps 3"
-EPN0+=" --test-mode 1"
-xterm -geometry 80x25+1000+0 -e @EPN_BINARY_DIR@/$EPN0 &
+EPN="epn"
+EPN+=" --epn-config @CMAKE_SOURCE_DIR@/Config/epn-config.yaml"
+xterm -geometry 80x25+1000+0 -hold -e @EPN_BINARY_DIR@/$EPN &
 
 EPN1="epn"
 EPN1+=" --id epnReceiver2"
 EPN1+=" --mq-config $cfg"
 EPN1+=" --num-flps 3"
 EPN1+=" --test-mode 1"
-xterm -geometry 80x25+1000+350 -hold -e @EPN_BINARY_DIR@/$EPN1 &
+#xterm -geometry 80x25+1000+350 -hold -e @EPN_BINARY_DIR@/$EPN1 &
 
 EPN2="epn"
 EPN2+=" --id epnReceiver3"
 EPN2+=" --mq-config $cfg"
 EPN2+=" --num-flps 3"
 EPN2+=" --test-mode 1"
-xterm -geometry 80x25+1000+700  -e @EPN_BINARY_DIR@/$EPN2 &
+#xterm -geometry 80x25+1000+700  -e @EPN_BINARY_DIR@/$EPN2 &

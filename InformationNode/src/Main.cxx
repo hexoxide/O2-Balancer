@@ -13,9 +13,10 @@
 * @author H.J.M van der Heijden
 * @since 25-08-2017
 */
-#include "O2/InformationDevice.h"
-#include <O2/DeviceManager.h>
-#include <O2/ProgramOptions.h>
+#include "O2/InformationNode/InformationDevice.h"
+#include <O2/Balancer/DeviceManager.h>
+#include <O2/Balancer/ProgramOptions.h>
+
 
 namespace po = boost::program_options;
 
@@ -29,20 +30,20 @@ int main(int argc, char** argv){
     (HEARTBEAT_RATE, po::value<int>()->default_value(100), "Heartbeat frequency")
     (ACKNOWLEDGE_PORT, po::value<int>()->default_value(5990), "Port that listens for acknowledge")
     (HEARTBEAT_PORT, po::value<int>()->default_value(5550), "Port that publishes the heartbeat");
-    auto vm = O2::AddO2Options(options, argc, argv);
+    auto vm = O2::Balancer::AddO2Options(options, argc, argv);
     
    
     try{
-        O2::DeviceManager<O2::InformationDevice> manager(
+        O2::Balancer::DeviceManager<O2::InformationNode::InformationDevice> manager(
             vm[HEARTBEAT_RATE].as<int>(),
             vm[ACKNOWLEDGE_PORT].as<int>(),
             vm[HEARTBEAT_PORT].as<int>()
         );
         manager.run();
-    } catch(O2::Exceptions::InitException exception){
+    } catch(O2::Balancer::Exceptions::InitException exception){
         LOG(ERROR) << "Failed to initialize due, error :" << exception.getMessage();
         return EXIT_FAILURE;
-    } catch (O2::Exceptions::AbstractException exception){
+    } catch (O2::Balancer::Exceptions::AbstractException exception){
         LOG(ERROR) << exception.getMessage();
         return EXIT_FAILURE;
     }
