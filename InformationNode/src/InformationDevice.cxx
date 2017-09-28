@@ -46,10 +46,10 @@ void InformationDevice::InitTask(){
 void InformationDevice::PreRun(){
     mLeaving = false;
     mAckListener = std::thread(&InformationDevice::ListenForAcknowledgement, this);
-}
+    
+  }
 
 bool InformationDevice::ConditionalRun(){
-  //return true;
   FairMQMessagePtr msg(NewSimpleMessage(mTimeFrameId));
 
   if (fChannels.at(mOutChannelName).at(0).Send(msg) >= 0) {
@@ -73,6 +73,7 @@ bool InformationDevice::ConditionalRun(){
 }
 
 void InformationDevice::PostRun(){
+
     mLeaving = true;
     mAckListener.join();
 }

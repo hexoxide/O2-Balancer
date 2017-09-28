@@ -14,9 +14,12 @@
 
 namespace O2{
     namespace EPN{
+
+        class EPNSettings;
+
         class FLPConnection : public Balancer::Connection{
         public:
-            FLPConnection(Balancer::AbstractDevice* device);
+            FLPConnection(Balancer::AbstractDevice* device, const EPNSettings& settings);
         };
     }
 }

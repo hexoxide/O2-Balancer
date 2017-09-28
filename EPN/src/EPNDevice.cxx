@@ -24,11 +24,11 @@ struct f2eHeader {
     int      flpIndex;
 };
 
-EPNDevice::EPNDevice() : Balancer::AbstractDevice("EPN"){
+EPNDevice::EPNDevice(const EPNSettings& settings) : Balancer::AbstractDevice("EPN"){
   //Setting up the connections, which are stored in each individual class
-  this->addConnection(FLPConnection(this));
-  this->addConnection(AcknowledgeConnection(this));
-  this->addConnection(OutputConnection(this));
+  this->addConnection(FLPConnection(this,settings));
+  this->addConnection(AcknowledgeConnection(this,settings));
+  this->addConnection(OutputConnection(this,settings));
 
 }
 

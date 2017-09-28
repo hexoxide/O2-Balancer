@@ -8,6 +8,7 @@
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
 #include "O2/EPN/EPNDevice.h"
+#include "O2/EPN/EPNSettings.h"
 #include <O2/Balancer/DeviceManager.h>
 #include <O2/Balancer/ProgramOptions.h>
 
@@ -22,11 +23,13 @@ int main(int argc, char** argv){
 
 
     options.add_options()
-    (CONFIG_FILE, po::value<std::string>()->default_value("./epn.yaml"), "Configuration file");
+    (CONFIG_FILE, po::value<std::string>()->default_value("./epn.yaml"), "Configuration file")
+    ("flp-port", po::value<int>()->default_value(0), "Port that the FLPs can use to connect");
     auto vm = Balancer::AddO2Options(options, argc, argv);
 
+    EPNSettings settings(vm);
 
-    Balancer::DeviceManager<EPNDevice> device;
+    Balancer::DeviceManager<EPNDevice> device(settings);
     device.run();
     return EXIT_SUCCESS;
 }

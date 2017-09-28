@@ -17,6 +17,9 @@ namespace O2{
         class Connection;
 
         class AbstractDevice : public FairMQDevice {
+
+        protected:
+            virtual void Reset() override;
         public:
             AbstractDevice(const std::string& name);
             void addConnection(Connection connection);

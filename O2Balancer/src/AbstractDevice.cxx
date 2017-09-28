@@ -12,6 +12,14 @@ AbstractDevice::AbstractDevice(const std::string& name){
   
 }
 
+void AbstractDevice::Reset(){
+    //ChangeState(STOP);
+    //this->Terminate();
+    
+    
+   
+}
+
 void AbstractDevice::addConnection(Connection connection){
 
     this->fChannels.insert(

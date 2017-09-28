@@ -1,3 +1,7 @@
+OutputPort: 5591
+
+FLPConnectionPort: 5561
+
 InformationNode:
-  Port: 5550
+  Port: 5990
   Ip: 127.0.0.1

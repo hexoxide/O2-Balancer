@@ -13,18 +13,33 @@
 using namespace O2;
 using namespace O2::EPN;
 
-EPNSettings::EPNSettings(const std::string& configFile){
-    YAML::Node config = YAML::LoadFile(configFile);
+EPNSettings::EPNSettings(const boost::program_options::variables_map& settings){
+    YAML::Node config = YAML::LoadFile(settings["epn-config"].as<std::string>());
     
     this->informationSettings = std::shared_ptr<Balancer::DeviceSetting>( new Balancer::DeviceSetting(
         config["InformationNode"]["Port"].as<int>(),
         config["InformationNode"]["Ip"].as<std::string>()
     ));
+
+    this->flpConnectionPort = config["FLPConnectionPort"].as<int>();
+    this->outputConnectionPort = config["OutputPort"].as<int>();
+
+    if(settings["flp-port"].as<int>() != 0){
+        this->flpConnectionPort = settings["flp-port"].as<int>();
+    }
+    
+
+
 }
 
 std::shared_ptr<Balancer::DeviceSetting> EPNSettings::getInformationNodeSetting() const{
     return this->informationSettings;
 }
 
-
+int EPNSettings::FLPConnectionPort() const{
+    return this->flpConnectionPort;
+}
+int EPNSettings::OutputConnectionPort() const{
+    return this->outputConnectionPort;    
+}
 

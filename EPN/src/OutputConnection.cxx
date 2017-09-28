@@ -8,14 +8,14 @@
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
 #include "O2/EPN/OutputConnection.h"
-
+#include "O2/EPN/EPNSettings.h"
 using namespace O2::EPN;
 
-OutputConnection::OutputConnection(Balancer::AbstractDevice* device) : Balancer::Connection("tf", device){
+OutputConnection::OutputConnection(Balancer::AbstractDevice* device, const EPNSettings& settings) : Balancer::Connection("tf", device){
     this->addChannel(
         Balancer::ConnectionType::Publish,
         Balancer::ConnectionMethod::Bind,
         "127.0.0.1",
-        5591
+        settings.OutputConnectionPort()
     );
 }

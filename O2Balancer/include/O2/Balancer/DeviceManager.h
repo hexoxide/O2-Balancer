@@ -11,36 +11,48 @@
 #define O2_BALANCER_DEVICE_MANAGER_H
 
 #include <memory>
+//#include <csignal>
+#include <iostream>
 #include "./SettingsManager.h"
 namespace O2{
     namespace Balancer{
         class AbstractDevice;
-        
+
         template<class T>
         class DeviceManager{
-            std::unique_ptr<T> device;
+             std::unique_ptr<T> device;
         public:
+
             template<typename... Arguments>
             DeviceManager(Arguments... args){
+                
                 auto settings = SettingsManager::getInstance();
                 //this->device = std::make_unique<T>(args...);
-                this->device = std::unique_ptr<T>(new T(args...));
+                device = std::unique_ptr<T>(new T(args...));
                 device->CatchSignals();
-                this->device->SetTransport(settings->getDefaultTransport());
-                this->device->ChangeState(T::INIT_DEVICE);
+           /*     std::signal(SIGINT,[](int i) -> void{
+                    DeviceManager::stop()
+                    std::exit(EXIT_FAILURE);
+                });*/
+                device->SetTransport(settings->getDefaultTransport());
+                device->ChangeState(T::INIT_DEVICE);
                     
-                this->device->WaitForInitialValidation();
-                this->device->WaitForEndOfState(T::INIT_DEVICE);
+                device->WaitForInitialValidation();
+                device->WaitForEndOfState(T::INIT_DEVICE);
                     
-                this->device->ChangeState(T::INIT_TASK);
-                this->device->WaitForEndOfState(T::INIT_TASK);
+                device->ChangeState(T::INIT_TASK);
+                device->WaitForEndOfState(T::INIT_TASK);
                 
-    
+            
             }
             void run(){
-                this->device->ChangeState(T::RUN);
-                this->device->WaitForEndOfState(T::RUN);
+                
+                device->ChangeState(T::RUN);
+                //device->WaitForEndOfState(T::RUN);
+                
+                while(!device->Terminated()){}
                 if (!device->CheckCurrentState(T::EXITING)){
+
                     device->ChangeState(T::RESET_TASK);
                     device->WaitForEndOfState(T::RESET_TASK);
             
@@ -49,6 +61,7 @@ namespace O2{
             
                     device->ChangeState(T::END);
                 }
+          
             }
         };
     }

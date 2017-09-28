@@ -11,6 +11,7 @@
 #define O2_EPN_EPNDEVICE_H
 
 #include <O2/Balancer/AbstractDevice.h>
+#include "./EPNSettings.h"
 #include <unordered_map>
 #include <string>
 #include <chrono>
@@ -28,7 +29,7 @@ namespace O2{
             };
             
             public:
-            EPNDevice();
+            EPNDevice(const EPNSettings& settings);
             virtual ~EPNDevice();
             
             /// Discared incomplete timeframes after \p fBufferTimeoutInMs.

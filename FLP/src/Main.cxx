@@ -21,10 +21,11 @@ int main(int argc, char** argv){
     using namespace O2::FLP;
     po::options_description options("FLP options");
     constexpr char CONFIG_FILE[] = "flp-config";
-
     options.add_options()
     (CONFIG_FILE, po::value<std::string>()->default_value("./flp.yaml"), "Configuration file");
+    
     auto vm = Balancer::AddO2Options(options, argc, argv);
+
     //Load the settings
     FLPSettings settings( vm[CONFIG_FILE].as<std::string>());
     try{

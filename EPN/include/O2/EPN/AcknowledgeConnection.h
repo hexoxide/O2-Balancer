@@ -15,9 +15,11 @@
 
 namespace O2{
     namespace EPN{
+
+        class EPNSettings;
         class AcknowledgeConnection : public Balancer::Connection{
         public:
-            AcknowledgeConnection(Balancer::AbstractDevice* device);
+            AcknowledgeConnection(Balancer::AbstractDevice* device, const EPNSettings& settings);
         };
     }
 }

@@ -14,16 +14,20 @@
 #include <memory>
 #include <vector>
 #include <O2/Balancer/DeviceSetting.h>
-
+#include <boost/program_options.hpp>
 
 namespace O2{
     namespace EPN{
         class EPNSettings{
             std::shared_ptr<Balancer::DeviceSetting> informationSettings;
+            int flpConnectionPort;
+            int outputConnectionPort;
 
         public:
-            EPNSettings(const std::string& configFile);
+            EPNSettings(const boost::program_options::variables_map& settings);
             std::shared_ptr<Balancer::DeviceSetting> getInformationNodeSetting() const;
+            int FLPConnectionPort() const;
+            int OutputConnectionPort() const;
         };
     }
 }

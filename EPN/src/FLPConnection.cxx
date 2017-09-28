@@ -8,15 +8,16 @@
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
 #include "O2/EPN/FLPConnection.h"
+#include "O2/EPN/EPNSettings.h"
 
 using namespace O2::EPN;
 
-FLPConnection::FLPConnection(Balancer::AbstractDevice* device) : Balancer::Connection("stf2", device){
+FLPConnection::FLPConnection(Balancer::AbstractDevice* device, const EPNSettings& settings) : Balancer::Connection("stf2", device){
     this->addChannel(
         Balancer::ConnectionType::Pull,
         Balancer::ConnectionMethod::Bind,
         "127.0.0.1",
-        5561
+        settings.FLPConnectionPort()
     );
 
     this->updateAllReceiveBuffer(10);

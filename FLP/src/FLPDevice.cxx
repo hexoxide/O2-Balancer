@@ -48,8 +48,6 @@ void FLPDevice::InitTask(){
 
 
 bool FLPDevice::ConditionalRun(){
-
-
   FairMQChannel& dataInChannel = fChannels.at("stf1").at(0);
   std::fstream fstream("/dev/null",  std::ifstream::binary | std::ios::in);
 

@@ -12,26 +12,23 @@ xterm -geometry 80x25+0+0 -hold -e @InformationNode_BINARY_DIR@/$SAMPLER &
 
 FLP="flp"
 FLP+=" --flp-config @CMAKE_SOURCE_DIR@/Config/flp-config.yaml"
+xterm -geometry 80x25+500+0  -e @FLP_BINARY_DIR@/$FLP &
 xterm -geometry 80x25+500+0 -hold -e @FLP_BINARY_DIR@/$FLP &
-xterm -geometry 80x25+500+0 -hold -e @FLP_BINARY_DIR@/$FLP &
-xterm -geometry 80x25+500+0 -hold -e @FLP_BINARY_DIR@/$FLP &
+xterm -geometry 80x25+500+0  -e @FLP_BINARY_DIR@/$FLP &
 
-
+EPNCFG=" --epn-config @CMAKE_SOURCE_DIR@/Config/epn-config.yaml"
 
 EPN="epn"
-EPN+=" --epn-config @CMAKE_SOURCE_DIR@/Config/epn-config.yaml"
-xterm -geometry 80x25+1000+0 -hold -e @EPN_BINARY_DIR@/$EPN &
+EPN+=" --flp-port 5561"
+EPN+=$EPNCFG
+xterm -geometry 80x25+1000+0  -e @EPN_BINARY_DIR@/$EPN &
 
 EPN1="epn"
-EPN1+=" --id epnReceiver2"
-EPN1+=" --mq-config $cfg"
-EPN1+=" --num-flps 3"
-EPN1+=" --test-mode 1"
-#xterm -geometry 80x25+1000+350 -hold -e @EPN_BINARY_DIR@/$EPN1 &
+EPN1+=$EPNCFG
+EPN1+=" --flp-port 5562"
+xterm -geometry 80x25+1000+0 -hold -e @EPN_BINARY_DIR@/$EPN1 &
 
 EPN2="epn"
-EPN2+=" --id epnReceiver3"
-EPN2+=" --mq-config $cfg"
-EPN2+=" --num-flps 3"
-EPN2+=" --test-mode 1"
-#xterm -geometry 80x25+1000+700  -e @EPN_BINARY_DIR@/$EPN2 &
+EPN2+=$EPNCFG
+EPN2+=" --flp-port 5563"
+xterm -geometry 80x25+1000+0 -hold -e @EPN_BINARY_DIR@/$EPN2 &

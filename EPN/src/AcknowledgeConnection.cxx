@@ -8,14 +8,15 @@
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
 #include "O2/EPN/AcknowledgeConnection.h"
+#include "O2/EPN/EPNSettings.h"
 
 using namespace O2::EPN;
 
-AcknowledgeConnection::AcknowledgeConnection(Balancer::AbstractDevice* device) : Balancer::Connection("ack", device){
+AcknowledgeConnection::AcknowledgeConnection(Balancer::AbstractDevice* device, const EPNSettings& settings) : Balancer::Connection("ack", device){
     this->addChannel(
         Balancer::ConnectionType::Push,
         Balancer::ConnectionMethod::Connect,
-        "127.0.0.1",
-        5990
+        settings.getInformationNodeSetting()->ip,
+        settings.getInformationNodeSetting()->port
     );
 }

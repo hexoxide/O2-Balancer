@@ -16,7 +16,8 @@
 #include "O2/InformationNode/InformationDevice.h"
 #include <O2/Balancer/DeviceManager.h>
 #include <O2/Balancer/ProgramOptions.h>
-
+#include <csignal>
+std::unique_ptr< O2::Balancer::DeviceManager<O2::InformationNode::InformationDevice>> deviceManager;
 
 namespace po = boost::program_options;
 
@@ -33,13 +34,28 @@ int main(int argc, char** argv){
     auto vm = O2::Balancer::AddO2Options(options, argc, argv);
     
    
+ //  std::signal(SIGINT,[](int i) -> void{
+ //       std::exit(EXIT_FAILURE);
+ //   });
+
     try{
-        O2::Balancer::DeviceManager<O2::InformationNode::InformationDevice> manager(
+    /*    O2::Balancer::DeviceManager<O2::InformationNode::InformationDevice> manager(
             vm[HEARTBEAT_RATE].as<int>(),
             vm[ACKNOWLEDGE_PORT].as<int>(),
             vm[HEARTBEAT_PORT].as<int>()
+        );*/
+
+        deviceManager = std::unique_ptr<O2::Balancer::DeviceManager<O2::InformationNode::InformationDevice>>(
+            new O2::Balancer::DeviceManager<O2::InformationNode::InformationDevice>(
+                vm[HEARTBEAT_RATE].as<int>(),
+                vm[ACKNOWLEDGE_PORT].as<int>(),
+                vm[HEARTBEAT_PORT].as<int>()
+            )
         );
-        manager.run();
+
+      
+        deviceManager->run();
+       // manager.run();
     } catch(O2::Balancer::Exceptions::InitException exception){
         LOG(ERROR) << "Failed to initialize due, error :" << exception.getMessage();
         return EXIT_FAILURE;
