@@ -11,6 +11,7 @@ SET(O2Balancer_INCLUDE_DIRS
     ${CMAKE_CURRENT_BINARY_DIR}/include/
     ${FAIRROOT_INCLUDE_DIR}
     ${Boost_INCLUDE_DIR}
+    ${ZOOKEEPER_INCLUDE_DIR}
 )
 
 INCLUDE_DIRECTORIES(
@@ -32,6 +33,9 @@ SET(
     ./src/Exceptions/InitException.cxx
     ./src/Exceptions/UnimplementedException.cxx
     ./src/DeviceSetting.cxx
+    ./src/ClusterManager.cxx
+    ./src/ClusterNodes.cxx
+    ./src/Utilities.cxx
 )
 
 ADD_LIBRARY(
@@ -48,6 +52,7 @@ TARGET_LINK_LIBRARIES(
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
     ${Boost_THREAD_LIBRARY}
     ${ZeroMQ_LIBRARY}
+    ${ZOOKEEPER_LIBRARIES}
     fairmq_logger
     FairMQ
     Threads::Threads

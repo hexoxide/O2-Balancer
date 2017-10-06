@@ -11,7 +11,7 @@ xterm -geometry 80x25+0+0 -hold -e @InformationNode_BINARY_DIR@/$SAMPLER &
 
 
 FLP="flp"
-FLP+=" --flp-config @CMAKE_SOURCE_DIR@/Config/flp-config.yaml"
+FLP+=" --sample-size 5 --flp-config @CMAKE_SOURCE_DIR@/Config/flp-config.yaml"
 xterm -geometry 80x25+500+0  -e @FLP_BINARY_DIR@/$FLP &
 xterm -geometry 80x25+500+0 -hold -e @FLP_BINARY_DIR@/$FLP &
 xterm -geometry 80x25+500+0  -e @FLP_BINARY_DIR@/$FLP &

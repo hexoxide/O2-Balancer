@@ -7,14 +7,17 @@
 // In applying this license CERN does not waive the privileges and immunities
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
+
 #include "O2/FLP/FLPSettings.h"
 #include <yaml-cpp/yaml.h>
+#include <iostream>
 using namespace O2;
 using namespace O2::FLP;
 
-FLPSettings::FLPSettings(const std::string fileName){
-    YAML::Node config = YAML::LoadFile(fileName);
-
+FLPSettings::FLPSettings(const boost::program_options::variables_map& settings){
+    YAML::Node config = YAML::LoadFile(settings["flp-config"].as<std::string>());
+    this->sampleSize = settings["sample-size"].as<int>();
+    
     this->informationSettings = std::shared_ptr<Balancer::DeviceSetting>( new Balancer::DeviceSetting(
         config["InformationNode"]["Port"].as<int>(),
         config["InformationNode"]["Ip"].as<std::string>()
@@ -33,6 +36,9 @@ FLPSettings::FLPSettings(const std::string fileName){
 
 }
 
+int FLPSettings::getSampleSize() const{
+    return this->sampleSize;
+}
 
 std::shared_ptr<Balancer::DeviceSetting> FLPSettings::getInformationNodeSetting() const{
     return this->informationSettings;

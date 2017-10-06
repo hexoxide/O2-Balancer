@@ -29,7 +29,7 @@ namespace O2{
                 auto settings = SettingsManager::getInstance();
                 //this->device = std::make_unique<T>(args...);
                 device = std::unique_ptr<T>(new T(args...));
-                device->CatchSignals();
+                //device->CatchSignals();
            /*     std::signal(SIGINT,[](int i) -> void{
                     DeviceManager::stop()
                     std::exit(EXIT_FAILURE);
@@ -48,9 +48,11 @@ namespace O2{
             void run(){
                 
                 device->ChangeState(T::RUN);
-                //device->WaitForEndOfState(T::RUN);
+                device->WaitForEndOfState(T::RUN);
                 
-                while(!device->Terminated()){}
+                //while(!device->Terminated()){
+                //    std::cout << "Test\n";
+                //}
                 if (!device->CheckCurrentState(T::EXITING)){
 
                     device->ChangeState(T::RESET_TASK);

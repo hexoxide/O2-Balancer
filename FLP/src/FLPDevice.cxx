@@ -37,17 +37,20 @@ FLPDevice::FLPDevice(const FLPSettings& settings) : Balancer::AbstractDevice("fl
   this->mNumEPNs = settings.getEPNSettings().size();
   this->addConnection(HeartbeatConnection(settings, this));
   this->addConnection(EPNConnection(settings,this));
+  this->mEventSize = settings.getSampleSize();
+  
 }
 
         
 void FLPDevice::InitTask(){
-    this->mEventSize = 1;
-
+ 
 }
 
 
 
 bool FLPDevice::ConditionalRun(){
+
+  
   FairMQChannel& dataInChannel = fChannels.at("stf1").at(0);
   std::fstream fstream("/dev/null",  std::ifstream::binary | std::ios::in);
 

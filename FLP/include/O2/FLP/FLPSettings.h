@@ -13,16 +13,20 @@
 #include <memory>
 #include <vector>
 #include <O2/Balancer/DeviceSetting.h>
+#include <boost/program_options.hpp>
+
 
 namespace O2{
     namespace FLP{
         class FLPSettings{
             std::shared_ptr<Balancer::DeviceSetting> informationSettings;
             std::vector<std::shared_ptr<Balancer::DeviceSetting>> epnSettings;
+            int sampleSize;
         public:
-            FLPSettings(const std::string fileName);
+            FLPSettings(const boost::program_options::variables_map& settings);
             std::shared_ptr<Balancer::DeviceSetting> getInformationNodeSetting() const;
             std::vector<std::shared_ptr<Balancer::DeviceSetting>> getEPNSettings() const;
+            int getSampleSize() const;
         };
     }
 }

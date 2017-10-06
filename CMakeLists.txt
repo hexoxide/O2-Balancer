@@ -8,7 +8,7 @@ ENDIF()
 
 SET(AliceO2_Balancer_MAJOR_VERSION 0)
 SET(AliceO2_Balancer_MINOR_VERSION 2)
-SET(AliceO2_Balancer_PATCH_VERSION 0)
+SET(AliceO2_Balancer_PATCH_VERSION 1)
 
 SET(SIMPATH $ENV{SIMPATH})
 SET(FAIRROOTPATH $ENV{FAIRROOTPATH})
@@ -30,6 +30,9 @@ SET(LINK_DIRECTORIES
 
 FIND_PACKAGE(Doxygen)
 
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMakeModules/")
+FIND_PACKAGE(Zookeeper REQUIRED)
+
 
 LINK_DIRECTORIES( ${LINK_DIRECTORIES})
 FIND_PACKAGE(FairRoot REQUIRED)
@@ -41,15 +44,12 @@ FIND_PACKAGE(Threads REQUIRED)
 
 FIND_PACKAGE(
     Boost 1.59 COMPONENTS 
-    thread 
     system 
     timer 
     program_options 
-    random 
     filesystem 
     chrono 
     exception 
-    regex 
     serialization 
     log 
     log_setup 

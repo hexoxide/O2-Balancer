@@ -37,7 +37,7 @@ InformationDevice::~InformationDevice()
 = default;
 
 void InformationDevice::InitTask(){
-  mMaxEvents = 100;//GetConfig()->GetValue<int>("max-events");
+  mMaxEvents = 0;//GetConfig()->GetValue<int>("max-events");
   mStoreRTTinFile = 100;//GetConfig()->GetValue<int>("store-rtt-in-file");
   mAckChannelName = "ack";//GetConfig()->GetValue<std::string>("ack-chan-name");
   mOutChannelName = "stf1";//GetConfig()->GetValue<std::string>("out-chan-name");

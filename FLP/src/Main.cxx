@@ -12,7 +12,7 @@
 #include <O2/Balancer/DeviceManager.h>
 #include <O2/Balancer/ProgramOptions.h>
 #include "O2/FLP/FLPSettings.h"
-
+#include <O2/Balancer/ClusterManager.h>
 namespace po = boost::program_options;
 
 
@@ -22,21 +22,29 @@ int main(int argc, char** argv){
     po::options_description options("FLP options");
     constexpr char CONFIG_FILE[] = "flp-config";
     options.add_options()
+    ("sample-size",  po::value<int>()->default_value(1))
     (CONFIG_FILE, po::value<std::string>()->default_value("./flp.yaml"), "Configuration file");
     
     auto vm = Balancer::AddO2Options(options, argc, argv);
 
+
+    //O2::Balancer::ClusterManager manager("localhost",2181);
+    //manager.registerCluster("FLP");
+    
+// vm[CONFIG_FILE].as<std::string>()
     //Load the settings
-    FLPSettings settings( vm[CONFIG_FILE].as<std::string>());
+    FLPSettings settings(vm);
     try{
         Balancer::DeviceManager<FLPDevice> manager(
             settings
         );
-        manager.run();
+        manager.run();    
     } catch (O2::Balancer::Exceptions::AbstractException exception){
         LOG(ERROR) << exception.getMessage();
+       // manager.close();
         return EXIT_FAILURE;
     }
+    return EXIT_SUCCESS;
 
 }
 

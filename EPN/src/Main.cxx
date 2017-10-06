@@ -11,6 +11,7 @@
 #include "O2/EPN/EPNSettings.h"
 #include <O2/Balancer/DeviceManager.h>
 #include <O2/Balancer/ProgramOptions.h>
+#include <O2/Balancer/ClusterManager.h>
 
 namespace po = boost::program_options;
 
@@ -21,6 +22,8 @@ int main(int argc, char** argv){
     po::options_description options("EPN options");
     constexpr char CONFIG_FILE[] = "epn-config";
 
+    
+
 
     options.add_options()
     (CONFIG_FILE, po::value<std::string>()->default_value("./epn.yaml"), "Configuration file")
@@ -29,8 +32,12 @@ int main(int argc, char** argv){
 
     EPNSettings settings(vm);
 
+  //  O2::Balancer::ClusterManager manager("localhost",2181);
+   // manager.registerCluster("EPN");
     Balancer::DeviceManager<EPNDevice> device(settings);
     device.run();
+
+   // manager.close();
     return EXIT_SUCCESS;
 }
 
