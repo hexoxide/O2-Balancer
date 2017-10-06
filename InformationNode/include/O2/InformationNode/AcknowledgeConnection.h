@@ -16,7 +16,7 @@ namespace O2{
     namespace InformationNode{
         class AcknowledgeConnection : public Balancer::Connection{
         public:
-            AcknowledgeConnection(int port, Balancer::AbstractDevice* device);
+            AcknowledgeConnection(std::string ip, int port, Balancer::AbstractDevice* device);
         };
     }
 

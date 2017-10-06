@@ -6,12 +6,12 @@ cfg="@CMAKE_SOURCE_DIR@/Config/epnflpconfig.json"
 export O2Transport="zeromq"
 
 SAMPLER="InformationNode"
-SAMPLER+=" --heartbeat 1000"
+SAMPLER+=" --ip 127.0.0.1 --heartbeat 1000"
 xterm -geometry 80x25+0+0 -hold -e @InformationNode_BINARY_DIR@/$SAMPLER &
 
 
 FLP="flp"
-FLP+=" --sample-size 5 --flp-config @CMAKE_SOURCE_DIR@/Config/flp-config.yaml"
+FLP+=" --ip 127.0.0.1 --sample-size 5 --flp-config @CMAKE_SOURCE_DIR@/Config/flp-config.yaml"
 xterm -geometry 80x25+500+0  -e @FLP_BINARY_DIR@/$FLP &
 xterm -geometry 80x25+500+0 -hold -e @FLP_BINARY_DIR@/$FLP &
 xterm -geometry 80x25+500+0  -e @FLP_BINARY_DIR@/$FLP &
@@ -19,16 +19,16 @@ xterm -geometry 80x25+500+0  -e @FLP_BINARY_DIR@/$FLP &
 EPNCFG=" --epn-config @CMAKE_SOURCE_DIR@/Config/epn-config.yaml"
 
 EPN="epn"
-EPN+=" --flp-port 5561"
+EPN+=" --ip 127.0.0.1 --flp-port 5561"
 EPN+=$EPNCFG
 xterm -geometry 80x25+1000+0  -e @EPN_BINARY_DIR@/$EPN &
 
 EPN1="epn"
 EPN1+=$EPNCFG
-EPN1+=" --flp-port 5562"
+EPN1+=" --ip 127.0.0.1 --flp-port 5562"
 xterm -geometry 80x25+1000+0 -hold -e @EPN_BINARY_DIR@/$EPN1 &
 
 EPN2="epn"
 EPN2+=$EPNCFG
-EPN2+=" --flp-port 5563"
+EPN2+=" --ip 127.0.0.1 --flp-port 5563"
 xterm -geometry 80x25+1000+0 -hold -e @EPN_BINARY_DIR@/$EPN2 &

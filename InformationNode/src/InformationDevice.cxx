@@ -25,11 +25,11 @@
 using namespace O2;
 using namespace O2::InformationNode;
 
-InformationDevice::InformationDevice(int heartbeat, int acknowledgePort, int heartbeatPort) : Balancer::AbstractDevice("Information"){
+InformationDevice::InformationDevice(std::string ip, int heartbeat, int acknowledgePort, int heartbeatPort) : Balancer::AbstractDevice("Information"){
   
   this->heartbeat = heartbeat;
-  this->addConnection(HeartbeatConnection(heartbeatPort, this));
-  this->addConnection(AcknowledgeConnection(acknowledgePort,this));
+  this->addConnection(HeartbeatConnection(ip,heartbeatPort, this));
+  this->addConnection(AcknowledgeConnection(ip,acknowledgePort,this));
 
 }
 

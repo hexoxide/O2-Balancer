@@ -45,6 +45,7 @@ int main(int argc, char** argv){
     try{
         deviceManager = std::unique_ptr<O2::Balancer::DeviceManager<O2::InformationNode::InformationDevice>>(
             new O2::Balancer::DeviceManager<O2::InformationNode::InformationDevice>(
+                vm["ip"].as<std::string>(),
                 vm[HEARTBEAT_RATE].as<int>(),
                 vm[ACKNOWLEDGE_PORT].as<int>(),
                 vm[HEARTBEAT_PORT].as<int>()

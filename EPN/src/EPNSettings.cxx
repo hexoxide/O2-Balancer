@@ -15,7 +15,7 @@ using namespace O2::EPN;
 
 EPNSettings::EPNSettings(const boost::program_options::variables_map& settings){
     YAML::Node config = YAML::LoadFile(settings["epn-config"].as<std::string>());
-    
+    this->ip = settings["ip"].as<std::string>();
     this->informationSettings = std::shared_ptr<Balancer::DeviceSetting>( new Balancer::DeviceSetting(
         config["InformationNode"]["Port"].as<int>(),
         config["InformationNode"]["Ip"].as<std::string>()
@@ -34,6 +34,10 @@ EPNSettings::EPNSettings(const boost::program_options::variables_map& settings){
 
 std::shared_ptr<Balancer::DeviceSetting> EPNSettings::getInformationNodeSetting() const{
     return this->informationSettings;
+}
+
+std::string EPNSettings::getIpAddress() const{
+    return this->ip;
 }
 
 int EPNSettings::FLPConnectionPort() const{

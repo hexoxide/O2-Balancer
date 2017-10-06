@@ -13,7 +13,7 @@
 using namespace O2;
 using namespace O2::InformationNode;
 
-HeartbeatConnection::HeartbeatConnection(int port, Balancer::AbstractDevice* device) : Balancer::Connection("stf1",device){
+HeartbeatConnection::HeartbeatConnection(std::string ip, int port, Balancer::AbstractDevice* device) : Balancer::Connection("stf1",device){
     this->addChannel(
         Balancer::ConnectionType::Publish,
         Balancer::ConnectionMethod::Bind,

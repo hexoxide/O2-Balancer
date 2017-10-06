@@ -32,7 +32,7 @@ namespace O2{
     class InformationDevice : public Balancer::AbstractDevice{
       public:
         /// Default constructor
-        InformationDevice(int heartbeat, int acknowledgePort, int heartbeatPort);
+        InformationDevice(std::string ip, int heartbeat, int acknowledgePort, int heartbeatPort);
     
         /// Default destructor
         ~InformationDevice() override;

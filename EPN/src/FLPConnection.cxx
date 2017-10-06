@@ -16,7 +16,7 @@ FLPConnection::FLPConnection(Balancer::AbstractDevice* device, const EPNSettings
     this->addChannel(
         Balancer::ConnectionType::Pull,
         Balancer::ConnectionMethod::Bind,
-        "0.0.0.0",
+        settings.getIpAddress(),
         settings.FLPConnectionPort()
     );
 

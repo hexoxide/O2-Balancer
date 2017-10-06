@@ -14,11 +14,11 @@
 using namespace O2;
 using namespace O2::InformationNode;
 
-AcknowledgeConnection::AcknowledgeConnection(int port, Balancer::AbstractDevice* device) : Balancer::Connection("ack",device){
+AcknowledgeConnection::AcknowledgeConnection(std::string ip, int port, Balancer::AbstractDevice* device) : Balancer::Connection("ack",device){
     this->addChannel(
         Balancer::ConnectionType::Pull,
         Balancer::ConnectionMethod::Bind,
-        "0.0.0.0",
+       ip,
         port
     );
 

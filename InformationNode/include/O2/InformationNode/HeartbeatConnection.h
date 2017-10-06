@@ -15,7 +15,7 @@ namespace O2{
     namespace InformationNode{
         class HeartbeatConnection : public Balancer::Connection{
         public:
-            HeartbeatConnection(int port, Balancer::AbstractDevice* device);
+            HeartbeatConnection(std::string ip,int port, Balancer::AbstractDevice* device);
         };
     }
 

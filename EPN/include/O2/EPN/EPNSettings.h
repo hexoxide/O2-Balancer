@@ -22,12 +22,13 @@ namespace O2{
             std::shared_ptr<Balancer::DeviceSetting> informationSettings;
             int flpConnectionPort;
             int outputConnectionPort;
-
+            std::string ip;
         public:
             EPNSettings(const boost::program_options::variables_map& settings);
             std::shared_ptr<Balancer::DeviceSetting> getInformationNodeSetting() const;
             int FLPConnectionPort() const;
             int OutputConnectionPort() const;
+            std::string getIpAddress() const;
         };
     }
 }

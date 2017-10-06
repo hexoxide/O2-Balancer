@@ -22,10 +22,13 @@ namespace O2{
             std::shared_ptr<Balancer::DeviceSetting> informationSettings;
             std::vector<std::shared_ptr<Balancer::DeviceSetting>> epnSettings;
             int sampleSize;
+            std::string ip;
         public:
+
             FLPSettings(const boost::program_options::variables_map& settings);
             std::shared_ptr<Balancer::DeviceSetting> getInformationNodeSetting() const;
             std::vector<std::shared_ptr<Balancer::DeviceSetting>> getEPNSettings() const;
+            std::string getIpAddress() const;
             int getSampleSize() const;
         };
     }
