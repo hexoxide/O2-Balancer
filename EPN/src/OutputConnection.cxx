@@ -15,7 +15,7 @@ OutputConnection::OutputConnection(Balancer::AbstractDevice* device, const EPNSe
     this->addChannel(
         Balancer::ConnectionType::Publish,
         Balancer::ConnectionMethod::Bind,
-        "127.0.0.1",
+        "0.0.0.0",
         settings.OutputConnectionPort()
     );
 }

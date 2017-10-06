@@ -18,7 +18,7 @@ AcknowledgeConnection::AcknowledgeConnection(int port, Balancer::AbstractDevice*
     this->addChannel(
         Balancer::ConnectionType::Pull,
         Balancer::ConnectionMethod::Bind,
-        "127.0.0.1",
+        "0.0.0.0",
         port
     );
 

@@ -17,7 +17,7 @@ HeartbeatConnection::HeartbeatConnection(int port, Balancer::AbstractDevice* dev
     this->addChannel(
         Balancer::ConnectionType::Publish,
         Balancer::ConnectionMethod::Bind,
-        "127.0.0.1",
+        "0.0.0.0",
         port
     );
 
