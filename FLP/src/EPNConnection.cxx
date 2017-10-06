@@ -23,7 +23,7 @@ EPNConnection::EPNConnection(const FLPSettings& settings, Balancer::AbstractDevi
         );
     }
 
-    this->updateAllSendBuffer(1);
+    this->updateAllSendBuffer(100000);
     this->updateAllRateLogging(1);
     
 }

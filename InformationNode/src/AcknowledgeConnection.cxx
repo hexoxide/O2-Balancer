@@ -21,4 +21,6 @@ AcknowledgeConnection::AcknowledgeConnection(int port, Balancer::AbstractDevice*
         "127.0.0.1",
         port
     );
+
+    this->updateAllReceiveBuffer(100000);
 }

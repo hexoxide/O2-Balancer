@@ -22,7 +22,7 @@ HeartbeatConnection::HeartbeatConnection(const FLPSettings& settings, Balancer::
     );
 
     this->updateAllRateLogging(1);
-    this->updateAllReceiveBuffer(10);
+    this->updateAllReceiveBuffer(100000);
 
 
 

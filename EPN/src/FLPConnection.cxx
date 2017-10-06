@@ -20,6 +20,6 @@ FLPConnection::FLPConnection(Balancer::AbstractDevice* device, const EPNSettings
         settings.FLPConnectionPort()
     );
 
-    this->updateAllReceiveBuffer(10);
+    this->updateAllReceiveBuffer(100000);
 
 }

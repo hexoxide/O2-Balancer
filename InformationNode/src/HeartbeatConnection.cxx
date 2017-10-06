@@ -20,4 +20,7 @@ HeartbeatConnection::HeartbeatConnection(int port, Balancer::AbstractDevice* dev
         "127.0.0.1",
         port
     );
+
+    this->updateAllReceiveBuffer(100000);
+    this->updateAllSendBuffer(100000);
 }
