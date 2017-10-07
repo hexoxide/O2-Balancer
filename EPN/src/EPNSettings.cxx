@@ -20,7 +20,7 @@ EPNSettings::EPNSettings(const boost::program_options::variables_map& settings){
         config["InformationNode"]["Port"].as<int>(),
         config["InformationNode"]["Ip"].as<std::string>()
     ));
-
+    this->amountOfFLPs = settings["amount-flps"].as<int>();
     this->flpConnectionPort = config["FLPConnectionPort"].as<int>();
     this->outputConnectionPort = config["OutputPort"].as<int>();
 
@@ -47,3 +47,6 @@ int EPNSettings::OutputConnectionPort() const{
     return this->outputConnectionPort;    
 }
 
+int EPNSettings::getAmountOfFLPs() const{
+    return this->amountOfFLPs;
+}

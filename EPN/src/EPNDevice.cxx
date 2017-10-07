@@ -29,12 +29,12 @@ EPNDevice::EPNDevice(const EPNSettings& settings) : Balancer::AbstractDevice("EP
   this->addConnection(FLPConnection(this,settings));
   this->addConnection(AcknowledgeConnection(this,settings));
   this->addConnection(OutputConnection(this,settings));
-
+  this->mNumFLPs = settings.getAmountOfFLPs();
 }
 
         
 void EPNDevice::InitTask(){
-    mNumFLPs = 3;// GetConfig()->GetValue<int>("num-flps");
+   // mNumFLPs = 2;// GetConfig()->GetValue<int>("num-flps");
     mBufferTimeoutInMs = 10;//GetConfig()->GetValue<int>("buffer-timeout");
     mTestMode = 1;//GetConfig()->GetValue<int>("test-mode");
     mInChannelName = "stf2";// GetConfig()->GetValue<std::string>("in-chan-name");

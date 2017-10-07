@@ -27,6 +27,7 @@ int main(int argc, char** argv){
 
     options.add_options()
     (CONFIG_FILE, po::value<std::string>()->default_value("./epn.yaml"), "Configuration file")
+    ("amount-flps", po::value<int>()->default_value(2))
     ("flp-port", po::value<int>()->default_value(0), "Port that the FLPs can use to connect");
     auto vm = Balancer::AddO2Options(options, argc, argv);
 

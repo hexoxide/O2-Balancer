@@ -18,7 +18,7 @@ AcknowledgeConnection::AcknowledgeConnection(std::string ip, int port, Balancer:
     this->addChannel(
         Balancer::ConnectionType::Pull,
         Balancer::ConnectionMethod::Bind,
-       ip,
+        ip,
         port
     );
 
