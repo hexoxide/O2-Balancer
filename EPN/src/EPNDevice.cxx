@@ -1,28 +1,45 @@
-#include "AliceO2/EPNDevice.h"
-#include<memory>
+// Copyright CERN and copyright holders of ALICE O2. This software is
+// distributed under the terms of the GNU General Public License v3 (GPL
+// Version 3), copied verbatim in the file "COPYING".
+//
+// See http://alice-o2.web.cern.ch/license for full licensing information.
+//
+// In applying this license CERN does not waive the privileges and immunities
+// granted to it by virtue of its status as an Intergovernmental Organization
+// or submit itself to any jurisdiction.
+#include "O2/EPN/EPNDevice.h"
+#include <memory>
 #include <fstream>
 #include <FairMQProgOptions.h>
 #include <future>
 #include <queue>
-using namespace AliceO2::EPN;
+#include "O2/EPN/FLPConnection.h"
+#include "O2/EPN/AcknowledgeConnection.h"
+#include "O2/EPN/OutputConnection.h"
+
+using namespace O2::EPN;
 
 struct f2eHeader {
     uint16_t timeFrameId;
     int      flpIndex;
 };
 
-EPNDevice::EPNDevice(){
-
+EPNDevice::EPNDevice(const EPNSettings& settings) : Balancer::AbstractDevice("EPN"){
+  //Setting up the connections, which are stored in each individual class
+  this->addConnection(FLPConnection(this,settings));
+  this->addConnection(AcknowledgeConnection(this,settings));
+  this->addConnection(OutputConnection(this,settings));
+  this->mNumFLPs = settings.getAmountOfFLPs();
 }
 
         
 void EPNDevice::InitTask(){
-    mNumFLPs = GetConfig()->GetValue<int>("num-flps");
-    mBufferTimeoutInMs = GetConfig()->GetValue<int>("buffer-timeout");
-    mTestMode = GetConfig()->GetValue<int>("test-mode");
-    mInChannelName = GetConfig()->GetValue<std::string>("in-chan-name");
-    mOutChannelName = GetConfig()->GetValue<std::string>("out-chan-name");
-    mAckChannelName = GetConfig()->GetValue<std::string>("ack-chan-name");
+   // mNumFLPs = 2;// GetConfig()->GetValue<int>("num-flps");
+  
+    mTestMode = 1;//GetConfig()->GetValue<int>("test-mode");
+    mInChannelName = "stf2";// GetConfig()->GetValue<std::string>("in-chan-name");
+    mOutChannelName = "tf";//GetConfig()->GetValue<std::string>("out-chan-name");
+    mAckChannelName = "ack";//GetConfig()->GetValue<std::string>("ack-chan-name");
 }
 
 
@@ -45,7 +62,7 @@ void EPNDevice::DiscardIncompleteTimeframes(){
 void EPNDevice::Run(){
     uint16_t id = 0; // holds the timeframe id of the currently arrived sub-timeframe.
     FairMQChannel& ackOutChannel = fChannels.at(mAckChannelName).at(0);
-  
+    
     while (CheckCurrentState(RUNNING)) {
       FairMQParts parts;
   

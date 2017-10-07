@@ -1,21 +1,71 @@
+// Copyright CERN and copyright holders of ALICE O2. This software is
+// distributed under the terms of the GNU General Public License v3 (GPL
+// Version 3), copied verbatim in the file "COPYING".
+//
+// See http://alice-o2.web.cern.ch/license for full licensing information.
+//
+// In applying this license CERN does not waive the privileges and immunities
+// granted to it by virtue of its status as an Intergovernmental Organization
+// or submit itself to any jurisdiction.
 
-#include <runFairMQDevice.h>
-#include "AliceO2/InformationDevice.h"
+/*
+* Main.cxx
+* @author H.J.M van der Heijden
+* @since 25-08-2017
+*/
+#include "O2/InformationNode/InformationDevice.h"
+#include <O2/Balancer/Devices/DeviceManager.h>
+#include <O2/Balancer/Utilities/Utilities.h>
+#include <O2/Balancer/Exceptions/InitException.h>
+std::unique_ptr< O2::Balancer::DeviceManager<O2::InformationNode::InformationDevice>> deviceManager;
 
-#include <string>
+namespace po = boost::program_options;
 
-namespace bpo = boost::program_options;
+int main(int argc, char** argv){
+    constexpr char ACKNOWLEDGE_PORT[] = "acknowledge-port";
+    constexpr char HEARTBEAT_RATE[] = "heartbeat";
+    constexpr char HEARTBEAT_PORT[] = "heartbeat-port";
 
-void addCustomOptions(bpo::options_description& options)
-{
-  options.add_options()
-    ("heartbeat", bpo::value<int>()->default_value(20), "Heartbeat in milliseconds")
-    ("max-events", bpo::value<int>()->default_value(0), "Maximum number of events to send (0 - unlimited)")
-    ("store-rtt-in-file", bpo::value<int>()->default_value(0), "Store round trip time measurements in a file (1/0)")
-    ("ack-chan-name", bpo::value<std::string>()->default_value("ack"), "Name of the acknowledgement channel")
-    ("out-chan-name", bpo::value<std::string>()->default_value("stf1"), "Name of the output channel (sub-time frames)");
-}
+   // O2::Balancer::ClusterManager manager("localhost",2181);
 
-FairMQDevice* getDevice(const FairMQProgOptions& config){
-    return new AliceO2::InformationDevice();
+    //manager.registerCluster("InformationNode");
+
+
+
+    po::options_description options("Information node options");
+    options.add_options()
+    (HEARTBEAT_RATE, po::value<int>()->default_value(1000000), "Heartbeat frequency")
+    (ACKNOWLEDGE_PORT, po::value<int>()->default_value(5990), "Port that listens for acknowledge")
+    (HEARTBEAT_PORT, po::value<int>()->default_value(5550), "Port that publishes the heartbeat");
+    auto vm = O2::Balancer::AddO2Options(options, argc, argv);
+    
+
+
+    try{
+        deviceManager = std::unique_ptr<O2::Balancer::DeviceManager<O2::InformationNode::InformationDevice>>(
+            new O2::Balancer::DeviceManager<O2::InformationNode::InformationDevice>(
+                vm["ip"].as<std::string>(),
+                vm[HEARTBEAT_RATE].as<int>(),
+                vm[ACKNOWLEDGE_PORT].as<int>(),
+                vm[HEARTBEAT_PORT].as<int>()
+            )
+        );
+
+      
+        deviceManager->run();
+        
+    } catch(O2::Balancer::Exceptions::InitException exception){
+        LOG(ERROR) << "Failed to initialize due, error :" << exception.getMessage();
+      //  manager.close();
+        return EXIT_FAILURE;
+    } catch (O2::Balancer::Exceptions::AbstractException exception){
+        LOG(ERROR) << exception.getMessage();
+    //    manager.close();
+        return EXIT_FAILURE;
+    } catch(std::exception ex){
+        LOG(ERROR) << "Unkown exception occured";
+        return EXIT_FAILURE;
+    }
+  //  manager.close();
+    return EXIT_SUCCESS;
 }

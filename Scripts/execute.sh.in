@@ -1,63 +1,34 @@
 #!/usr/bin/env bash
 
+
 cfg="@CMAKE_SOURCE_DIR@/Config/epnflpconfig.json"
 
+export O2Transport="zeromq"
+
 SAMPLER="InformationNode"
-SAMPLER+=" --id flpSyncSampler"
-SAMPLER+=" --mq-config $cfg"
-SAMPLER+=" --heartbeat 20"
+SAMPLER+=" --ip 127.0.0.1 --heartbeat 1000"
 xterm -geometry 80x25+0+0 -hold -e @InformationNode_BINARY_DIR@/$SAMPLER &
 
 
-FLP0="flp"
-FLP0+=" --id flpSender1"
-FLP0+=" --mq-config $cfg"
-#FLP0+=" --out-chan-name zero"
-FLP0+=" --flp-index 0"
-FLP0+=" --event-size 1"
-FLP0+=" --num-epns 3"
-FLP0+=" --test-mode 1"
-FLP0+=" --send-offset 0"
-#xterm -geometry 80x25+500+0 -e @FLP_BINARY_DIR@/$FLP0 &
+FLP="flp"
+FLP+=" --ip 127.0.0.1 --sample-size 5 --flp-config @CMAKE_SOURCE_DIR@/Config/flp-config.yaml"
+xterm -geometry 80x25+500+0  -e @FLP_BINARY_DIR@/$FLP &
+xterm -geometry 80x25+500+0 -hold -e @FLP_BINARY_DIR@/$FLP &
+xterm -geometry 80x25+500+0  -e @FLP_BINARY_DIR@/$FLP &
 
-FLP1="flp"
-FLP1+=" --id flpSender2"
-FLP1+=" --mq-config $cfg"
-FLP1+=" --flp-index 1"
-FLP1+=" --event-size 1"
-FLP1+=" --num-epns 3"
-FLP1+=" --test-mode 1"
-#FLP1+=" --out-chan-name first"
-FLP1+=" --send-offset 0"
-#xterm -geometry 80x25+500+350 -e @FLP_BINARY_DIR@/$FLP1 &
+EPNCFG=" --epn-config @CMAKE_SOURCE_DIR@/Config/epn-config.yaml"
 
-FLP2="flp"
-FLP2+=" --id flpSender3"
-FLP2+=" --mq-config $cfg"
-FLP2+=" --flp-index 2"
-FLP2+=" --event-size 1"
-FLP2+=" --num-epns 3"
-FLP2+=" --test-mode 1"
-FLP2+=" --send-offset 0"
-xterm -geometry 80x25+500+700  -e @FLP_BINARY_DIR@/$FLP2 &
-
-EPN0="epn"
-EPN0+=" --id epnReceiver1"
-EPN0+=" --mq-config $cfg"
-EPN0+=" --num-flps 3"
-EPN0+=" --test-mode 1"
-xterm -geometry 80x25+1000+0 -e @EPN_BINARY_DIR@/$EPN0 &
+EPN="epn"
+EPN+="  --amount-flps 3 --ip 127.0.0.1 --flp-port 5561"
+EPN+=$EPNCFG
+xterm -geometry 80x25+1000+0  -e @EPN_BINARY_DIR@/$EPN &
 
 EPN1="epn"
-EPN1+=" --id epnReceiver2"
-EPN1+=" --mq-config $cfg"
-EPN1+=" --num-flps 3"
-EPN1+=" --test-mode 1"
-xterm -geometry 80x25+1000+350 -hold -e @EPN_BINARY_DIR@/$EPN1 &
+EPN1+=$EPNCFG
+EPN1+="  --amount-flps 3 --ip 127.0.0.1 --flp-port 5562"
+xterm -geometry 80x25+1000+0 -hold -e @EPN_BINARY_DIR@/$EPN1 &
 
 EPN2="epn"
-EPN2+=" --id epnReceiver3"
-EPN2+=" --mq-config $cfg"
-EPN2+=" --num-flps 3"
-EPN2+=" --test-mode 1"
-xterm -geometry 80x25+1000+700  -e @EPN_BINARY_DIR@/$EPN2 &
+EPN2+=$EPNCFG
+EPN2+="  --amount-flps 3 --ip 127.0.0.1 --flp-port 5563"
+xterm -geometry 80x25+1000+0 -hold -e @EPN_BINARY_DIR@/$EPN2 &

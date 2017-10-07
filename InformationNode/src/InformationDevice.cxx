@@ -8,94 +8,71 @@
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
 
-/**
- * FLPSyncSampler.cpp
- *
- * @since 2013-04-23
- * @author D. Klein, A. Rybalchenko
- */
-
+/*
+* InformationDevice.cxx
+* @author H.J.M van der Heijden
+* @since 25-08-2017
+*/
 #include <fstream>
 #include <ctime>
 
 #include <FairMQLogger.h>
 #include <FairMQProgOptions.h>
-#include "AliceO2/InformationDevice.h"
+#include "O2/InformationNode/InformationDevice.h"
+#include "O2/InformationNode/AcknowledgeConnection.h"
+#include "O2/InformationNode/HeartbeatConnection.h"
 
-using namespace AliceO2;
+using namespace O2;
+using namespace O2::InformationNode;
 
-InformationDevice::InformationDevice()
-  : mTimeframeRTT()
-  , mMaxEvents(0)
-  , mStoreRTTinFile(0)
-  , mEventCounter(0)
-  , mTimeFrameId(0)
-  , heartbeat(0)
-  , mAckListener()
-  , mLeaving(false)
-  , mAckChannelName()
-  , mOutChannelName()
-{
+InformationDevice::InformationDevice(std::string ip, int heartbeat, int acknowledgePort, int heartbeatPort) : Balancer::AbstractDevice("Information"){
+  this->timeFrameId = 0;
+  this->heartbeat = heartbeat;
+  this->addConnection(HeartbeatConnection(ip,heartbeatPort, this));
+  this->addConnection(AcknowledgeConnection(ip,acknowledgePort,this));
+
 }
 
 InformationDevice::~InformationDevice()
 = default;
 
 void InformationDevice::InitTask(){
-  mMaxEvents = GetConfig()->GetValue<int>("max-events");
-  heartbeat = GetConfig()->GetValue<int>("heartbeat");
-  mStoreRTTinFile = GetConfig()->GetValue<int>("store-rtt-in-file");
-  mAckChannelName = GetConfig()->GetValue<std::string>("ack-chan-name");
-  mOutChannelName = GetConfig()->GetValue<std::string>("out-chan-name");
+  mAckChannelName = "ack";
+  mOutChannelName = "stf1";
 }
 
 void InformationDevice::PreRun(){
     mLeaving = false;
     mAckListener = std::thread(&InformationDevice::ListenForAcknowledgement, this);
-}
+    
+  }
 
 bool InformationDevice::ConditionalRun(){
-  FairMQMessagePtr msg(NewSimpleMessage(mTimeFrameId));
+  FairMQMessagePtr msg(NewSimpleMessage(timeFrameId));
 
   if (fChannels.at(mOutChannelName).at(0).Send(msg) >= 0) {
-    mTimeframeRTT[mTimeFrameId].start = std::chrono::steady_clock::now();
+    mTimeframeRTT[timeFrameId].start = std::chrono::steady_clock::now();
 
-    if (++mTimeFrameId == UINT16_MAX - 1) {
-      mTimeFrameId = 0;
-    }
+    this->timeFrameId = (timeFrameId == UINT16_MAX - 1)? 0 : timeFrameId + 1;
+  } else {
+    LOG(ERROR) << "Could not send :(";
   }
 
   std::this_thread::sleep_for(std::chrono::milliseconds(heartbeat));
-
-  if (mMaxEvents > 0 && mTimeFrameId >= mMaxEvents) {
-    LOG(INFO) << "Reached configured maximum number of events (" << mMaxEvents << "). Exiting Run().";
-    return false;
-  }
 
   return true;
 }
 
 void InformationDevice::PostRun(){
+
     mLeaving = true;
     mAckListener.join();
 }
 
 void InformationDevice::ListenForAcknowledgement(){
+  
   uint16_t id = 0;
 
-  std::ofstream ofsFrames;
-  std::ofstream ofsTimes;
-
-  // store round trip time measurements in a file
-  if (mStoreRTTinFile > 0) {
-    std::time_t t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-    std::tm utc = *gmtime(&t);
-    std::stringstream s;
-    s << utc.tm_year + 1900 << "-" << utc.tm_mon + 1 << "-" << utc.tm_mday << "-" << utc.tm_hour << "-" << utc.tm_min << "-" << utc.tm_sec;
-    std::string name = s.str();
-    ofsFrames.open(name + "-frames.log");
-    ofsTimes.open(name + "-times.log");
-  }
 
   while (!mLeaving) {
     FairMQMessagePtr idMsg(NewMessage());
@@ -106,19 +83,11 @@ void InformationDevice::ListenForAcknowledgement(){
       // store values in a file
       auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(mTimeframeRTT.at(id).end - mTimeframeRTT.at(id).start);
 
-      if (mStoreRTTinFile > 0) {
-        ofsFrames << id << "\n";
-        ofsTimes  << elapsed.count() << "\n";
-      }
+      
 
       LOG(INFO) << "Timeframe #" << id << " acknowledged after " << elapsed.count() << " μs.";
     }
   }
 
-  // store round trip time measurements in a file
-  if (mStoreRTTinFile > 0) {
-    ofsFrames.close();
-    ofsTimes.close();
-  }
   LOG(INFO) << "Exiting Ack listener";
 }
