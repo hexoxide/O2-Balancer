@@ -1,4 +1,4 @@
-#include "O2/Balancer/DeviceSetting.h"
+#include "O2/Balancer/Utilities/DeviceSetting.h"
 
 using namespace O2::Balancer;
 

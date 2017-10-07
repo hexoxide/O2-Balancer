@@ -1,4 +1,4 @@
-#include "O2/Balancer/ClusterNodes.h"
+#include "O2/Balancer/Remote/ClusterNodes.h"
 
 using namespace O2::Balancer;
 

@@ -14,10 +14,9 @@
 * @since 25-08-2017
 */
 #include "O2/InformationNode/InformationDevice.h"
-#include <O2/Balancer/DeviceManager.h>
-#include <O2/Balancer/ProgramOptions.h>
-#include <O2/Balancer/ClusterManager.h>
-#include <csignal>
+#include <O2/Balancer/Devices/DeviceManager.h>
+#include <O2/Balancer/Utilities/Utilities.h>
+#include <O2/Balancer/Exceptions/InitException.h>
 std::unique_ptr< O2::Balancer::DeviceManager<O2::InformationNode::InformationDevice>> deviceManager;
 
 namespace po = boost::program_options;

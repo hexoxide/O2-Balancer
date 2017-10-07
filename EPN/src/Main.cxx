@@ -8,10 +8,10 @@
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
 #include "O2/EPN/EPNDevice.h"
-#include "O2/EPN/EPNSettings.h"
-#include <O2/Balancer/DeviceManager.h>
-#include <O2/Balancer/ProgramOptions.h>
-#include <O2/Balancer/ClusterManager.h>
+#include <O2/Balancer/Devices/DeviceManager.h>
+#include <O2/Balancer/Utilities/Utilities.h>
+#include <O2/Balancer/Exceptions/InitException.h>
+
 
 namespace po = boost::program_options;
 
@@ -41,22 +41,3 @@ int main(int argc, char** argv){
    // manager.close();
     return EXIT_SUCCESS;
 }
-
-/*#include <runFairMQDevice.h>
-
-namespace bpo = boost::program_options;
-
-void addCustomOptions(bpo::options_description& options){
-    options.add_options()
-        ("buffer-timeout", bpo::value<int>()->default_value(1000), "Buffer timeout in milliseconds")
-        ("num-flps", bpo::value<int>()->required(), "Number of FLPs")
-        ("test-mode", bpo::value<int>()->default_value(0), "Run in test mode")
-        ("in-chan-name", bpo::value<std::string>()->default_value("stf2"), "Name of the input channel (sub-time frames)")
-        ("out-chan-name", bpo::value<std::string>()->default_value("tf"), "Name of the output channel (time frames)")
-        ("ack-chan-name", bpo::value<std::string>()->default_value("ack"), "Name of the acknowledgement channel");
-}
-
-FairMQDevicePtr getDevice(const FairMQProgOptions&){
-    return new AliceO2::EPN::EPNDevice();
-}
-*/

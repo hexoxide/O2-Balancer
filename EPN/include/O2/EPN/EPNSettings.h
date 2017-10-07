@@ -13,7 +13,7 @@
 #include <string>
 #include <memory>
 #include <vector>
-#include <O2/Balancer/DeviceSetting.h>
+#include <O2/Balancer/Utilities/DeviceSetting.h>
 #include <boost/program_options.hpp>
 
 namespace O2{

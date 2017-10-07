@@ -9,8 +9,8 @@
 // or submit itself to any jurisdiction.
 
 
-#ifndef O2_BALANCER_CONNECTION_H
-#define O2_BALANCER_CONNECTION_H
+#ifndef O2_BALANCER_DEVICES_CONNECTION_H
+#define O2_BALANCER_DEVICES_CONNECTION_H
 
 #include <string>
 #include <vector>

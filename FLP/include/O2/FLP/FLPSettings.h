@@ -12,7 +12,7 @@
 
 #include <memory>
 #include <vector>
-#include <O2/Balancer/DeviceSetting.h>
+#include <O2/Balancer/Utilities/DeviceSetting.h>
 #include <boost/program_options.hpp>
 
 
@@ -24,7 +24,6 @@ namespace O2{
             int sampleSize;
             std::string ip;
         public:
-
             FLPSettings(const boost::program_options::variables_map& settings);
             std::shared_ptr<Balancer::DeviceSetting> getInformationNodeSetting() const;
             std::vector<std::shared_ptr<Balancer::DeviceSetting>> getEPNSettings() const;

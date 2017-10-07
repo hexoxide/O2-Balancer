@@ -33,7 +33,6 @@ struct f2eHeader {
 using namespace O2::FLP;
 
 FLPDevice::FLPDevice(const FLPSettings& settings) : Balancer::AbstractDevice("flpSender"){
-  this->results = std::unique_ptr<O2::Balancer::ResultManager>(new O2::Balancer::ResultManager("flp.csv"));
   this->mNumEPNs = settings.getEPNSettings().size();
   this->addConnection(HeartbeatConnection(settings, this));
   this->addConnection(EPNConnection(settings,this));
@@ -42,9 +41,7 @@ FLPDevice::FLPDevice(const FLPSettings& settings) : Balancer::AbstractDevice("fl
 }
 
         
-void FLPDevice::InitTask(){
- 
-}
+
 
 
 
@@ -54,7 +51,6 @@ bool FLPDevice::ConditionalRun(){
   FairMQChannel& dataInChannel = fChannels.at("stf1").at(0);
   std::fstream fstream("/dev/null",  std::ifstream::binary | std::ios::in);
 
-  //while (CheckCurrentState(RUNNING)) {
     if(fstream.good()){
       
       FairMQParts parts;
@@ -72,7 +68,6 @@ bool FLPDevice::ConditionalRun(){
       ));
       if (dataInChannel.Receive(parts.At(0)) >= 0) {
         uint16_t currentTimeFrameid = *(static_cast<uint16_t*>(parts.At(0)->GetData()));
-        this->results->addTimeFrame(currentTimeFrameid);
         LOG(INFO) << "Current id " << currentTimeFrameid;
         int direction = currentTimeFrameid % mNumEPNs;
         LOG(INFO) << "Direction" << direction;
@@ -90,5 +85,5 @@ bool FLPDevice::ConditionalRun(){
 
 FLPDevice::~FLPDevice(){
   LOG(INFO) << "closing";
-  this->results.reset();
+
 }

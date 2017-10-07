@@ -1,5 +1,5 @@
-#ifndef O2_BALANCER_CLUSTER_NODES_H
-#define O2_BALANCER_CLUSTER_NODES_H
+#ifndef O2_BALANCER_REMOTE_CLUSTER_NODES_H
+#define O2_BALANCER_REMOTE_CLUSTER_NODES_H
 
 #include <vector>
 #include <memory>

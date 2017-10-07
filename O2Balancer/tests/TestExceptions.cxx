@@ -1,5 +1,5 @@
 #define BOOST_TEST_MODULE "Testing Exceptions"
-#define BOOST_TEST_DYN_LINK
+//#define BOOST_TEST_DYN_LINK
 #include <boost/test/included/unit_test.hpp>
 #include <O2/Balancer/Exceptions/InitException.h>
 #include <O2/Balancer/Exceptions/UnimplementedException.h>

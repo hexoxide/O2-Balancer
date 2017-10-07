@@ -18,4 +18,5 @@ OutputConnection::OutputConnection(Balancer::AbstractDevice* device, const EPNSe
         settings.getIpAddress(),
         settings.OutputConnectionPort()
     );
+    this->updateAllSendBuffer(10000);
 }

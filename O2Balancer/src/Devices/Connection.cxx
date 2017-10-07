@@ -1,6 +1,7 @@
-#include "O2/Balancer/Connection.h"
+#include "O2/Balancer/Devices/Connection.h"
+#include "O2/Balancer/Devices/AbstractDevice.h"
 #include "O2/Balancer/Exceptions/UnimplementedException.h"
-#include "O2/Balancer/AbstractDevice.h"
+
 
 using namespace O2::Balancer;
 

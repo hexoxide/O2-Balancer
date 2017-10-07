@@ -7,15 +7,19 @@
 // In applying this license CERN does not waive the privileges and immunities
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
-#ifndef O2_BALANCER_DEVICE_MANAGER_H
-#define O2_BALANCER_DEVICE_MANAGER_H
+#ifndef O2_BALANCER_DEVICES_DEVICE_MANAGER_H
+#define O2_BALANCER_DEVICES_DEVICE_MANAGER_H
 
+#include <chrono>
+#include <thread>
 #include <memory>
-//#include <csignal>
-#include <iostream>
-#include "./SettingsManager.h"
+#include <csignal>
 namespace O2{
     namespace Balancer{
+
+        namespace{
+            bool shouldStop;
+        }
         class AbstractDevice;
 
         template<class T>
@@ -25,16 +29,14 @@ namespace O2{
 
             template<typename... Arguments>
             DeviceManager(Arguments... args){
-                
-                auto settings = SettingsManager::getInstance();
-                //this->device = std::make_unique<T>(args...);
+                shouldStop = false;
+            
                 device = std::unique_ptr<T>(new T(args...));
-                //device->CatchSignals();
-           /*     std::signal(SIGINT,[](int i) -> void{
-                    DeviceManager::stop()
-                    std::exit(EXIT_FAILURE);
-                });*/
-                device->SetTransport(settings->getDefaultTransport());
+                device->CatchSignals();
+                std::signal(SIGINT,[](int sig) -> void{
+                    shouldStop = true;
+                });
+                device->SetTransport(device->getDefaultTransport());
                 device->ChangeState(T::INIT_DEVICE);
                     
                 device->WaitForInitialValidation();
@@ -48,11 +50,19 @@ namespace O2{
             void run(){
                 
                 device->ChangeState(T::RUN);
-                device->WaitForEndOfState(T::RUN);
-                
-                //while(!device->Terminated()){
-                //    std::cout << "Test\n";
-                //}
+
+                while(!shouldStop){
+                   std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                }
+                device->ChangeState(T::STOP);
+
+                device->ChangeState(T::RESET_TASK);
+                device->WaitForEndOfState(T::RESET_TASK);
+
+                device->ChangeState(T::RESET_DEVICE);
+                device->WaitForEndOfState(T::RESET_DEVICE);
+                device->ChangeState(T::END);
+
                 if (!device->CheckCurrentState(T::EXITING)){
 
                     device->ChangeState(T::RESET_TASK);

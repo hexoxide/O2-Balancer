@@ -16,7 +16,7 @@
 #include <thread>
 #include <atomic>
 #include <chrono>
-#include <O2/Balancer/AbstractDevice.h>
+#include <O2/Balancer/Devices/AbstractDevice.h>
 
 namespace O2{
 
@@ -51,11 +51,11 @@ namespace O2{
         void PostRun() override;
     
         std::array<timeframeDuration, UINT16_MAX> mTimeframeRTT; ///< Container for the roundtrip values per timeframe ID
-        int mMaxEvents; ///< Maximum number of events to send (0 - unlimited)
-        int mStoreRTTinFile; ///< Store round trip time measurements in a file.
-        int mEventCounter; ///< Controls the send rate of the timeframe IDs
+     //   int mStoreRTTinFile; ///< Store round trip time measurements in a file.
+       // int mEventCounter; ///< Controls the send rate of the timeframe IDs
         int heartbeat;
-        uint16_t mTimeFrameId;
+        uint16_t timeFrameId;
+        //uint16_t mTimeFrameId;
         std::thread mAckListener;
         std::atomic<bool> mLeaving;
     

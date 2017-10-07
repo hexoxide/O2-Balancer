@@ -10,7 +10,7 @@
 #ifndef O2_INFORMATIONNODE_ACKNOWLEDGE_CONNECTION_H
 #define O2_INFORMATIONNODE_ACKNOWLEDGE_CONNECTION_H
 
-#include <O2/Balancer/Connection.h>
+#include <O2/Balancer/Devices/Connection.h>
 
 namespace O2{
     namespace InformationNode{

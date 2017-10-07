@@ -3,7 +3,7 @@ PROJECT(O2Balancer_tests)
 
 SET(
     O2Balancer_tests_sources
-    ./TestsSettings.cxx
+  #  ./TestsSettings.cxx
     ./TestExceptions.cxx
 )
 

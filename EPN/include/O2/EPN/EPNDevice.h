@@ -10,7 +10,7 @@
 #ifndef O2_EPN_EPNDEVICE_H
 #define O2_EPN_EPNDEVICE_H
 
-#include <O2/Balancer/AbstractDevice.h>
+#include <O2/Balancer/Devices/AbstractDevice.h>
 #include "./EPNSettings.h"
 #include <unordered_map>
 #include <string>

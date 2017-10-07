@@ -11,11 +11,10 @@
 #ifndef O2_FLP_DEVICE_H
 #define O2_FLP_DEVICE_H
 
-#include <O2/Balancer/AbstractDevice.h>
+#include <O2/Balancer/Devices/AbstractDevice.h>
 #include <queue>
 #include <string>
 #include <memory>
-#include <O2/Balancer/ResultManager.h>
 #include "./FLPSettings.h"
 
 namespace O2{
@@ -26,11 +25,9 @@ namespace O2{
             virtual ~FLPDevice();
         
           protected:
-            virtual void InitTask() override;
             virtual bool ConditionalRun() override;
 
           private:
-            std::unique_ptr<Balancer::ResultManager> results;
             std::queue<FairMQParts> mSTFBuffer; ///< Buffer for sub-timeframes
             std::queue<std::chrono::steady_clock::time_point> mArrivalTime; ///< Stores arrival times of sub-timeframes
         

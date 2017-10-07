@@ -23,29 +23,25 @@ IF( CMAKE_COMPILER_IS_GNUCC )
 ENDIF ( CMAKE_COMPILER_IS_GNUCC )
 
 SET(
-    ALICEO2_LIB_SRC
-    ./src/AbstractDevice.cxx
-    ./src/Connection.cxx
-    ./src/ResultManager.cxx
-    ./src/SettingsManager.cxx
-    ./src/ProgramOptions.cxx
+    O2_LIB_SRC
+    ./src/Devices/AbstractDevice.cxx
+    ./src/Devices/Connection.cxx
     ./src/Exceptions/AbstractException.cxx
     ./src/Exceptions/InitException.cxx
     ./src/Exceptions/UnimplementedException.cxx
-    ./src/DeviceSetting.cxx
-    ./src/ClusterManager.cxx
-    ./src/ClusterNodes.cxx
-    ./src/Utilities.cxx
+    ./src/Utilities/DeviceSetting.cxx
+    ./src/Remote/ClusterManager.cxx
+    ./src/Remote/ClusterNodes.cxx
+    ./src/Utilities/Utilities.cxx
 )
 
 ADD_LIBRARY(
     O2Balancer SHARED 
-    ${ALICEO2_LIB_SRC}
+    ${O2_LIB_SRC}
 )
 
 TARGET_LINK_LIBRARIES(
     O2Balancer
-    
     ${Boost_SYSTEM_LIBRARY}
     ${Boost_LOG_LIBRARY}
     ${Boost_LOG_SETUP_LIBRARY}
