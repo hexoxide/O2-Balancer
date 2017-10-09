@@ -30,7 +30,7 @@ int main(int argc, char** argv){
 
     //manager.registerCluster("InformationNode");
 
-
+    reinit_logger(false, "Information", SEVERITY_MINIMUM);
 
     po::options_description options("Information node options");
     options.add_options()

@@ -9,6 +9,12 @@ SET(config_sh_out ${CMAKE_BINARY_DIR}/config.sh)
 
 CONFIGURE_FILE(${config_sh_in} ${config_sh_out})
 
+FILE(COPY ${O2Scripts_SOURCE_DIR}/clean.sh DESTINATION  ${CMAKE_BINARY_DIR})
+EXECUTE_PROCESS(
+    COMMAND /bin/chmod 0700 ${CMAKE_BINARY_DIR}/clean.sh
+)
+
+
 EXECUTE_PROCESS(
     COMMAND /bin/chmod 0700 ${CMAKE_BINARY_DIR}/config.sh
 )

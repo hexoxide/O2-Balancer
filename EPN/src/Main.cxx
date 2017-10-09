@@ -33,6 +33,7 @@ int main(int argc, char** argv){
 
     EPNSettings settings(vm);
 
+    reinit_logger(false, "EPN", SEVERITY_MINIMUM);
   //  O2::Balancer::ClusterManager manager("localhost",2181);
    // manager.registerCluster("EPN");
     Balancer::DeviceManager<EPNDevice> device(settings);
