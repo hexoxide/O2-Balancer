@@ -15,7 +15,7 @@ OutputConnection::OutputConnection(Balancer::AbstractDevice* device, const EPNSe
     this->addChannel(
         Balancer::ConnectionType::Publish,
         Balancer::ConnectionMethod::Bind,
-        settings.getIpAddress(),
+        settings.getIPAddress(),
         settings.OutputConnectionPort()
     );
     this->updateAllSendBuffer(10000);

@@ -10,26 +10,23 @@
 #ifndef O2_EPN_EPNSETTINGS_H
 #define O2_EPN_EPNSETTINGS_H
 
-#include <string>
-#include <memory>
 #include <vector>
 #include <O2/Balancer/Utilities/DeviceSetting.h>
-#include <boost/program_options.hpp>
+#include <O2/Balancer/Utilities/Settings.h>
 
 namespace O2{
     namespace EPN{
-        class EPNSettings{
-            std::shared_ptr<Balancer::DeviceSetting> informationSettings;
+        class EPNSettings : public Balancer::Settings{
             int flpConnectionPort;
             int outputConnectionPort;
             int amountOfFLPs;
-            std::string ip;
-        public:
+        
+        protected:
+            std::string getSettingsFile() const override;
+        public:           
             EPNSettings(const boost::program_options::variables_map& settings);
-            std::shared_ptr<Balancer::DeviceSetting> getInformationNodeSetting() const;
             int FLPConnectionPort() const;
             int OutputConnectionPort() const;
-            std::string getIpAddress() const;
             int getAmountOfFLPs() const;
         };
     }

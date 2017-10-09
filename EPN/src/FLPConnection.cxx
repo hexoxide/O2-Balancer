@@ -13,10 +13,11 @@
 using namespace O2::EPN;
 
 FLPConnection::FLPConnection(Balancer::AbstractDevice* device, const EPNSettings& settings) : Balancer::Connection("stf2", device){
+
     this->addChannel(
         Balancer::ConnectionType::Pull,
         Balancer::ConnectionMethod::Bind,
-        settings.getIpAddress(),
+        settings.getIPAddress(),
         settings.FLPConnectionPort()
     );
 

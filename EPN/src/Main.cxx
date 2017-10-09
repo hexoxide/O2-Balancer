@@ -22,22 +22,26 @@ int main(int argc, char** argv){
     po::options_description options("EPN options");
     constexpr char CONFIG_FILE[] = "epn-config";
 
+    try{
+        options.add_options()
+        (CONFIG_FILE, po::value<std::string>()->default_value("./epn.yaml"), "Configuration file")
+        ("amount-flps", po::value<int>()->default_value(2))
+        ("flp-port", po::value<int>()->default_value(0), "Port that the FLPs can use to connect");
+        auto vm = Balancer::AddO2Options(options, argc, argv);
     
+        EPNSettings settings(vm);
+    
+        reinit_logger(false, "EPN", SEVERITY_MINIMUM);
+      
+        Balancer::DeviceManager<EPNDevice> device(settings);
+        device.run();
+    } catch(const O2::Balancer::Exceptions::AbstractException& ex){
+        LOG(ERROR) << "Could not start due exception " << ex.getMessage();
+        return EXIT_FAILURE;
+    }
 
 
-    options.add_options()
-    (CONFIG_FILE, po::value<std::string>()->default_value("./epn.yaml"), "Configuration file")
-    ("amount-flps", po::value<int>()->default_value(2))
-    ("flp-port", po::value<int>()->default_value(0), "Port that the FLPs can use to connect");
-    auto vm = Balancer::AddO2Options(options, argc, argv);
 
-    EPNSettings settings(vm);
-
-    reinit_logger(false, "EPN", SEVERITY_MINIMUM);
-  //  O2::Balancer::ClusterManager manager("localhost",2181);
-   // manager.registerCluster("EPN");
-    Balancer::DeviceManager<EPNDevice> device(settings);
-    device.run();
 
    // manager.close();
     return EXIT_SUCCESS;

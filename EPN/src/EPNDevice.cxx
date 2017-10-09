@@ -30,6 +30,7 @@ EPNDevice::EPNDevice(const EPNSettings& settings) : Balancer::AbstractDevice("EP
   this->addConnection(AcknowledgeConnection(this,settings));
   this->addConnection(OutputConnection(this,settings));
   this->mNumFLPs = settings.getAmountOfFLPs();
+  mBufferTimeoutInMs = 10;
 }
 
         

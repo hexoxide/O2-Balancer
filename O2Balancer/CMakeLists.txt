@@ -33,6 +33,7 @@ SET(
     ./src/Remote/ClusterManager.cxx
     ./src/Remote/ClusterNodes.cxx
     ./src/Utilities/Utilities.cxx
+    ./src/Utilities/Settings.cxx
 )
 
 ADD_LIBRARY(

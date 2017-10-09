@@ -10,24 +10,23 @@
 #ifndef O2_FLP_FLP_SETTINGS_H
 #define O2_FLP_FLP_SETTINGS_H
 
-#include <memory>
+//#include <memory>
 #include <vector>
+//#include <O2/Balancer/Utilities/DeviceSetting.h>
+//#include <boost/program_options.hpp>
 #include <O2/Balancer/Utilities/DeviceSetting.h>
-#include <boost/program_options.hpp>
-
+#include <O2/Balancer/Utilities/Settings.h>
 
 namespace O2{
     namespace FLP{
-        class FLPSettings{
-            std::shared_ptr<Balancer::DeviceSetting> informationSettings;
+        class FLPSettings : public Balancer::Settings{
             std::vector<std::shared_ptr<Balancer::DeviceSetting>> epnSettings;
             int sampleSize;
-            std::string ip;
+        protected:
+            std::string getSettingsFile() const override;
         public:
             FLPSettings(const boost::program_options::variables_map& settings);
-            std::shared_ptr<Balancer::DeviceSetting> getInformationNodeSetting() const;
             std::vector<std::shared_ptr<Balancer::DeviceSetting>> getEPNSettings() const;
-            std::string getIpAddress() const;
             int getSampleSize() const;
         };
     }

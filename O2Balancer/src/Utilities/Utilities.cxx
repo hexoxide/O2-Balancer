@@ -12,29 +12,33 @@ using namespace O2;
 namespace po = boost::program_options;
 
 po::variables_map O2::Balancer::AddO2Options(boost::program_options::options_description& options, int argc, char** argv){
-    options.add_options()
-    ("version", "Shows O2 library version")
-    ("daemonize", "sets a daemon")
-    ("ip", po::value<std::string>()->required())
-    ("help", "Produces help message");
+    try{
+        options.add_options()
+        ("version", "Shows O2 library version")
+        ("daemonize", "sets a daemon")
+        ("ip", po::value<std::string>()->required())
+        ("help", "Produces help message");
 
 
 
-    po::variables_map vm;
-    po::store(po::parse_command_line(argc, argv, options), vm);
-    po::notify(vm);   
-    
-    
-    if(vm.count("version")){
-        std::cout << "O2 version: " << O2::Balancer::VERSION_MAJOR << "." <<  O2::Balancer::VERSION_MINOR << "." << O2::Balancer::VERSION_PATCH << "\n" ;
-        std::exit(EXIT_SUCCESS);
+        po::variables_map vm;
+        po::store(po::parse_command_line(argc, argv, options), vm);
+        po::notify(vm);   
+        
+        if(vm.count("version")){
+            std::cout << "O2 version: " << O2::Balancer::VERSION_MAJOR << "." <<  O2::Balancer::VERSION_MINOR << "." << O2::Balancer::VERSION_PATCH << "\n" ;
+            std::exit(EXIT_SUCCESS);
+        }
+
+        if(vm.count("daemonize")){
+            daemonize();
+        }
+
+        return vm;
+    } catch(const boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<boost::program_options::required_option> >& exc){
+        throw O2::Balancer::Exceptions::InitException(exc.what());
     }
 
-    if(vm.count("daemonize")){
-        daemonize();
-    }
-
-    return vm;
 }
 
 void Balancer::daemonize(){
