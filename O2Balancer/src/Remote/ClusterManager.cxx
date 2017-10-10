@@ -1,6 +1,8 @@
 #include "O2/Balancer/Remote/ClusterManager.h"
 #include "FairMQLogger.h"
 #include <zookeeper/zookeeper.h>
+#include <chrono>
+#include <thread>
 
 using namespace O2::Balancer;
 
@@ -32,18 +34,44 @@ void ClusterManager::addGlobalVariable(const std::string& name, const std::strin
 
 }
 
-std::string ClusterManager::getGlobalVariable(const std::string& name){
-    int buflen = 512;
+std::string ClusterManager::getGlobalVariable(const std::string& name, const int& timeout){
+
+    const std::string directory = "/globals/" + name;
+    constexpr int JUMP = 100;
+    int currentWaitTime = 0;
+    int done = 0;
+    while(done == 0){
+        int buflen = 512;
+        char buffer[buflen]; 
+        struct Stat stat;
+        done = zoo_get(this->zh, directory.c_str()  , 0, buffer, &buflen, &stat);
+        if(done == ZOK){
+            return std::string(buffer, buflen);
+        } else {
+            if(timeout == 0 && currentWaitTime > timeout){
+                return std::string("");
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(JUMP));
+            currentWaitTime += JUMP;
+        }
+    }
+
+    return std::string("");
+    
+
+   /* int buflen = 512;
     char buffer[buflen]; 
   
     struct Stat stat;
-    const std::string directory = "/globals/" + name;
     int rc = zoo_get(this->zh, directory.c_str()  , 0, buffer, &buflen, &stat);
-    if(rc != ZOK){
-        return std::string("");
-    }
+    */
+    //if(rc != ZOK){
+    //    return std::string("");
+   // }
 
-    return std::string(buffer, buflen);
+
+
+
 }
 
 void ClusterManager::setupDirectories(){

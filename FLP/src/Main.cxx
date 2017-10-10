@@ -30,7 +30,7 @@ int main(int argc, char** argv){
     auto vm = Balancer::AddO2Options(options, argc, argv);
 
 
-    reinit_logger(false, "FLP", SEVERITY_MINIMUM);
+    reinit_logger(true, "FLP", SEVERITY_MINIMUM);
 
     //O2::Balancer::ClusterManager manager("localhost",2181);
     //manager.registerCluster("FLP");

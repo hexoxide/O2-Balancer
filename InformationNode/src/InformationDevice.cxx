@@ -27,14 +27,13 @@ using namespace O2;
 using namespace O2::InformationNode;
 
 InformationDevice::InformationDevice(std::string ip, int heartbeat, int acknowledgePort, int heartbeatPort) : Balancer::AbstractDevice("Information"){
-  
   this->timeFrameId = 0;
   this->heartbeat = heartbeat;
-  //this->clusterManager->addGlobalVariable("sampleSize", "10");
   this->addConnection(HeartbeatConnection(ip,heartbeatPort, this));
   this->addConnection(AcknowledgeConnection(ip,acknowledgePort,this));
-
 }
+
+
 
 InformationDevice::~InformationDevice()
 = default;
@@ -46,9 +45,10 @@ void InformationDevice::InitTask(){
 }
 
 void InformationDevice::PreRun(){
+    AbstractDevice::PreRun(); 
     mLeaving = false;
     mAckListener = std::thread(&InformationDevice::ListenForAcknowledgement, this);
-    AbstractDevice::PreRun(); 
+    this->clusterManager->addGlobalVariable("sampleSize", "10");
 }
 
 bool InformationDevice::ConditionalRun(){

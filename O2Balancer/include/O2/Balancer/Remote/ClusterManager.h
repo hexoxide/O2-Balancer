@@ -20,7 +20,7 @@ namespace O2{
         public:
             ClusterManager(const std::string& zooServer, const int& port);
             void addGlobalVariable(const std::string& name, const std::string& value);
-            std::string getGlobalVariable(const std::string& name);
+            std::string getGlobalVariable(const std::string& name, const int& timeout = 0);
             void registerConnection(const std::string& classification, const std::string& tag, const DeviceSetting& setting );
             void close();
         };

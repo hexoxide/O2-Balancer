@@ -22,11 +22,12 @@ namespace O2{
         //class ClusterManager;
         class AbstractDevice : public FairMQDevice {
         private:
-            std::unique_ptr<ClusterManager> clusterManager;
+          
             //this->clusterManager = std::unique_ptr<Balancer::ClusterManager>(new Balancer::ClusterManager(ip,2181));
             std::string defaultTransport;
             std::string getProperty(const std::string& varName, const std::string& defValue); 
         protected:
+            std::unique_ptr<ClusterManager> clusterManager;
             std::vector<Connection> connnections;
             virtual void PreRun() override;
             virtual void PostRun() override;

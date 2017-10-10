@@ -45,7 +45,11 @@ FLPDevice::FLPDevice(const FLPSettings& settings) : Balancer::AbstractDevice("fl
 
         
 
-
+void FLPDevice::PreRun(){
+  AbstractDevice::PreRun();
+    auto dat = this->clusterManager->getGlobalVariable("sampleSize", 1000);
+    LOG(INFO) << dat << "\n";
+}
 
 
 bool FLPDevice::ConditionalRun(){

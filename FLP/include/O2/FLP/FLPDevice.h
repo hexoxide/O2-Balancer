@@ -27,6 +27,7 @@ namespace O2{
             
           protected:
             virtual bool ConditionalRun() override;
+            void PreRun() override;
           private:
            // std::unique_ptr<Balancer::ClusterManager> clusterManager;
             std::queue<FairMQParts> mSTFBuffer; ///< Buffer for sub-timeframes
