@@ -1,5 +1,6 @@
 #include "O2/Balancer/Devices/AbstractDevice.h"
 #include "O2/Balancer/Devices/Connection.h"
+#include "O2/Balancer/Remote/ClusterManager.h"
 #include "O2/Balancer/Utilities/Utilities.h"
 #include <cstdlib>
 
@@ -10,16 +11,25 @@ using namespace O2::Balancer;
 
 
 AbstractDevice::AbstractDevice(const std::string& name){
-  this->fId = name;
-  this->fNetworkInterface = "default";
-  this->fNumIoThreads = 1;
-  this->fPortRangeMin = 22000;
-  this->fPortRangeMax = 32000;
-  this->fInitializationTimeoutInS = 1;
-  this->defaultTransport = this->getProperty("O2Transport", "zeromq");
-  variableChecksOut(this->defaultTransport, "zeromq", "nanomsg","shmem");
+    //this->clusterManager = std::unique_ptr<Balancer::ClusterManager>(new Balancer::ClusterManager(ip,2181));
+    this->fId = name;
+    this->fNetworkInterface = "default";
+    this->fNumIoThreads = 1;
+    this->fPortRangeMin = 22000;
+    this->fPortRangeMax = 32000;
+    this->fInitializationTimeoutInS = 1;
+    this->defaultTransport = this->getProperty("O2Transport", "zeromq");
+    variableChecksOut(this->defaultTransport, "zeromq", "nanomsg","shmem");
 }
 
+void AbstractDevice::PreRun(){
+    this->clusterManager = std::unique_ptr<ClusterManager>(new ClusterManager("localhost",2181));
+}
+
+void AbstractDevice::PostRun(){
+    this->clusterManager->close();
+    this->clusterManager.reset();
+}
 
 std::string AbstractDevice::getDefaultTransport() const{
     return this->defaultTransport;

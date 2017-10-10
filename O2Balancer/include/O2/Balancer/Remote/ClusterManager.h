@@ -11,15 +11,17 @@ typedef struct _zhandle zhandle_t;
 namespace O2{
     namespace Balancer{
 
-        class ClusterNode;
+        
+        class DeviceSetting;
+
         class ClusterManager{
             zhandle_t *zh;
-            std::string getOwnIpAddress() const;
-            std::shared_ptr<ClusterNode> root;
-            std::string clusterType;
+            void setupDirectories();
         public:
             ClusterManager(const std::string& zooServer, const int& port);
-            void registerCluster(const std::string& type);
+            void addGlobalVariable(const std::string& name, const std::string& value);
+            std::string getGlobalVariable(const std::string& name);
+            void registerConnection(const std::string& classification, const std::string& tag, const DeviceSetting& setting );
             void close();
         };
     }

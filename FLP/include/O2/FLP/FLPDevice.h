@@ -12,6 +12,7 @@
 #define O2_FLP_DEVICE_H
 
 #include <O2/Balancer/Devices/AbstractDevice.h>
+#include <O2/Balancer/Remote/ClusterManager.h>
 #include <queue>
 #include <string>
 #include <memory>
@@ -23,11 +24,11 @@ namespace O2{
           public:
             FLPDevice(const FLPSettings& settings);
             virtual ~FLPDevice();
-        
+            
           protected:
             virtual bool ConditionalRun() override;
-
           private:
+           // std::unique_ptr<Balancer::ClusterManager> clusterManager;
             std::queue<FairMQParts> mSTFBuffer; ///< Buffer for sub-timeframes
             std::queue<std::chrono::steady_clock::time_point> mArrivalTime; ///< Stores arrival times of sub-timeframes
         

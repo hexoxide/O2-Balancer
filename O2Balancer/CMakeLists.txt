@@ -31,7 +31,6 @@ SET(
     ./src/Exceptions/UnimplementedException.cxx
     ./src/Utilities/DeviceSetting.cxx
     ./src/Remote/ClusterManager.cxx
-    ./src/Remote/ClusterNodes.cxx
     ./src/Utilities/Utilities.cxx
     ./src/Utilities/Settings.cxx
 )

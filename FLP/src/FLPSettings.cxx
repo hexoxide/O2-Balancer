@@ -49,3 +49,4 @@ std::vector<std::shared_ptr<Balancer::DeviceSetting>> FLPSettings::getEPNSetting
     }
     return this->epnSettings;
 }
+

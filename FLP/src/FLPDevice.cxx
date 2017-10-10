@@ -37,7 +37,10 @@ FLPDevice::FLPDevice(const FLPSettings& settings) : Balancer::AbstractDevice("fl
   this->addConnection(HeartbeatConnection(settings, this));
   this->addConnection(EPNConnection(settings,this));
   this->mEventSize = settings.getSampleSize();
-  
+
+
+  //while(  this->clusterManager->addGlobalVariable("sampleSize", "10");)
+
 }
 
         
@@ -81,7 +84,6 @@ bool FLPDevice::ConditionalRun(){
   return true;
 
 }
-
 
 FLPDevice::~FLPDevice(){
   LOG(INFO) << "closing";

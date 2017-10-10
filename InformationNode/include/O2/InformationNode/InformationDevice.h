@@ -8,7 +8,7 @@
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
 #ifndef O2_INFORMATIONNODE_INFORMATION_DEVICE_H
-#define O2INFORMATIONNODE_INFORMATION_DEVICE_H
+#define O2_INFORMATIONNODE_INFORMATION_DEVICE_H
 
 #include <string>
 #include <cstdint> // UINT64_MAX
@@ -17,7 +17,7 @@
 #include <atomic>
 #include <chrono>
 #include <O2/Balancer/Devices/AbstractDevice.h>
-
+#include <O2/Balancer/Remote/ClusterManager.h>
 namespace O2{
 
   namespace InformationNode{
@@ -49,7 +49,7 @@ namespace O2{
         bool ConditionalRun() override;
         void PreRun() override;
         void PostRun() override;
-    
+        //std::unique_ptr<Balancer::ClusterManager> clusterManager;
         std::array<timeframeDuration, UINT16_MAX> mTimeframeRTT; ///< Container for the roundtrip values per timeframe ID
      //   int mStoreRTTinFile; ///< Store round trip time measurements in a file.
        // int mEventCounter; ///< Controls the send rate of the timeframe IDs

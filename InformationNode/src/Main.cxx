@@ -26,8 +26,7 @@ int main(int argc, char** argv){
     constexpr char ACKNOWLEDGE_PORT[] = "acknowledge-port";
     constexpr char HEARTBEAT_RATE[] = "heartbeat";
     constexpr char HEARTBEAT_PORT[] = "heartbeat-port";
-    O2::Balancer::ClusterManager clManager("localhost", 4000);
-    clManager.close();
+
     try{
         reinit_logger(true, "Information", SEVERITY_MINIMUM); 
         po::options_description options("Information node options");

@@ -1,10 +1,7 @@
 #include "O2/Balancer/Remote/ClusterManager.h"
-#include "O2/Balancer/Remote/ClusterNodes.h"
+#include "FairMQLogger.h"
 #include <zookeeper/zookeeper.h>
-#include <ifaddrs.h>
-#include <netinet/in.h> 
-#include <iostream>
-#include <arpa/inet.h>
+
 using namespace O2::Balancer;
 
 ClusterManager::ClusterManager(const std::string& zooServer, const int& port){
@@ -12,47 +9,58 @@ ClusterManager::ClusterManager(const std::string& zooServer, const int& port){
     zoo_set_debug_level(ZOO_LOG_LEVEL_DEBUG);
     this->zh = zookeeper_init(server.c_str(), [](zhandle_t *zzh, int type, int state, const char *path,
         void *watcherCtx)-> void {
-            std::cout << std::string(path) << "\n";
+            LOG(INFO) << std::string(path) << "\n";
 
     }, 10000, 0, 0, 0);
+
+    this->setupDirectories();
 }
 
-void ClusterManager::registerCluster(const std::string& type){
-    this->clusterType = type;
-    struct ACL CREATE_ONLY_ACL[] = {{ZOO_PERM_CREATE, ZOO_AUTH_IDS}};
-    const std::string ip = this->getOwnIpAddress();
-    const std::string dir = "/" + type + "/" + ip; 
+void ClusterManager::addGlobalVariable(const std::string& name, const std::string& value){
+    //struct ACL CREATE_ONLY_ACL[] = {{ZOO_PERM_ALL, ZOO_AUTH_IDS}};
+    struct ACL CREATE_ONLY_ACL[] = {{ZOO_PERM_ALL, ZOO_AUTH_IDS}};
+    struct ACL_vector CREATE_ONLY = {1, CREATE_ONLY_ACL};
+    const std::string dir = "/globals/" + name;
     char buffer[512];
-    int rc = zoo_create(zh,dir.c_str(),ip.c_str(), ip.length(), &ZOO_OPEN_ACL_UNSAFE, ZOO_EPHEMERAL,
-                        nullptr, 0);
+
+
+    int rc = zoo_create(zh,dir.c_str(),value.c_str(), value.length(), &ZOO_OPEN_ACL_UNSAFE, ZOO_EPHEMERAL,
+    nullptr, 0);
     if(rc != ZOK){
-       
+        LOG(ERROR) << "Could not create variable";
+    }
+
+}
+
+std::string ClusterManager::getGlobalVariable(const std::string& name){
+    int buflen = 512;
+    char buffer[buflen]; 
+  
+    struct Stat stat;
+    const std::string directory = "/globals/" + name;
+    int rc = zoo_get(this->zh, directory.c_str()  , 0, buffer, &buflen, &stat);
+    if(rc != ZOK){
+        return std::string("");
+    }
+
+    return std::string(buffer, buflen);
+}
+
+void ClusterManager::setupDirectories(){
+//    struct ACL CREATE_ONLY_ACL[] = {{ZOO_PERM_ALL}};
+    int rc = zoo_create(zh, "/globals", "", 0,  &ZOO_OPEN_ACL_UNSAFE, 0 , nullptr, 0);
+
+    if(rc != ZOK){
+        LOG(ERROR) << "Could not create the globals directory";
     }
 }
 
-std::string ClusterManager::getOwnIpAddress() const{
-    struct ifaddrs *ifAddrStruct = nullptr;
-    struct ifaddrs *ifa = nullptr;
-    void* tmpAddrPtr = nullptr;
+void ClusterManager::registerConnection(const std::string& classification, const std::string& tag, const DeviceSetting& setting ){
 
-    getifaddrs(&ifAddrStruct);
-    std::string result;
-    for (ifa = ifAddrStruct; ifa != nullptr; ifa = ifa->ifa_next) {
-        if (!ifa->ifa_addr) {
-            continue;
-        }
-        if (ifa->ifa_addr->sa_family == AF_INET) { // check it is IP4
-            // is a valid IP4 Address
-            tmpAddrPtr=&((struct sockaddr_in *)ifa->ifa_addr)->sin_addr;
-            char addressBuffer[INET_ADDRSTRLEN];
-            inet_ntop(AF_INET, tmpAddrPtr, addressBuffer, INET_ADDRSTRLEN);
-            result = std::string(addressBuffer);
-        } 
-    }
-    if (ifAddrStruct!=nullptr) freeifaddrs(ifAddrStruct);
-
-    return result;
 }
+
+
+
 
 void ClusterManager::close(){
    zookeeper_close(this->zh);

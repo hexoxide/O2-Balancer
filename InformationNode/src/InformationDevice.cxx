@@ -22,12 +22,15 @@
 #include "O2/InformationNode/AcknowledgeConnection.h"
 #include "O2/InformationNode/HeartbeatConnection.h"
 
+
 using namespace O2;
 using namespace O2::InformationNode;
 
 InformationDevice::InformationDevice(std::string ip, int heartbeat, int acknowledgePort, int heartbeatPort) : Balancer::AbstractDevice("Information"){
+  
   this->timeFrameId = 0;
   this->heartbeat = heartbeat;
+  //this->clusterManager->addGlobalVariable("sampleSize", "10");
   this->addConnection(HeartbeatConnection(ip,heartbeatPort, this));
   this->addConnection(AcknowledgeConnection(ip,acknowledgePort,this));
 
@@ -39,13 +42,14 @@ InformationDevice::~InformationDevice()
 void InformationDevice::InitTask(){
   mAckChannelName = "ack";
   mOutChannelName = "stf1";
+
 }
 
 void InformationDevice::PreRun(){
     mLeaving = false;
     mAckListener = std::thread(&InformationDevice::ListenForAcknowledgement, this);
-    
-  }
+    AbstractDevice::PreRun(); 
+}
 
 bool InformationDevice::ConditionalRun(){
   FairMQMessagePtr msg(NewSimpleMessage(timeFrameId));
@@ -67,6 +71,7 @@ void InformationDevice::PostRun(){
 
     mLeaving = true;
     mAckListener.join();
+    AbstractDevice::PostRun();
 }
 
 void InformationDevice::ListenForAcknowledgement(){
