@@ -1,6 +1,6 @@
 #include "O2/Balancer/Remote/ClusterManager.h"
 #include "O2/Balancer/Remote/ClusterNodes.h"
-//#include <zookeeper/zookeeper.h>
+#include <zookeeper/zookeeper.h>
 #include <ifaddrs.h>
 #include <netinet/in.h> 
 #include <iostream>
@@ -8,17 +8,17 @@
 using namespace O2::Balancer;
 
 ClusterManager::ClusterManager(const std::string& zooServer, const int& port){
- /*   const std::string server = zooServer + ":" + std::to_string(port);
+    const std::string server = zooServer + ":" + std::to_string(port);
     zoo_set_debug_level(ZOO_LOG_LEVEL_DEBUG);
     this->zh = zookeeper_init(server.c_str(), [](zhandle_t *zzh, int type, int state, const char *path,
         void *watcherCtx)-> void {
             std::cout << std::string(path) << "\n";
 
-    }, 10000, 0, 0, 0);*/
+    }, 10000, 0, 0, 0);
 }
 
 void ClusterManager::registerCluster(const std::string& type){
-  /*  this->clusterType = type;
+    this->clusterType = type;
     struct ACL CREATE_ONLY_ACL[] = {{ZOO_PERM_CREATE, ZOO_AUTH_IDS}};
     const std::string ip = this->getOwnIpAddress();
     const std::string dir = "/" + type + "/" + ip; 
@@ -27,11 +27,11 @@ void ClusterManager::registerCluster(const std::string& type){
                         nullptr, 0);
     if(rc != ZOK){
        
-    }*/
+    }
 }
 
 std::string ClusterManager::getOwnIpAddress() const{
-    /*struct ifaddrs *ifAddrStruct = nullptr;
+    struct ifaddrs *ifAddrStruct = nullptr;
     struct ifaddrs *ifa = nullptr;
     void* tmpAddrPtr = nullptr;
 
@@ -51,10 +51,9 @@ std::string ClusterManager::getOwnIpAddress() const{
     }
     if (ifAddrStruct!=nullptr) freeifaddrs(ifAddrStruct);
 
-    return result;*/
-    return "";
+    return result;
 }
 
 void ClusterManager::close(){
-   // zookeeper_close(this->zh);
+   zookeeper_close(this->zh);
 }

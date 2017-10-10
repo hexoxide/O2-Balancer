@@ -17,6 +17,7 @@
 #include <O2/Balancer/Devices/DeviceManager.h>
 #include <O2/Balancer/Utilities/Utilities.h>
 #include <O2/Balancer/Exceptions/InitException.h>
+#include <O2/Balancer/Remote/ClusterManager.h>
 std::unique_ptr< O2::Balancer::DeviceManager<O2::InformationNode::InformationDevice>> deviceManager;
 
 namespace po = boost::program_options;
@@ -25,23 +26,16 @@ int main(int argc, char** argv){
     constexpr char ACKNOWLEDGE_PORT[] = "acknowledge-port";
     constexpr char HEARTBEAT_RATE[] = "heartbeat";
     constexpr char HEARTBEAT_PORT[] = "heartbeat-port";
-
-   // O2::Balancer::ClusterManager manager("localhost",2181);
-
-    //manager.registerCluster("InformationNode");
-
-    reinit_logger(false, "Information", SEVERITY_MINIMUM);
-
-    po::options_description options("Information node options");
-    options.add_options()
-    (HEARTBEAT_RATE, po::value<int>()->default_value(1000000), "Heartbeat frequency")
-    (ACKNOWLEDGE_PORT, po::value<int>()->default_value(5990), "Port that listens for acknowledge")
-    (HEARTBEAT_PORT, po::value<int>()->default_value(5550), "Port that publishes the heartbeat");
-    auto vm = O2::Balancer::AddO2Options(options, argc, argv);
-    
-
-
+    O2::Balancer::ClusterManager clManager("localhost", 4000);
+    clManager.close();
     try{
+        reinit_logger(true, "Information", SEVERITY_MINIMUM); 
+        po::options_description options("Information node options");
+        options.add_options()
+        (HEARTBEAT_RATE, po::value<int>()->default_value(1000000), "Heartbeat frequency")
+        (ACKNOWLEDGE_PORT, po::value<int>()->default_value(5990), "Port that listens for acknowledge")
+        (HEARTBEAT_PORT, po::value<int>()->default_value(5550), "Port that publishes the heartbeat");
+        auto vm = O2::Balancer::AddO2Options(options, argc, argv);
         deviceManager = std::unique_ptr<O2::Balancer::DeviceManager<O2::InformationNode::InformationDevice>>(
             new O2::Balancer::DeviceManager<O2::InformationNode::InformationDevice>(
                 vm["ip"].as<std::string>(),
