@@ -1,12 +1,15 @@
 #include "O2/Balancer/Remote/ClusterManager.h"
 #include <boost/format.hpp> 
 #include "O2/Balancer/Exceptions/ClusterTypeException.h"
+#include "O2/Balancer/Utilities/DeviceSetting.h"
 #include "O2/Balancer/Exceptions/TimeOutException.h"
 #include "FairMQLogger.h"
 #include <zookeeper/zookeeper.h>
 #include "O2/Balancer/Globals.h"
+#include <boost/format.hpp>
 #include <chrono>
 #include <thread>
+#include <regex>
 
 using namespace O2::Balancer;
 
@@ -88,14 +91,41 @@ void ClusterManager::setupDirectories(){
     if(rc != ZOK){
         LOG(ERROR) << "Could not create the globals directory";
     }
+
+
+    
 }
 
 
 void ClusterManager::registerConnection(const std::string& classification, const std::string& tag, const DeviceSetting& setting ){
+    std::string dir = "/" + classification;
+    int rc = zoo_create(zh, dir.c_str(), "", 0,  &ZOO_OPEN_ACL_UNSAFE, 0 , nullptr, 0);   
+    if(rc != ZOK){
+        LOG(ERROR) << boost::format("Could not create folder %s") % classification;
+    }
 
+    dir += "/" + tag;
+    std::string value = setting.ip + ":" + std::to_string(setting.port); 
+    rc = zoo_create(zh,dir.c_str(),value.c_str(), value.length(), &ZOO_OPEN_ACL_UNSAFE, ZOO_EPHEMERAL,nullptr, 0);
 }
 
+ 
+DeviceSetting ClusterManager::getRegisteredConnection(const std::string& classification, const std::string& tag){
+    
+    int buflen = 512;
+    char buffer[buflen]; 
+    struct Stat stat;
+    std::string dir = "/" + classification + "/" + tag;
+    int rc = zoo_get(this->zh, dir.c_str()  , 0, buffer, &buflen, &stat);
+    if(rc == ZOK){
+        std::string result(buffer,buflen);
+       // LOG(INFO) << result;
+        return DeviceSetting(result);
+    }
 
+    return DeviceSetting(0,"");
+    
+}
 
 
 void ClusterManager::close(){

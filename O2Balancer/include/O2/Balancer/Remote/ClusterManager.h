@@ -64,11 +64,10 @@ namespace O2{
             
             int getGlobalInteger(const std::string& name, int timeout);
 
-            /**
-             *  Not yet implemented
-             * */
             void registerConnection(const std::string& classification, const std::string& tag, const DeviceSetting& setting );
             
+            DeviceSetting getRegisteredConnection(const std::string& classification, const std::string& tag);
+
             /**
              *  Closes the connection, making the class unusable after calling this.
              * */

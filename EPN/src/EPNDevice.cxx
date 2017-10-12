@@ -27,11 +27,12 @@ struct f2eHeader {
 
 EPNDevice::EPNDevice(std::shared_ptr<EPNSettings> settings) : Balancer::AbstractDevice(O2::Balancer::Globals::DeviceNames::EPN_NAME, settings){
   //Setting up the connections, which are stored in each individual class
-  this->addConnection(FLPConnection(this,settings));
-  this->addConnection(AcknowledgeConnection(this,settings));
-  this->addConnection(OutputConnection(this,settings));
+  this->addConnection(std::shared_ptr<Balancer::Connection>( new FLPConnection(this,settings)));
+  this->addConnection(std::shared_ptr<Balancer::Connection>(new AcknowledgeConnection(this,settings)));
+  this->addConnection(std::shared_ptr<Balancer::Connection>(new OutputConnection(this,settings)));
   this->mNumFLPs = settings->getAmountOfFLPs();
   mBufferTimeoutInMs = 50;
+ 
 }
 
         
@@ -47,6 +48,7 @@ void EPNDevice::InitTask(){
 
 void EPNDevice::DiscardIncompleteTimeframes(){
   auto it = mTimeframeBuffer.begin();
+
 
   while (it != mTimeframeBuffer.end()) {
     if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - (it->second).start).count() > mBufferTimeoutInMs) {
@@ -66,6 +68,7 @@ void EPNDevice::Run(){
     FairMQChannel& ackOutChannel = fChannels.at(mAckChannelName).at(0);
     
     while (CheckCurrentState(RUNNING)) {
+      this->update();
       FairMQParts parts;
   
       if (Receive(parts, mInChannelName, 0, 100) > 0) {
@@ -99,6 +102,13 @@ void EPNDevice::Run(){
           }
           LOG(INFO) << "Received " <<  (total / 1024 / 1024)  << " Mega Bytes";
           if (mTestMode > 0) {
+            std::unique_lock<std::mutex> locker(this->lock);
+            auto ackGate =  this->clusterManager->getRegisteredConnection("InformationNode", "ack");
+            LOG(INFO) << ackGate.ip << " " << ackGate.port;
+            
+          
+            locker.unlock();
+
             // Send an acknowledgement back to the sampler to measure the round trip time
             std::unique_ptr<FairMQMessage> ack(NewMessage(sizeof(uint16_t)));
             memcpy(ack->GetData(), &id, sizeof(uint16_t));

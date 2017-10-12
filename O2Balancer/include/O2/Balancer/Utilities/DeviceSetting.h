@@ -24,8 +24,11 @@ namespace O2{
             int port;
             std::string ip;
             DeviceSetting(int port, std::string ip);
+            DeviceSetting(const std::string& setting);
+            
         };
     }
 }
+
 
 #endif

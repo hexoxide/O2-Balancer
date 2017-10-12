@@ -4,6 +4,7 @@
 #include "O2/Balancer/Utilities/Utilities.h"
 #include "O2/Balancer/Utilities/Settings.h"
 #include "O2/Balancer/Globals.h"
+#include "O2/Balancer/Utilities/DeviceSetting.h"
 #include <cstdlib>
 
 #include "O2/Balancer/Exceptions/InitException.h"
@@ -13,8 +14,12 @@ using namespace O2::Balancer;
 
 
 AbstractDevice::AbstractDevice(const std::string& name, std::shared_ptr<Settings> settings){
-    //this->clusterManager = std::unique_ptr<Balancer::ClusterManager>(new Balancer::ClusterManager(ip,2181));
     this->fId = name;
+    this->settings = settings;
+    this->clusterManager = std::shared_ptr<ClusterManager>(new ClusterManager(
+        settings->getSettingsServer()->ip,
+        settings->getSettingsServer()->port
+    ));
     this->fNetworkInterface = "default";
     this->fNumIoThreads = 1;
     this->fPortRangeMin = 22000;
@@ -33,12 +38,22 @@ AbstractDevice::AbstractDevice(const std::string& name, std::shared_ptr<Settings
 }
 
 void AbstractDevice::PreRun(){
-    this->clusterManager = std::unique_ptr<ClusterManager>(new ClusterManager("localhost",2181));
+
+
+}
+
+void AbstractDevice::addHandle(const std::string& tag, const DeviceSetting& setting){
+    this->clusterManager->registerConnection(
+        this->fId,
+        tag,
+        setting
+    );
 }
 
 void AbstractDevice::PostRun(){
     this->clusterManager->close();
     this->clusterManager.reset();
+    this->settings.reset();
 }
 
 std::string AbstractDevice::getDefaultTransport() const{
@@ -57,12 +72,22 @@ std::string AbstractDevice::getProperty(const std::string& varName, const std::s
     return result;
 }
 
-void AbstractDevice::addConnection(Connection connection){
+std::shared_ptr<ClusterManager> AbstractDevice::getClusterManager() const{
+    return this->clusterManager;
+}
+
+void AbstractDevice::update(){
+    for(auto i : this->connnections){
+        i->updateConnection(this->clusterManager);
+    }
+}
+
+void AbstractDevice::addConnection(std::shared_ptr<Connection> connection){
     this->connnections.push_back(connection);
     this->fChannels.insert(
         std::pair<std::string, std::vector<FairMQChannel>>(
-            connection.getName(),
-            std::move(connection.getChannels())
+            connection->getName(),
+            std::move(connection->getChannels())
         )
     );
 }

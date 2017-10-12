@@ -70,16 +70,19 @@ std::vector<FairMQChannel> Connection::getChannels() const{
     return this->channels;
 }
 
-void Connection::addChannel(ConnectionType type, ConnectionMethod method,const std::string& ip, int port){
-
-    this->channels.push_back(
-        FairMQChannel(
-            this->typeToString(type),
-            this->methodToString(method),
-            "tcp://" + std::string(ip) + ":" + std::to_string(port)
-        )
+FairMQChannel Connection::addChannel(ConnectionType type, ConnectionMethod method,const std::string& ip, int port){
+    FairMQChannel channel(
+        this->typeToString(type),
+        this->methodToString(method),
+        "tcp://" + std::string(ip) + ":" + std::to_string(port)
     );
+    this->channels.push_back(channel);
 
+    return channel;
+}
+
+void Connection::updateConnection(std::shared_ptr<ClusterManager> clusterManager){
+    //virtual
 }
 
 std::string Connection::getName() const{

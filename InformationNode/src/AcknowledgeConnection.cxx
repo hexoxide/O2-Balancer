@@ -10,7 +10,7 @@
 
 #include "O2/InformationNode/AcknowledgeConnection.h"
 #include "O2/InformationNode/InformationDevice.h"
-
+#include <O2/Balancer/Utilities/DeviceSetting.h>
 using namespace O2;
 using namespace O2::InformationNode;
 
@@ -23,4 +23,5 @@ AcknowledgeConnection::AcknowledgeConnection(std::string ip, int port, Balancer:
     );
 
     this->updateAllReceiveBuffer(100000);
+    device->addHandle("ack", O2::Balancer::DeviceSetting(port,ip));
 }

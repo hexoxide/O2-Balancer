@@ -31,6 +31,8 @@ namespace O2{
         };
     
         class AbstractDevice;
+
+        class ClusterManager;
     
         /**
         *   Class for maintaining 1 connection
@@ -53,8 +55,9 @@ namespace O2{
             void updateAllSendBuffer(const int& buffer);
             void updateAllSendKernelSize(const int& size);
             void updateAllReceiveKernelSize(const int& size);
-            void addChannel(ConnectionType type, ConnectionMethod method, const std::string& ip, int port);
+            FairMQChannel addChannel(ConnectionType type, ConnectionMethod method, const std::string& ip, int port);
             Connection(const std::string& name, AbstractDevice* device);
+            virtual void updateConnection(std::shared_ptr<ClusterManager> clusterManager);
             std::string getName() const;
             std::vector<FairMQChannel> getChannels() const;
         };

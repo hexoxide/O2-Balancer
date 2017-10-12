@@ -34,11 +34,11 @@ InformationDevice::InformationDevice(std::shared_ptr<InfoSettings> settings) :  
   this->timeFrameId = 0;
   this->heartbeat = settings->getHeartRate();
 
-  this->addConnection(HeartbeatConnection(
-    settings->getIPAddress(), settings->getHeartBeatPort(), this)
+  this->addConnection(std::shared_ptr<Balancer::Connection>( new HeartbeatConnection(
+    settings->getIPAddress(), settings->getHeartBeatPort(), this))
   );
-  this->addConnection(AcknowledgeConnection(
-    settings->getIPAddress(),settings->getAcknowledgePort(),this));
+  this->addConnection(std::shared_ptr<Balancer::Connection>( new AcknowledgeConnection(
+    settings->getIPAddress(),settings->getAcknowledgePort(),this)));
 }
 
 

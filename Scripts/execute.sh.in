@@ -9,7 +9,7 @@ SAMPLER="InformationNode"
 SAMPLER+=" --ip 127.0.0.1 --info-config @CMAKE_SOURCE_DIR@/Config/info-config.yaml "
 xterm -geometry 80x25+0+0 -hold -e @InformationNode_BINARY_DIR@/$SAMPLER &
 
-
+sleep 1s
 FLP="flp"
 FLP+=" --ip 127.0.0.1 --sample-size 5 --flp-config @CMAKE_SOURCE_DIR@/Config/flp-config.yaml"
 xterm -geometry 80x25+500+0  -e @FLP_BINARY_DIR@/$FLP &

@@ -34,8 +34,8 @@ using namespace O2::FLP;
 
 FLPDevice::FLPDevice(std::shared_ptr<FLPSettings> settings) : Balancer::AbstractDevice(O2::Balancer::Globals::DeviceNames::FLP_NAME, settings){
   this->mNumEPNs = settings->getEPNSettings().size();
-  this->addConnection(HeartbeatConnection(settings, this));
-  this->addConnection(EPNConnection(settings,this));
+  this->addConnection(std::shared_ptr<Balancer::Connection>(new HeartbeatConnection(settings, this)));
+  this->addConnection(std::shared_ptr<Balancer::Connection>(new EPNConnection(settings,this)));
   this->mEventSize = settings->getSampleSize();
 
 

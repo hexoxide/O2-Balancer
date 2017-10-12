@@ -21,7 +21,6 @@ EPNSettings::EPNSettings(const boost::program_options::variables_map& settings) 
     this->flpConnectionPort = config["FLPConnectionPort"].as<int>();
     this->outputConnectionPort = config["OutputPort"].as<int>();
     if(settings["flp-port"].as<int>() != 0){
-        
         this->flpConnectionPort = settings["flp-port"].as<int>();
     }
     
