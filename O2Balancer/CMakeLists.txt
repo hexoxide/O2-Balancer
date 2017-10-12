@@ -29,6 +29,9 @@ SET(
     ./src/Exceptions/AbstractException.cxx
     ./src/Exceptions/InitException.cxx
     ./src/Exceptions/UnimplementedException.cxx
+    ./src/Exceptions/ClusterHandlerException.cxx
+    ./src/Exceptions/ClusterTypeException.cxx
+    ./src/Exceptions/TimeOutException.cxx
     ./src/Utilities/DeviceSetting.cxx
     ./src/Remote/ClusterManager.cxx
     ./src/Utilities/Utilities.cxx

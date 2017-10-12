@@ -29,9 +29,9 @@ int main(int argc, char** argv){
         ("flp-port", po::value<int>()->default_value(0), "Port that the FLPs can use to connect");
         auto vm = Balancer::AddO2Options(options, argc, argv);
     
-        EPNSettings settings(vm);
+        auto settings = std::shared_ptr<EPNSettings>(new EPNSettings(vm));
     
-        reinit_logger(false, "EPN", SEVERITY_MINIMUM);
+        reinit_logger(true, "EPN", SEVERITY_MINIMUM);
       
         Balancer::DeviceManager<EPNDevice> device(settings);
         device.run();

@@ -15,6 +15,13 @@ YAML::Node Settings::load(const boost::program_options::variables_map& settings)
     try{
         YAML::Node config = YAML::LoadFile(settings[getSettingsFile()].as<std::string>());
         this->ipAddress = settings["ip"].as<std::string>();
+        this->settingsServer = std::shared_ptr<Balancer::DeviceSetting>(
+            new Balancer::DeviceSetting(
+                config["SettingsServer"]["Port"].as<int>(),
+                config["SettingsServer"]["IP"].as<std::string>()
+            )
+        );
+
         this->informationSettings = std::shared_ptr<Balancer::DeviceSetting>( new Balancer::DeviceSetting(
             config["InformationNode"]["Port"].as<int>(),
             config["InformationNode"]["Ip"].as<std::string>()
@@ -22,8 +29,16 @@ YAML::Node Settings::load(const boost::program_options::variables_map& settings)
         return config;
     } catch(const YAML::BadFile& badFile){
         throw Exceptions::InitException("Could not load settings file!");
+    } catch(const YAML::TypedBadConversion<int>& badfile){
+        throw Exceptions::InitException("Could not parse settings file");
     }
-   
+}
+
+std::shared_ptr<DeviceSetting> Settings::getSettingsServer() const{
+    if(this->settingsServer == nullptr){
+        throw Exceptions::InitException("Settings server was not initialized");
+    }
+    return this->settingsServer;
 }
 
 std::shared_ptr<DeviceSetting> Settings::getInformationNodeSetting() const{

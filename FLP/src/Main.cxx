@@ -37,13 +37,14 @@ int main(int argc, char** argv){
     
 // vm[CONFIG_FILE].as<std::string>()
     //Load the settings
-    FLPSettings settings(vm);
+    //FLPSettings settings(vm);
+    auto settings = std::shared_ptr<FLPSettings>(new FLPSettings(vm));
     try{
         Balancer::DeviceManager<FLPDevice> manager(
             settings
         );
         manager.run();    
-    } catch (O2::Balancer::Exceptions::AbstractException exception){
+    } catch (const O2::Balancer::Exceptions::AbstractException& exception){
         LOG(ERROR) << exception.getMessage();
        // manager.close();
         return EXIT_FAILURE;

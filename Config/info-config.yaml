@@ -1,0 +1,15 @@
+InformationNode:
+  Port: 5990
+  Ip: 127.0.0.1
+
+Settings: 
+  SampleSize: 100
+
+SettingsServer:
+  Port: 2181
+  IP: localhost
+
+
+heartrate: 2000
+acknowledgePort: 5990
+heartBeatPort: 5550

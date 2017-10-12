@@ -16,17 +16,30 @@
 #include <csignal>
 namespace O2{
     namespace Balancer{
-
+        /**
+         *  Global static variable, to be changed after the program quits.
+         *  Required for signaling.
+         * */
         namespace{
             bool shouldStop;
         }
         class AbstractDevice;
 
+        /**
+         *  Class for maintaining the state of a device specified by FairRoot.
+         *  When called the device will catch the signals.
+         *  @author H.J.M van der Heijden
+         *  @date 10 October 2017
+         * */
         template<class T>
         class DeviceManager{
              std::unique_ptr<T> device;
         public:
-
+            /**
+             *  Creates the device and initializes FairRoot.
+             *  When called, the signals will be catched.
+             *  @param args     The constructor arguments for the purposed device
+             * */
             template<typename... Arguments>
             DeviceManager(Arguments... args){
                 shouldStop = false;
@@ -47,6 +60,10 @@ namespace O2{
                 
             
             }
+            /**
+             *  Starts the state of the device.
+             *  Will return when the abort signall is called.
+             * */
             void run(){
                 
                 device->ChangeState(T::RUN);

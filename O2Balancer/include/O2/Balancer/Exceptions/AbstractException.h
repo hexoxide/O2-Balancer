@@ -12,13 +12,25 @@
 
 #include <string>
 namespace O2{
+
     namespace Balancer{
         namespace Exceptions{
+            /**
+             * Base class for all exceptions used in the O2 Balancer library and derived programs.
+             * Although not abstract, it's preferably not directly throw this exception. Instead use exceptions derived from this.
+             * @author H.J.M van der Heijden
+             * @date 10 October 2017
+             * */
             class AbstractException : public std::exception{
                 std::string msg;
-    
             public:
+                /**
+                 * Constructor with message.
+                 * */
                 AbstractException(const std::string& msg);
+                /**
+                 * Gets the error message that caused the crash.
+                 * */
                 std::string getMessage() const;
                 
             };

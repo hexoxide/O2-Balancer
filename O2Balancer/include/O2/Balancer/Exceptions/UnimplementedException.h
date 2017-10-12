@@ -13,8 +13,16 @@
 #include "./AbstractException.h"
 
 namespace O2{
+
     namespace Balancer{
         namespace Exceptions{
+            /**
+             * An exception that should be thrown when the program is meeting a condition that defaults to undefined behaviour.
+             * For example when a switch defaults to an unsupported operation.
+             * Ideally, this exception should never be thrown.
+             * @author H.J.M van der Heijden
+             * @date 10 October 2017
+             * */
             class UnimplementedException : public AbstractException{
             public:
                 UnimplementedException(const std::string& msg);

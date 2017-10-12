@@ -16,6 +16,7 @@
 #include "O2/EPN/FLPConnection.h"
 #include "O2/EPN/AcknowledgeConnection.h"
 #include "O2/EPN/OutputConnection.h"
+#include <O2/Balancer/Globals.h>
 
 using namespace O2::EPN;
 
@@ -24,13 +25,13 @@ struct f2eHeader {
     int      flpIndex;
 };
 
-EPNDevice::EPNDevice(const EPNSettings& settings) : Balancer::AbstractDevice("EPN"){
+EPNDevice::EPNDevice(std::shared_ptr<EPNSettings> settings) : Balancer::AbstractDevice(O2::Balancer::Globals::DeviceNames::EPN_NAME, settings){
   //Setting up the connections, which are stored in each individual class
   this->addConnection(FLPConnection(this,settings));
   this->addConnection(AcknowledgeConnection(this,settings));
   this->addConnection(OutputConnection(this,settings));
-  this->mNumFLPs = settings.getAmountOfFLPs();
-  mBufferTimeoutInMs = 10;
+  this->mNumFLPs = settings->getAmountOfFLPs();
+  mBufferTimeoutInMs = 50;
 }
 
         

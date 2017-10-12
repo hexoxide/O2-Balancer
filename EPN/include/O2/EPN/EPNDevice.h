@@ -29,7 +29,7 @@ namespace O2{
             };
             
             public:
-            EPNDevice(const EPNSettings& settings);
+            EPNDevice(std::shared_ptr<EPNSettings> settings);
             virtual ~EPNDevice();
             
             /// Discared incomplete timeframes after \p fBufferTimeoutInMs.

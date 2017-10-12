@@ -18,7 +18,7 @@ namespace O2{
 
         class HeartbeatConnection : public Balancer::Connection{
         public:
-            HeartbeatConnection(const FLPSettings& settings, Balancer::AbstractDevice* device);
+            HeartbeatConnection(std::shared_ptr<FLPSettings> settings, Balancer::AbstractDevice* device);
         };
     }
 }

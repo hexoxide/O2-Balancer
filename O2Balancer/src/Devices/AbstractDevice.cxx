@@ -2,6 +2,8 @@
 #include "O2/Balancer/Devices/Connection.h"
 #include "O2/Balancer/Remote/ClusterManager.h"
 #include "O2/Balancer/Utilities/Utilities.h"
+#include "O2/Balancer/Utilities/Settings.h"
+#include "O2/Balancer/Globals.h"
 #include <cstdlib>
 
 #include "O2/Balancer/Exceptions/InitException.h"
@@ -10,7 +12,7 @@ using namespace O2::Balancer;
 
 
 
-AbstractDevice::AbstractDevice(const std::string& name){
+AbstractDevice::AbstractDevice(const std::string& name, std::shared_ptr<Settings> settings){
     //this->clusterManager = std::unique_ptr<Balancer::ClusterManager>(new Balancer::ClusterManager(ip,2181));
     this->fId = name;
     this->fNetworkInterface = "default";
@@ -18,8 +20,16 @@ AbstractDevice::AbstractDevice(const std::string& name){
     this->fPortRangeMin = 22000;
     this->fPortRangeMax = 32000;
     this->fInitializationTimeoutInS = 1;
-    this->defaultTransport = this->getProperty("O2Transport", "zeromq");
-    variableChecksOut(this->defaultTransport, "zeromq", "nanomsg","shmem");
+    this->defaultTransport = this->getProperty(
+        Globals::EnvironmentVariables::O2_TRANSPORT_VAR,
+        Globals::FairMessageOptions::ZERO_MQ
+    );
+    variableChecksOut(
+        this->defaultTransport, 
+        Globals::FairMessageOptions::ZERO_MQ,
+        Globals::FairMessageOptions::NANO_MSG,
+        Globals::FairMessageOptions::SHARED_MEMORY
+    );
 }
 
 void AbstractDevice::PreRun(){

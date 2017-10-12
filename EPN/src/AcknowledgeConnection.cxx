@@ -12,11 +12,11 @@
 
 using namespace O2::EPN;
 
-AcknowledgeConnection::AcknowledgeConnection(Balancer::AbstractDevice* device, const EPNSettings& settings) : Balancer::Connection("ack", device){
+AcknowledgeConnection::AcknowledgeConnection(Balancer::AbstractDevice* device, std::shared_ptr<EPNSettings> settings) : Balancer::Connection("ack", device){
     this->addChannel(
         Balancer::ConnectionType::Push,
         Balancer::ConnectionMethod::Connect,
-        settings.getInformationNodeSetting()->ip,
-        settings.getInformationNodeSetting()->port
+        settings->getInformationNodeSetting()->ip,
+        settings->getInformationNodeSetting()->port
     );
 }

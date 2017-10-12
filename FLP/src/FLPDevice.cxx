@@ -21,8 +21,8 @@
 #include <cstring>
 #include "O2/FLP/HeartBeatConnection.h"
 #include "O2/FLP/EPNConnection.h"
-
-
+#include <O2/Balancer/Globals.h>
+#include <O2/Balancer/Exceptions/ClusterHandlerException.h>
 
 
 struct f2eHeader {
@@ -32,11 +32,11 @@ struct f2eHeader {
 
 using namespace O2::FLP;
 
-FLPDevice::FLPDevice(const FLPSettings& settings) : Balancer::AbstractDevice("flpSender"){
-  this->mNumEPNs = settings.getEPNSettings().size();
+FLPDevice::FLPDevice(std::shared_ptr<FLPSettings> settings) : Balancer::AbstractDevice(O2::Balancer::Globals::DeviceNames::FLP_NAME, settings){
+  this->mNumEPNs = settings->getEPNSettings().size();
   this->addConnection(HeartbeatConnection(settings, this));
   this->addConnection(EPNConnection(settings,this));
-  this->mEventSize = settings.getSampleSize();
+  this->mEventSize = settings->getSampleSize();
 
 
   //while(  this->clusterManager->addGlobalVariable("sampleSize", "10");)
@@ -46,9 +46,13 @@ FLPDevice::FLPDevice(const FLPSettings& settings) : Balancer::AbstractDevice("fl
         
 
 void FLPDevice::PreRun(){
-  AbstractDevice::PreRun();
-    auto dat = this->clusterManager->getGlobalVariable("sampleSize", 1000);
-    LOG(INFO) << dat << "\n";
+    AbstractDevice::PreRun();
+    try{
+      this->mEventSize = this->clusterManager->getGlobalInteger("sampleSize", 1000);
+
+    } catch (const O2::Balancer::Exceptions::ClusterHandlerException& ex){
+        LOG(ERROR) << ex.getMessage();
+    }
 }
 
 

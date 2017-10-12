@@ -7,20 +7,23 @@
 // In applying this license CERN does not waive the privileges and immunities
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
+#ifndef O2_BALANCER_EXCEPTIONS_TIME_OUT_EXCEPTION_H
+#define O2_BALANCER_EXCEPTIONS_TIME_OUT_EXCEPTION_H
 
-#ifndef O2_FLP_EPN_CONNECTION_H
-#define O2_FLP_EPN_CONNECTION_H
-
-#include <O2/Balancer/Devices/Connection.h>
+#include "./ClusterHandlerException.h"
 
 namespace O2{
-    namespace FLP{
-        class FLPSettings;
-        class EPNConnection : public Balancer::Connection{
-        public:
-            EPNConnection(std::shared_ptr<FLPSettings> settings, Balancer::AbstractDevice* device);
-        };
+
+    namespace Balancer{
+        namespace Exceptions{
+
+            class TimeOutException : public ClusterHandlerException{
+            public:
+                TimeOutException(const std::string& msg);
+            };
+        }
     }
+
 }
 
 #endif

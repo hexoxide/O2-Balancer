@@ -18,19 +18,27 @@
 
 #include <FairMQLogger.h>
 #include <FairMQProgOptions.h>
+#include <O2/Balancer/Globals.h>
+#include <O2/Balancer/Exceptions/AbstractException.h>
 #include "O2/InformationNode/InformationDevice.h"
+#include "O2/InformationNode/InfoSettings.h"
+
 #include "O2/InformationNode/AcknowledgeConnection.h"
-#include "O2/InformationNode/HeartbeatConnection.h"
 
 
 using namespace O2;
 using namespace O2::InformationNode;
 
-InformationDevice::InformationDevice(std::string ip, int heartbeat, int acknowledgePort, int heartbeatPort) : Balancer::AbstractDevice("Information"){
+//InformationDevice::InformationDevice(std::string ip, int heartbeat, int acknowledgePort, int heartbeatPort) : Balancer::AbstractDevice(O2::Balancer::Globals::DeviceNames::INFORMATION_NAME){
+InformationDevice::InformationDevice(std::shared_ptr<InfoSettings> settings) :  Balancer::AbstractDevice(O2::Balancer::Globals::DeviceNames::INFORMATION_NAME, settings){
   this->timeFrameId = 0;
-  this->heartbeat = heartbeat;
-  this->addConnection(HeartbeatConnection(ip,heartbeatPort, this));
-  this->addConnection(AcknowledgeConnection(ip,acknowledgePort,this));
+  this->heartbeat = settings->getHeartRate();
+
+  this->addConnection(HeartbeatConnection(
+    settings->getIPAddress(), settings->getHeartBeatPort(), this)
+  );
+  this->addConnection(AcknowledgeConnection(
+    settings->getIPAddress(),settings->getAcknowledgePort(),this));
 }
 
 
@@ -46,9 +54,15 @@ void InformationDevice::InitTask(){
 
 void InformationDevice::PreRun(){
     AbstractDevice::PreRun(); 
+    try{
+      this->clusterManager->addGlobalInteger("sampleSize", 1);
+    } catch (const O2::Balancer::Exceptions::AbstractException& exc){
+        LOG(ERROR) << exc.getMessage(); 
+    }
     mLeaving = false;
     mAckListener = std::thread(&InformationDevice::ListenForAcknowledgement, this);
-    this->clusterManager->addGlobalVariable("sampleSize", "10");
+
+
 }
 
 bool InformationDevice::ConditionalRun(){

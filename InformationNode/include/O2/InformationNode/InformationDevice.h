@@ -17,11 +17,14 @@
 #include <atomic>
 #include <chrono>
 #include <O2/Balancer/Devices/AbstractDevice.h>
+#include "O2/InformationNode/HeartbeatConnection.h"
 #include <O2/Balancer/Remote/ClusterManager.h>
+
 namespace O2{
 
   namespace InformationNode{
-
+    class InfoSettings;
+    
     struct timeframeDuration{
         std::chrono::steady_clock::time_point start;
         std::chrono::steady_clock::time_point end;
@@ -32,8 +35,8 @@ namespace O2{
     class InformationDevice : public Balancer::AbstractDevice{
       public:
         /// Default constructor
-        InformationDevice(std::string ip, int heartbeat, int acknowledgePort, int heartbeatPort);
-    
+        //InformationDevice(std::string ip, int heartbeat, int acknowledgePort, int heartbeatPort);
+        InformationDevice(std::shared_ptr<InfoSettings> settings);
         /// Default destructor
         ~InformationDevice() override;
     
@@ -49,13 +52,10 @@ namespace O2{
         bool ConditionalRun() override;
         void PreRun() override;
         void PostRun() override;
-        //std::unique_ptr<Balancer::ClusterManager> clusterManager;
         std::array<timeframeDuration, UINT16_MAX> mTimeframeRTT; ///< Container for the roundtrip values per timeframe ID
-     //   int mStoreRTTinFile; ///< Store round trip time measurements in a file.
-       // int mEventCounter; ///< Controls the send rate of the timeframe IDs
+  
         int heartbeat;
         uint16_t timeFrameId;
-        //uint16_t mTimeFrameId;
         std::thread mAckListener;
         std::atomic<bool> mLeaving;
     

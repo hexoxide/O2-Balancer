@@ -19,7 +19,7 @@
 namespace O2{   
     namespace Balancer{     
         class Connection;
-        //class ClusterManager;
+        class Settings;
         class AbstractDevice : public FairMQDevice {
         private:
           
@@ -33,7 +33,7 @@ namespace O2{
             virtual void PostRun() override;
 
         public:
-            AbstractDevice(const std::string& name);
+            AbstractDevice(const std::string& name, std::shared_ptr<Settings> settings);
             void addConnection(Connection connection);
             std::string getDefaultTransport() const;
         };

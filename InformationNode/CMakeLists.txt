@@ -10,6 +10,7 @@ SET(
     ./src/InformationDevice.cxx
     ./src/HeartbeatConnection.cxx
     ./src/AcknowledgeConnection.cxx
+    ./src/InfoSettings.cxx
 )
 
 GET_DIRECTORY_PROPERTY(

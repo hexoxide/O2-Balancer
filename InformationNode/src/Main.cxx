@@ -18,33 +18,33 @@
 #include <O2/Balancer/Utilities/Utilities.h>
 #include <O2/Balancer/Exceptions/InitException.h>
 #include <O2/Balancer/Remote/ClusterManager.h>
+#include "O2/InformationNode/InfoSettings.h"
+
 std::unique_ptr< O2::Balancer::DeviceManager<O2::InformationNode::InformationDevice>> deviceManager;
 
 namespace po = boost::program_options;
 
 int main(int argc, char** argv){
-    constexpr char ACKNOWLEDGE_PORT[] = "acknowledge-port";
-    constexpr char HEARTBEAT_RATE[] = "heartbeat";
-    constexpr char HEARTBEAT_PORT[] = "heartbeat-port";
+    using namespace O2::InformationNode;
+    using namespace O2::Balancer;
 
     try{
         reinit_logger(true, "Information", SEVERITY_MINIMUM); 
         po::options_description options("Information node options");
         options.add_options()
-        (HEARTBEAT_RATE, po::value<int>()->default_value(1000000), "Heartbeat frequency")
-        (ACKNOWLEDGE_PORT, po::value<int>()->default_value(5990), "Port that listens for acknowledge")
-        (HEARTBEAT_PORT, po::value<int>()->default_value(5550), "Port that publishes the heartbeat");
-        auto vm = O2::Balancer::AddO2Options(options, argc, argv);
-        deviceManager = std::unique_ptr<O2::Balancer::DeviceManager<O2::InformationNode::InformationDevice>>(
-            new O2::Balancer::DeviceManager<O2::InformationNode::InformationDevice>(
-                vm["ip"].as<std::string>(),
-                vm[HEARTBEAT_RATE].as<int>(),
-                vm[ACKNOWLEDGE_PORT].as<int>(),
-                vm[HEARTBEAT_PORT].as<int>()
+        ("info-config", po::value<std::string>()->default_value("./information.yaml"), "Configuration file");
+        auto vm = AddO2Options(options, argc, argv);
+        
+        auto settings = std::shared_ptr<InfoSettings>(new InfoSettings(vm));
+        
+        deviceManager = std::unique_ptr<DeviceManager<InformationDevice>>(
+            new DeviceManager<InformationDevice>(
+                settings
             )
         );
 
       
+
         deviceManager->run();
         
     } catch(O2::Balancer::Exceptions::InitException exception){
@@ -55,10 +55,10 @@ int main(int argc, char** argv){
         LOG(ERROR) << exception.getMessage();
     //    manager.close();
         return EXIT_FAILURE;
-    } catch(std::exception ex){
-        LOG(ERROR) << "Unkown exception occured";
-        return EXIT_FAILURE;
-    }
+    }// catch(std::exception ex){
+    //    LOG(ERROR) << "Unkown exception occured";
+   //     return EXIT_FAILURE;
+    //}
   //  manager.close();
     return EXIT_SUCCESS;
 }

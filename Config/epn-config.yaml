@@ -1,5 +1,9 @@
 OutputPort: 5591
 
+SettingsServer:
+  Port: 2181
+  IP: localhost
+
 FLPConnectionPort: 5561
 
 InformationNode:

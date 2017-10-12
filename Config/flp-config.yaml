@@ -1,6 +1,10 @@
 Settings: 
   SampleSize: 100
 
+SettingsServer:
+  Port: 2181
+  IP: localhost
+
 InformationNode:
   Port: 5550
   Ip: 127.0.0.1

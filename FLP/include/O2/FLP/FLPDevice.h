@@ -22,7 +22,7 @@ namespace O2{
     namespace FLP{
         class FLPDevice : public Balancer::AbstractDevice{
           public:
-            FLPDevice(const FLPSettings& settings);
+            FLPDevice(std::shared_ptr<FLPSettings> settings);
             virtual ~FLPDevice();
             
           protected:

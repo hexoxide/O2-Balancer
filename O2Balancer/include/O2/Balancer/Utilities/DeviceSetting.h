@@ -13,7 +13,13 @@
 #include <string>
 
 namespace O2{
+
     namespace Balancer{
+        /**
+        *   Small classes to interchange data.
+        *   @author H.J.M van der Heijden
+        *   @date 11 October 2017
+        **/
         struct DeviceSetting{
             int port;
             std::string ip;

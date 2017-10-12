@@ -19,7 +19,7 @@ namespace O2{
         class EPNSettings;
         class AcknowledgeConnection : public Balancer::Connection{
         public:
-            AcknowledgeConnection(Balancer::AbstractDevice* device, const EPNSettings& settings);
+            AcknowledgeConnection(Balancer::AbstractDevice* device,std::shared_ptr<EPNSettings> settings);
         };
     }
 }

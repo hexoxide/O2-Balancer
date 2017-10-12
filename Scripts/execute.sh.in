@@ -6,7 +6,7 @@ cfg="@CMAKE_SOURCE_DIR@/Config/epnflpconfig.json"
 export O2Transport=nanomsg
 
 SAMPLER="InformationNode"
-SAMPLER+=" --ip 127.0.0.1 --heartbeat 1000"
+SAMPLER+=" --ip 127.0.0.1 --info-config @CMAKE_SOURCE_DIR@/Config/info-config.yaml "
 xterm -geometry 80x25+0+0 -hold -e @InformationNode_BINARY_DIR@/$SAMPLER &
 
 
