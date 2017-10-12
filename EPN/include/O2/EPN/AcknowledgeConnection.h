@@ -13,12 +13,13 @@
 
 #include <O2/Balancer/Devices/Connection.h>
 #include <O2/Balancer/Remote/ClusterManager.h>
+#include <O2/Balancer/Utilities/DeviceSetting.h>
 namespace O2{
     namespace EPN{
 
         class EPNSettings;
         class AcknowledgeConnection : public Balancer::Connection{
-            FairMQChannel acknowledgeChannel;
+            std::shared_ptr<Balancer::DeviceSetting> acknowledgeChannel;
         public:
             AcknowledgeConnection(Balancer::AbstractDevice* device,std::shared_ptr<EPNSettings> settings);
             void updateConnection(std::shared_ptr<Balancer::ClusterManager> clusterManager) override;

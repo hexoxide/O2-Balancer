@@ -84,10 +84,10 @@ void AbstractDevice::update(){
 
 void AbstractDevice::addConnection(std::shared_ptr<Connection> connection){
     this->connnections.push_back(connection);
-    this->fChannels.insert(
+   /* this->fChannels.insert(
         std::pair<std::string, std::vector<FairMQChannel>>(
             connection->getName(),
             std::move(connection->getChannels())
         )
-    );
+    );*/
 }

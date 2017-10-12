@@ -14,16 +14,9 @@
 using namespace O2::EPN;
 
 AcknowledgeConnection::AcknowledgeConnection(Balancer::AbstractDevice* device, std::shared_ptr<EPNSettings> settings) : Balancer::Connection("ack", device){
-    /*this->acknowledgeChannel = this->addChannel(
-        Balancer::ConnectionType::Push,
-        Balancer::ConnectionMethod::Connect,
-        settings->getInformationNodeSetting()->ip,
-        settings->getInformationNodeSetting()->port
-    );*/
-
-    auto dev = device->getClusterManager()->getRegisteredConnection("InformationNode", "ack");
-    LOG(INFO) << "Connected with " << dev.ip << " " << dev.port;
-    this->acknowledgeChannel = this->addChannel(
+   Balancer::DeviceSetting dev = device->getClusterManager()->getRegisteredConnections("InformationNode", "ack")[0];
+   
+   this->acknowledgeChannel = this->addInputChannel(
         Balancer::ConnectionType::Push,
         Balancer::ConnectionMethod::Connect,
         dev.ip,
@@ -32,7 +25,6 @@ AcknowledgeConnection::AcknowledgeConnection(Balancer::AbstractDevice* device, s
 }
 
 void AcknowledgeConnection::updateConnection(std::shared_ptr<Balancer::ClusterManager> clusterManager){
-    auto dev = clusterManager->getRegisteredConnection("InformationNode", "ack");
-    this->acknowledgeChannel.UpdateAddress(dev.ip);
+    Balancer::DeviceSetting dev = clusterManager->getRegisteredConnections("InformationNode", "ack")[0];
     LOG(INFO) << "Connected with " << dev.ip << " " << dev.port;
 }

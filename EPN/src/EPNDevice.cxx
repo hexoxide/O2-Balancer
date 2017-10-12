@@ -102,12 +102,12 @@ void EPNDevice::Run(){
           }
           LOG(INFO) << "Received " <<  (total / 1024 / 1024)  << " Mega Bytes";
           if (mTestMode > 0) {
-            std::unique_lock<std::mutex> locker(this->lock);
+           /* std::unique_lock<std::mutex> locker(this->lock);
             auto ackGate =  this->clusterManager->getRegisteredConnection("InformationNode", "ack");
             LOG(INFO) << ackGate.ip << " " << ackGate.port;
             
           
-            locker.unlock();
+            locker.unlock();*/
 
             // Send an acknowledgement back to the sampler to measure the round trip time
             std::unique_ptr<FairMQMessage> ack(NewMessage(sizeof(uint16_t)));

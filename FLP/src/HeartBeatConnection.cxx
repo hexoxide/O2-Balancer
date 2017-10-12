@@ -14,7 +14,7 @@
 using namespace O2::FLP;
 
 HeartbeatConnection::HeartbeatConnection(std::shared_ptr<FLPSettings> settings, Balancer::AbstractDevice* device) : Balancer::Connection("stf1", device){
-    this->addChannel(
+    this->addInputChannel(
         Balancer::ConnectionType::Subscribe,
         Balancer::ConnectionMethod::Connect,
         settings->getInformationNodeSetting()->ip,

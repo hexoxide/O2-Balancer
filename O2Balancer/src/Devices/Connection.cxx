@@ -1,41 +1,43 @@
 #include "O2/Balancer/Devices/Connection.h"
 #include "O2/Balancer/Devices/AbstractDevice.h"
 #include "O2/Balancer/Exceptions/UnimplementedException.h"
-
+#include "O2/Balancer/Utilities/DeviceSetting.h"
 
 using namespace O2::Balancer;
 
 Connection::Connection(const std::string& name, AbstractDevice* device){
     this->name = name;
     this->device = device;
+    this->device->fChannels.insert(
+        std::pair<std::string, std::vector<FairMQChannel>>(name, std::vector<FairMQChannel>()));
 }
 
 void Connection::updateAllRateLogging(const int& logg){
-    for(auto& i : this->channels){
+     for(auto& i : this->device->fChannels.at(name)){
         i.UpdateRateLogging(logg);
     }
 }
 
 void Connection::updateAllReceiveBuffer(const int& buffer){
-    for(auto& i : this->channels){
+    for(auto& i : this->device->fChannels.at(name)){
         i.UpdateRcvBufSize(buffer);
     }
 }
 
 void Connection::updateAllSendBuffer(const int& buffer){
-    for(auto& i : this->channels){
+    for(auto& i : this->device->fChannels.at(name)){
         i.UpdateSndBufSize(buffer);
     }
 }
 
 void Connection::updateAllSendKernelSize(const int& size){
-    for(auto& i : this->channels){
+    for(auto& i : this->device->fChannels.at(name)){
         i.UpdateSndKernelSize(size);
     }
 }
 
 void Connection::updateAllReceiveKernelSize(const int& size){
-    for(auto& i : this->channels){
+    for(auto& i : this->device->fChannels.at(name)){
         i.UpdateRcvKernelSize(size);
     }
 }
@@ -66,20 +68,32 @@ std::string Connection::methodToString(ConnectionMethod method) const{
     }
 }
 
-std::vector<FairMQChannel> Connection::getChannels() const{
-    return this->channels;
-}
-
-FairMQChannel Connection::addChannel(ConnectionType type, ConnectionMethod method,const std::string& ip, int port){
-    FairMQChannel channel(
+std::shared_ptr<DeviceSetting> Connection::addInputChannel(ConnectionType type, ConnectionMethod method,const std::string& ip, int port){
+    this->device->fChannels.at(name).push_back( FairMQChannel(
         this->typeToString(type),
         this->methodToString(method),
         "tcp://" + std::string(ip) + ":" + std::to_string(port)
-    );
-    this->channels.push_back(channel);
-
-    return channel;
+    ));
+    return std::shared_ptr<DeviceSetting>(new DeviceSetting(port,ip));
 }
+
+std::shared_ptr<DeviceSetting> Connection::addOutputChannel(ConnectionType type, ConnectionMethod method, const std::string& ip, int port){
+    device->addHandle(this->name, O2::Balancer::DeviceSetting(port,ip));
+    return this->addInputChannel(type,method,ip,port);
+   
+}
+
+
+void Connection::updateChannel(std::shared_ptr<DeviceSetting> oldChannel,std::shared_ptr<DeviceSetting> newChannel){
+    for(auto& i : this->device->fChannels.at(name)){
+        if(i.GetAddress() == "tcp://" + oldChannel->ip + ":" + std::to_string(oldChannel->port)){
+            i.UpdateAddress("tcp://" + newChannel->ip + ":" + std::to_string(newChannel->port));
+            LOG(INFO) << "Updated";
+            return;
+        }
+    }
+}
+
 
 void Connection::updateConnection(std::shared_ptr<ClusterManager> clusterManager){
     //virtual

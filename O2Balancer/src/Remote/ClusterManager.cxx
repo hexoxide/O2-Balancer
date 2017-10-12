@@ -106,27 +106,35 @@ void ClusterManager::registerConnection(const std::string& classification, const
 
     dir += "/" + tag;
     std::string value = setting.ip + ":" + std::to_string(setting.port); 
-    rc = zoo_create(zh,dir.c_str(),value.c_str(), value.length(), &ZOO_OPEN_ACL_UNSAFE, ZOO_EPHEMERAL,nullptr, 0);
+    rc = zoo_create(zh,dir.c_str(),value.c_str(), value.length(), &ZOO_OPEN_ACL_UNSAFE, ZOO_EPHEMERAL | ZOO_SEQUENCE ,nullptr, 0);
 }
 
- 
-DeviceSetting ClusterManager::getRegisteredConnection(const std::string& classification, const std::string& tag){
-    
-    int buflen = 512;
-    char buffer[buflen]; 
-    struct Stat stat;
-    std::string dir = "/" + classification + "/" + tag;
-    int rc = zoo_get(this->zh, dir.c_str()  , 0, buffer, &buflen, &stat);
-    if(rc == ZOK){
-        std::string result(buffer,buflen);
-       // LOG(INFO) << result;
-        return DeviceSetting(result);
+
+std::vector<DeviceSetting> ClusterManager::getRegisteredConnections(const std::string& classification, const std::string& tag){
+    std::vector<DeviceSetting> result;
+    struct String_vector vec;
+    std::string dir = "/" + classification;
+    //All connections listed are sequential(just to keep generic code)
+    int rc = zoo_get_children(this->zh, dir.c_str(), 0, &vec);
+    for(int32_t i = 0; i < vec.count; i++){
+        std::string tmp = dir + "/";
+        tmp.append(vec.data[i]);
+        //Is the tag part of the string
+        if (tmp.find(tag) != std::string::npos) {
+            int buflen = 512;
+            char buffer[buflen]; 
+            struct Stat stat;
+            int rc = zoo_get(this->zh, tmp.c_str(),0, buffer, &buflen, &stat);
+            result.push_back(DeviceSetting(std::string(buffer,buflen)));
+        }
+
+        
     }
 
-    return DeviceSetting(0,"");
-    
+ 
+    return result;
 }
-
+ 
 
 void ClusterManager::close(){
    zookeeper_close(this->zh);

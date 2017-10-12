@@ -23,6 +23,7 @@ namespace O2{
         class Settings;
         class AbstractDevice : public FairMQDevice {
         private:
+            friend Connection;
             std::shared_ptr<Settings> settings;
             //this->clusterManager = std::unique_ptr<Balancer::ClusterManager>(new Balancer::ClusterManager(ip,2181));
             std::string defaultTransport;

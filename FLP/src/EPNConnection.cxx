@@ -15,14 +15,13 @@ using namespace O2::FLP;
 
 EPNConnection::EPNConnection(std::shared_ptr<FLPSettings> settings, Balancer::AbstractDevice* device) : Balancer::Connection("stf2", device){
     for(const auto& epn : settings->getEPNSettings()){
-        this->addChannel(
+        this->addInputChannel(
             Balancer::ConnectionType::Push,
             Balancer::ConnectionMethod::Connect,
             epn->ip,
             epn->port
         );
     }
-
     this->updateAllSendBuffer(100000);
     this->updateAllRateLogging(1);
     
