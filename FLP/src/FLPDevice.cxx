@@ -34,8 +34,14 @@ using namespace O2::FLP;
 
 FLPDevice::FLPDevice(std::shared_ptr<FLPSettings> settings) : Balancer::AbstractDevice(O2::Balancer::Globals::DeviceNames::FLP_NAME, settings){
   this->mNumEPNs = settings->getEPNSettings().size();
-  this->addConnection(std::shared_ptr<Balancer::Connection>(new HeartbeatConnection(settings, this)));
-  this->addConnection(std::shared_ptr<Balancer::Connection>(new EPNConnection(settings,this)));
+  this->heartBeatConnection = std::unique_ptr<HeartbeatConnection>(
+    new HeartbeatConnection(settings, this)
+  );
+  this->epnConnection = std::unique_ptr<EPNConnection>(
+    new EPNConnection(settings,this)
+  );
+  //this->addConnection(std::shared_ptr<Balancer::Connection>(new HeartbeatConnection(settings, this)));
+  //this->addConnection(std::shared_ptr<Balancer::Connection>(new EPNConnection(settings,this)));
   this->mEventSize = settings->getSampleSize();
 
 
@@ -59,8 +65,8 @@ void FLPDevice::PreRun(){
 bool FLPDevice::ConditionalRun(){
 
   
-  FairMQChannel& dataInChannel = fChannels.at("stf1").at(0);
-  std::fstream fstream("/dev/null",  std::ifstream::binary | std::ios::in);
+    FairMQChannel& dataInChannel = fChannels.at(this->heartBeatConnection->getName()).at(0);
+    std::fstream fstream("/dev/null",  std::ifstream::binary | std::ios::in);
 
     if(fstream.good()){
       

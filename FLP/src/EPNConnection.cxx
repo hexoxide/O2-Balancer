@@ -11,9 +11,12 @@
 #include "O2/FLP/EPNConnection.h"
 #include "O2/FLP/FLPDevice.h"
 #include "O2/FLP/FLPSettings.h"
+
 using namespace O2::FLP;
 
 EPNConnection::EPNConnection(std::shared_ptr<FLPSettings> settings, Balancer::AbstractDevice* device) : Balancer::Connection("stf2", device){
+    
+    
     for(const auto& epn : settings->getEPNSettings()){
         this->addInputChannel(
             Balancer::ConnectionType::Push,

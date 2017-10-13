@@ -85,8 +85,9 @@ namespace O2{
              *  @param classification,  The root node that contains all the children.
              *  @param tag, The specific name of the Znode. This is not the queryable due the sequential nature of this method.
              *  @param setting,     The device settings, (IP and port)
+             *  @return if the connection was succesfully made
              * */
-            void registerConnection(const std::string& classification, const std::string& tag, const DeviceSetting& setting );
+            bool registerConnection(const std::string& classification, const std::string& tag, const DeviceSetting& setting );
             
             /**
              *  Gets all the devices currently online.

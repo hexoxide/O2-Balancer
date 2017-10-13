@@ -2,7 +2,8 @@
 #include "O2/Balancer/Devices/AbstractDevice.h"
 #include "O2/Balancer/Exceptions/UnimplementedException.h"
 #include "O2/Balancer/Utilities/DeviceSetting.h"
-
+#include <chrono>
+#include <thread>
 using namespace O2::Balancer;
 
 Connection::Connection(const std::string& name, AbstractDevice* device){
@@ -78,7 +79,10 @@ std::shared_ptr<DeviceSetting> Connection::addInputChannel(ConnectionType type, 
 }
 
 std::shared_ptr<DeviceSetting> Connection::addOutputChannel(ConnectionType type, ConnectionMethod method, const std::string& ip, int port){
-    device->addHandle(this->name, O2::Balancer::DeviceSetting(port,ip));
+    //Stop what you are doing, and wait until it's registered in ZooKeeper. In case of failure try again later
+    while(!device->addHandle(this->name, O2::Balancer::DeviceSetting(port,ip))){
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
     return this->addInputChannel(type,method,ip,port);
    
 }

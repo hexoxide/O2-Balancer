@@ -26,14 +26,7 @@ ClusterManager::ClusterManager(const std::string& zooServer, const int& port){
 }
 
 void ClusterManager::addGlobalString(const std::string& name, const std::string& value){
-    //struct ACL CREATE_ONLY_ACL[] = {{ZOO_PERM_ALL, ZOO_AUTH_IDS}};
-    struct ACL CREATE_ONLY_ACL[] = {{ZOO_PERM_ALL, ZOO_AUTH_IDS}};
-    struct ACL_vector CREATE_ONLY = {1, CREATE_ONLY_ACL};
     const std::string dir = std::string(Globals::ZooKeeperTopology::VAR_ZNODE_ROOT) + "/" + name;
-    //"/globals/" + name;
-    char buffer[512];
-
-
     int rc = zoo_create(zh,dir.c_str(),value.c_str(), value.length(), &ZOO_OPEN_ACL_UNSAFE, ZOO_EPHEMERAL,
     nullptr, 0);
     if(rc != ZOK){
@@ -59,9 +52,7 @@ int ClusterManager::getGlobalInteger(const std::string& name, int timeout){
 
 std::string ClusterManager::getGlobalString(const std::string& name, int timeout){
 
-    const std::string directory = std::string(
-        Globals::ZooKeeperTopology::VAR_ZNODE_ROOT) + "/" + name;
-    //"/globals/" + name;
+    const std::string directory = std::string(Globals::ZooKeeperTopology::VAR_ZNODE_ROOT) + "/" + name;
     constexpr int JUMP = 100;
     int currentWaitTime = 0;
     int done = 0;
@@ -81,32 +72,35 @@ std::string ClusterManager::getGlobalString(const std::string& name, int timeout
         }
     }
     throw Exceptions::ClusterHandlerException((boost::format("Could not get variable %s") % name).str());
-   // return std::string("");
 }
 
 void ClusterManager::setupDirectories(){
-//    struct ACL CREATE_ONLY_ACL[] = {{ZOO_PERM_ALL}};
-    int rc = zoo_create(zh, Globals::ZooKeeperTopology::VAR_ZNODE_ROOT, "", 0,  &ZOO_OPEN_ACL_UNSAFE, 0 , nullptr, 0);
-
-    if(rc != ZOK){
-        LOG(ERROR) << "Could not create the globals directory";
+    struct Stat v;
+    if(zoo_exists(zh,Globals::ZooKeeperTopology::VAR_ZNODE_ROOT, true, &v) != ZOK){
+        int rc = zoo_create(zh, Globals::ZooKeeperTopology::VAR_ZNODE_ROOT, "", 0,  &ZOO_OPEN_ACL_UNSAFE, 0 , nullptr, 0);
+        if(rc != ZOK){
+            LOG(ERROR) << "Could not create the globals directory";
+        }
     }
-
-
-    
+   
 }
 
 
-void ClusterManager::registerConnection(const std::string& classification, const std::string& tag, const DeviceSetting& setting ){
+bool ClusterManager::registerConnection(const std::string& classification, const std::string& tag, const DeviceSetting& setting ){
     std::string dir = "/" + classification;
-    int rc = zoo_create(zh, dir.c_str(), "", 0,  &ZOO_OPEN_ACL_UNSAFE, 0 , nullptr, 0);   
-    if(rc != ZOK){
-        LOG(ERROR) << boost::format("Could not create folder %s") % classification;
+    int rc;
+    struct Stat v;
+    if(zoo_exists(zh,dir.c_str(), true, &v) != ZOK){
+      
+        rc = zoo_create(zh, dir.c_str(), "", 0,  &ZOO_OPEN_ACL_UNSAFE, 0 , nullptr, 0);   
+        if(rc != ZOK){
+            LOG(ERROR) << boost::format("Could not create folder %s") % classification;
+        }
     }
-
     dir += "/" + tag;
-    std::string value = setting.ip + ":" + std::to_string(setting.port); 
+    const std::string value = setting.ip + ":" + std::to_string(setting.port); 
     rc = zoo_create(zh,dir.c_str(),value.c_str(), value.length(), &ZOO_OPEN_ACL_UNSAFE, ZOO_EPHEMERAL | ZOO_SEQUENCE ,nullptr, 0);
+    return rc == ZOK;
 }
 
 
@@ -116,19 +110,20 @@ std::vector<DeviceSetting> ClusterManager::getRegisteredConnections(const std::s
     std::string dir = "/" + classification;
     //All connections listed are sequential(just to keep generic code)
     int rc = zoo_get_children(this->zh, dir.c_str(), 0, &vec);
-    for(int32_t i = 0; i < vec.count; i++){
-        std::string tmp = dir + "/";
-        tmp.append(vec.data[i]);
-        //Is the tag part of the string
-        if (tmp.find(tag) != std::string::npos) {
-            int buflen = 512;
-            char buffer[buflen]; 
-            struct Stat stat;
-            int rc = zoo_get(this->zh, tmp.c_str(),0, buffer, &buflen, &stat);
-            result.push_back(DeviceSetting(std::string(buffer,buflen)));
+    if(rc == ZOK){
+        for(int32_t i = 0; i < vec.count; i++){
+            std::string tmp = dir + "/";
+            tmp.append(vec.data[i]);
+            //Is the tag part of the string
+            if (tmp.find(tag) != std::string::npos) {
+                int buflen = 512;
+                char buffer[buflen]; 
+                struct Stat stat;
+                if(zoo_get(this->zh, tmp.c_str(),0, buffer, &buflen, &stat) == ZOK){
+                    result.push_back(DeviceSetting(std::string(buffer,buflen)));
+                }
+            }
         }
-
-        
     }
 
  

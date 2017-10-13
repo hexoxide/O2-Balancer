@@ -48,6 +48,7 @@ namespace O2{
                 device->CatchSignals();
                 std::signal(SIGINT,[](int sig) -> void{
                     shouldStop = true;
+                    LOG(INFO) << "Stopping device!";
                 });
                 device->SetTransport(device->getDefaultTransport());
                 device->ChangeState(T::INIT_DEVICE);

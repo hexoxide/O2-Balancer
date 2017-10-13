@@ -34,12 +34,11 @@ namespace O2{
             virtual void PreRun() override;
             virtual void PostRun() override;
             std::mutex lock;
-            void update();
         public:
             std::shared_ptr<ClusterManager> getClusterManager() const;
             AbstractDevice(const std::string& name, std::shared_ptr<Settings> settings);
-            void addConnection(std::shared_ptr<Connection> connection);
-            void addHandle(const std::string& tag, const DeviceSetting& setting);
+        
+            bool addHandle(const std::string& tag, const DeviceSetting& setting);
             std::string getDefaultTransport() const;
         };
     }

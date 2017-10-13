@@ -34,11 +34,18 @@ InformationDevice::InformationDevice(std::shared_ptr<InfoSettings> settings) :  
   this->timeFrameId = 0;
   this->heartbeat = settings->getHeartRate();
 
-  this->addConnection(std::shared_ptr<Balancer::Connection>( new HeartbeatConnection(
-    settings->getIPAddress(), settings->getHeartBeatPort(), this))
-  );
-  this->addConnection(std::shared_ptr<Balancer::Connection>( new AcknowledgeConnection(
-    settings->getIPAddress(),settings->getAcknowledgePort(),this)));
+  this->heartbeatConnection = std::unique_ptr<HeartbeatConnection>(new HeartbeatConnection(
+    settings->getIPAddress(), settings->getHeartBeatPort(), this
+  )); 
+
+  this->acknowledgeConnection = std::unique_ptr<AcknowledgeConnection>(new AcknowledgeConnection(
+    settings->getIPAddress(),settings->getAcknowledgePort(),this
+  ));
+  //this->addConnection(std::shared_ptr<Balancer::Connection>( new HeartbeatConnection(
+    //settings->getIPAddress(), settings->getHeartBeatPort(), this))
+  //);
+  //this->addConnection(std::shared_ptr<Balancer::Connection>( new AcknowledgeConnection(
+  //  settings->getIPAddress(),settings->getAcknowledgePort(),this)));
 }
 
 
@@ -47,8 +54,6 @@ InformationDevice::~InformationDevice()
 = default;
 
 void InformationDevice::InitTask(){
-  mAckChannelName = "ack";
-  mOutChannelName = "stf1";
 
 }
 
@@ -59,16 +64,17 @@ void InformationDevice::PreRun(){
     } catch (const O2::Balancer::Exceptions::AbstractException& exc){
         LOG(ERROR) << exc.getMessage(); 
     }
-    mLeaving = false;
-    mAckListener = std::thread(&InformationDevice::ListenForAcknowledgement, this);
+    //mLeaving = false;
+    //mAckListener = std::thread(&InformationDevice::ListenForAcknowledgement, this);
 
 
 }
 
 bool InformationDevice::ConditionalRun(){
   FairMQMessagePtr msg(NewSimpleMessage(timeFrameId));
+  
+  if (fChannels.at(heartbeatConnection->getName()).at(0).Send(msg) >= 0) {
 
-  if (fChannels.at(mOutChannelName).at(0).Send(msg) >= 0) {
     mTimeframeRTT[timeFrameId].start = std::chrono::steady_clock::now();
 
     this->timeFrameId = (timeFrameId == UINT16_MAX - 1)? 0 : timeFrameId + 1;
@@ -82,9 +88,9 @@ bool InformationDevice::ConditionalRun(){
 }
 
 void InformationDevice::PostRun(){
-
+    LOG(INFO) << "Stopping";
     mLeaving = true;
-    mAckListener.join();
+    //mAckListener.join();
     AbstractDevice::PostRun();
 }
 
@@ -92,7 +98,7 @@ void InformationDevice::ListenForAcknowledgement(){
   
   uint16_t id = 0;
 
-
+/*
   while (!mLeaving) {
     FairMQMessagePtr idMsg(NewMessage());
 
@@ -107,6 +113,6 @@ void InformationDevice::ListenForAcknowledgement(){
       LOG(INFO) << "Timeframe #" << id << " acknowledged after " << elapsed.count() << " μs.";
     }
   }
-
+  */
   LOG(INFO) << "Exiting Ack listener";
 }

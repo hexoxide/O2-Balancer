@@ -17,7 +17,7 @@ HeartbeatConnection::HeartbeatConnection(std::string ip, int port, Balancer::Abs
     this->addOutputChannel(
         Balancer::ConnectionType::Publish,
         Balancer::ConnectionMethod::Bind,
-        "0.0.0.0",
+        ip,
         port
     );
 

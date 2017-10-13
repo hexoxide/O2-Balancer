@@ -26,10 +26,9 @@ struct f2eHeader {
 };
 
 EPNDevice::EPNDevice(std::shared_ptr<EPNSettings> settings) : Balancer::AbstractDevice(O2::Balancer::Globals::DeviceNames::EPN_NAME, settings){
-  //Setting up the connections, which are stored in each individual class
-  this->addConnection(std::shared_ptr<Balancer::Connection>( new FLPConnection(this,settings)));
-  this->addConnection(std::shared_ptr<Balancer::Connection>(new AcknowledgeConnection(this,settings)));
-  this->addConnection(std::shared_ptr<Balancer::Connection>(new OutputConnection(this,settings)));
+  this->flpConnection = std::unique_ptr<FLPConnection>(new FLPConnection(this,settings));
+  this->acknowledgeConnection = std::unique_ptr<AcknowledgeConnection>(new AcknowledgeConnection(this,settings));
+  this->outputConnection = std::unique_ptr<OutputConnection>(new OutputConnection(this,settings));
   this->mNumFLPs = settings->getAmountOfFLPs();
   mBufferTimeoutInMs = 50;
  
@@ -68,7 +67,7 @@ void EPNDevice::Run(){
     FairMQChannel& ackOutChannel = fChannels.at(mAckChannelName).at(0);
     
     while (CheckCurrentState(RUNNING)) {
-      this->update();
+    //  this->update();
       FairMQParts parts;
   
       if (Receive(parts, mInChannelName, 0, 100) > 0) {

@@ -6,12 +6,9 @@
 #include "O2/Balancer/Globals.h"
 #include "O2/Balancer/Utilities/DeviceSetting.h"
 #include <cstdlib>
-
 #include "O2/Balancer/Exceptions/InitException.h"
 
 using namespace O2::Balancer;
-
-
 
 AbstractDevice::AbstractDevice(const std::string& name, std::shared_ptr<Settings> settings){
     this->fId = name;
@@ -22,9 +19,9 @@ AbstractDevice::AbstractDevice(const std::string& name, std::shared_ptr<Settings
     ));
     this->fNetworkInterface = "default";
     this->fNumIoThreads = 1;
-    this->fPortRangeMin = 22000;
-    this->fPortRangeMax = 32000;
-    this->fInitializationTimeoutInS = 1;
+   // this->fPortRangeMin = 22000;
+   // this->fPortRangeMax = 32000;
+   // this->fInitializationTimeoutInS = 1;
     this->defaultTransport = this->getProperty(
         Globals::EnvironmentVariables::O2_TRANSPORT_VAR,
         Globals::FairMessageOptions::ZERO_MQ
@@ -42,8 +39,8 @@ void AbstractDevice::PreRun(){
 
 }
 
-void AbstractDevice::addHandle(const std::string& tag, const DeviceSetting& setting){
-    this->clusterManager->registerConnection(
+bool AbstractDevice::addHandle(const std::string& tag, const DeviceSetting& setting){
+    return this->clusterManager->registerConnection(
         this->fId,
         tag,
         setting
@@ -51,6 +48,7 @@ void AbstractDevice::addHandle(const std::string& tag, const DeviceSetting& sett
 }
 
 void AbstractDevice::PostRun(){
+    LOG(INFO) << "Closing device : " << fId;
     this->clusterManager->close();
     this->clusterManager.reset();
     this->settings.reset();
@@ -76,18 +74,3 @@ std::shared_ptr<ClusterManager> AbstractDevice::getClusterManager() const{
     return this->clusterManager;
 }
 
-void AbstractDevice::update(){
-    for(auto i : this->connnections){
-        i->updateConnection(this->clusterManager);
-    }
-}
-
-void AbstractDevice::addConnection(std::shared_ptr<Connection> connection){
-    this->connnections.push_back(connection);
-   /* this->fChannels.insert(
-        std::pair<std::string, std::vector<FairMQChannel>>(
-            connection->getName(),
-            std::move(connection->getChannels())
-        )
-    );*/
-}

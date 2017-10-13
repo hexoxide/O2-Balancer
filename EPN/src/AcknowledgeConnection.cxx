@@ -10,17 +10,25 @@
 #include "O2/EPN/AcknowledgeConnection.h"
 #include <O2/Balancer/Devices/AbstractDevice.h>
 #include "O2/EPN/EPNSettings.h"
+#include <chrono>
+#include <thread>
 #include "FairMQLogger.h"
 using namespace O2::EPN;
 
 AcknowledgeConnection::AcknowledgeConnection(Balancer::AbstractDevice* device, std::shared_ptr<EPNSettings> settings) : Balancer::Connection("ack", device){
-   Balancer::DeviceSetting dev = device->getClusterManager()->getRegisteredConnections("InformationNode", "ack")[0];
-   
+   //Balancer::DeviceSetting dev = device->getClusterManager()->getRegisteredConnections("InformationNode", "ack")[0];
+   LOG(INFO) << "TEST\n";
+   auto dev =  device->getClusterManager()->getRegisteredConnections("InformationNode", "ack");
+
+    while(dev.empty()){
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        dev = device->getClusterManager()->getRegisteredConnections("InformationNode", "ack");
+    }
    this->acknowledgeChannel = this->addInputChannel(
         Balancer::ConnectionType::Push,
         Balancer::ConnectionMethod::Connect,
-        dev.ip,
-        dev.port
+        dev[0].ip,
+        dev[0].port
     );
 }
 

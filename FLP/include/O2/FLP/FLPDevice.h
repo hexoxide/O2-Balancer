@@ -20,6 +20,10 @@
 
 namespace O2{
     namespace FLP{
+
+      class EPNConnection;
+      class HeartbeatConnection;
+
         class FLPDevice : public Balancer::AbstractDevice{
           public:
             FLPDevice(std::shared_ptr<FLPSettings> settings);
@@ -29,6 +33,8 @@ namespace O2{
             virtual bool ConditionalRun() override;
             void PreRun() override;
           private:
+            std::unique_ptr<HeartbeatConnection> heartBeatConnection;
+            std::unique_ptr<EPNConnection> epnConnection;
            // std::unique_ptr<Balancer::ClusterManager> clusterManager;
             std::queue<FairMQParts> mSTFBuffer; ///< Buffer for sub-timeframes
             std::queue<std::chrono::steady_clock::time_point> mArrivalTime; ///< Stores arrival times of sub-timeframes
