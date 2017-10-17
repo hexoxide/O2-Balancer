@@ -23,11 +23,11 @@ ClusterManager::ClusterManager(const std::string& zooServer, const int& port){
     this->zh = zookeeper_init(server.c_str(), [](zhandle_t *zzh, int type, int state, const char *path,
         void *watcherCtx)-> void {
             if(type == ZOO_CHILD_EVENT){
-                LOG(WARN) << "Child event happening :" << std::string(path);
+                LOG(INFO) << boost::format("Child event happened at %s") % std::string(path);
                 changedPaths.push_back(std::string(path));
             }
 
-    }, 10000, 0, 0, 0);
+    }, 5000, 0, 0, 0);
 
     this->setupDirectories();
 }

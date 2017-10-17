@@ -64,7 +64,7 @@ void FLPDevice::ResetTask(){
 void FLPDevice::refreshDevice(){
   std::unique_lock<std::mutex> lck (this->zoolock);
   const std::string tmp = this->clusterManager->pathThatNeedsUpdate();
-  this->epnConnection->updateChannels(this->clusterManager->getRegisteredConnections(tmp, "stf2"));
+  this->epnConnection->updateChannels(this->clusterManager->getRegisteredConnections(tmp, this->epnConnection->getName()));
 }
 
 bool FLPDevice::ConditionalRun(){
@@ -94,7 +94,7 @@ bool FLPDevice::ConditionalRun(){
         int direction = currentTimeFrameid % this->epnConnection->amountOfEpns();
       
         LOG(INFO) << boost::format("Direction: %i, amount of epns: %i") % direction % this->epnConnection->amountOfEpns();
-        if (Send(parts, "stf2", direction, 0) < 0) {
+        if (Send(parts, this->epnConnection->getName(), direction, 0) < 0) {
            LOG(ERROR) << boost::format("could not send to EPN %i") % direction;
         }
 

@@ -97,7 +97,7 @@ size_t Connection::channelSize() const{
 }
 
 void Connection::updateChannels(std::vector<DeviceSetting> nChannels){
-
+    //First filter all the old ips out
     std::vector<std::string> deleteIp;
     for(size_t i = 0; i < this->device->fChannels.at(name).size(); i++){
         bool used = false;;
@@ -128,7 +128,7 @@ void Connection::updateChannels(std::vector<DeviceSetting> nChannels){
             }
         )
     );
-
+  
     this->device->fChannels.at(name).shrink_to_fit();
     LOG(WARN) << this->device->fChannels.at(name).size() << " remaining";
 

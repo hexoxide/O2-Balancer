@@ -10,6 +10,7 @@
 #include "O2/EPN/EPNDevice.h"
 #include <memory>
 #include <fstream>
+#include <boost/format.hpp>
 #include <FairMQProgOptions.h>
 #include <future>
 #include <queue>
@@ -63,7 +64,10 @@ void EPNDevice::DiscardIncompleteTimeframes(){
 }
 
 void EPNDevice::refreshDevice(){
-
+  std::unique_lock<std::mutex> lck (this->zoolock);
+  const std::string tmp = this->clusterManager->pathThatNeedsUpdate();
+  LOG(WARN) << boost::format("Refresh called on path %s, yet not fully supported on EPNs.") % tmp;
+  //this->epnConnection->updateChannels(this->clusterManager->getRegisteredConnections(tmp, this->epnConnection->getName()));
 }
 
 void EPNDevice::Run(){
