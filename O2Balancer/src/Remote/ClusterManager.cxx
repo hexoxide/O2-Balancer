@@ -3,6 +3,7 @@
 #include "O2/Balancer/Exceptions/ClusterTypeException.h"
 #include "O2/Balancer/Utilities/DeviceSetting.h"
 #include "O2/Balancer/Exceptions/TimeOutException.h"
+#include "O2/Balancer/Exceptions/UnimplementedException.h"
 #include "FairMQLogger.h"
 #include <zookeeper/zookeeper.h>
 #include "O2/Balancer/Globals.h"
@@ -12,17 +13,36 @@
 #include <regex>
 
 using namespace O2::Balancer;
+//For events
+std::vector<std::string> changedPaths;
 
 ClusterManager::ClusterManager(const std::string& zooServer, const int& port){
+    
     const std::string server = zooServer + ":" + std::to_string(port);
     zoo_set_debug_level(ZOO_LOG_LEVEL_DEBUG);
     this->zh = zookeeper_init(server.c_str(), [](zhandle_t *zzh, int type, int state, const char *path,
         void *watcherCtx)-> void {
-            LOG(INFO) << std::string(path) << "\n";
+            if(type == ZOO_CHILD_EVENT){
+                LOG(WARN) << "Child event happening :" << std::string(path);
+                changedPaths.push_back(std::string(path));
+            }
 
     }, 10000, 0, 0, 0);
 
     this->setupDirectories();
+}
+
+bool ClusterManager::requiresUpdate() const{
+    return !changedPaths.empty();
+}
+
+std::string ClusterManager::pathThatNeedsUpdate(){
+    if(!changedPaths.empty()){
+        std::string dat = changedPaths.back();
+        changedPaths.pop_back();
+        return dat;
+    } 
+    throw Exceptions::UnimplementedException("Array out of index");
 }
 
 void ClusterManager::addGlobalString(const std::string& name, const std::string& value){
@@ -33,14 +53,12 @@ void ClusterManager::addGlobalString(const std::string& name, const std::string&
        // LOG(ERROR) << "Could not create variable";
         throw Exceptions::ClusterHandlerException((boost::format("Could not create a variable with name %s and value %s") % name % value).str());
     }
-
 }
 
 void ClusterManager::addGlobalInteger(const std::string& name, int value){
     this->addGlobalString(name, std::to_string(value));
 }
-
-            
+        
 int ClusterManager::getGlobalInteger(const std::string& name, int timeout){
     try{
         return std::stoi(getGlobalString(name, timeout));
@@ -48,6 +66,15 @@ int ClusterManager::getGlobalInteger(const std::string& name, int timeout){
         const auto msg = boost::format("Global variable %s is not an integer" ) % name;
         throw Exceptions::ClusterTypeException(msg.str());
     }
+}
+
+std::string ClusterManager::addRootIfNeccesary(const std::string& name) const{
+    if(name.length() > 0){
+        if(name[0] != '/'){
+            return "/" + name;
+        }
+    }
+    return name;
 }
 
 std::string ClusterManager::getGlobalString(const std::string& name, int timeout){
@@ -81,13 +108,12 @@ void ClusterManager::setupDirectories(){
         if(rc != ZOK){
             LOG(ERROR) << "Could not create the globals directory";
         }
-    }
-   
+    }  
 }
 
 
 bool ClusterManager::registerConnection(const std::string& classification, const std::string& tag, const DeviceSetting& setting ){
-    std::string dir = "/" + classification;
+    std::string dir = this->addRootIfNeccesary(classification);//"/" + classification;
     int rc;
     struct Stat v;
     if(zoo_exists(zh,dir.c_str(), true, &v) != ZOK){
@@ -107,9 +133,9 @@ bool ClusterManager::registerConnection(const std::string& classification, const
 std::vector<DeviceSetting> ClusterManager::getRegisteredConnections(const std::string& classification, const std::string& tag){
     std::vector<DeviceSetting> result;
     struct String_vector vec;
-    std::string dir = "/" + classification;
+    std::string dir = this->addRootIfNeccesary(classification);//"/" + classification;
     //All connections listed are sequential(just to keep generic code)
-    int rc = zoo_get_children(this->zh, dir.c_str(), 0, &vec);
+    int rc = zoo_get_children(this->zh, dir.c_str(), 1, &vec);
     if(rc == ZOK){
         for(int32_t i = 0; i < vec.count; i++){
             std::string tmp = dir + "/";

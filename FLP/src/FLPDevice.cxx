@@ -15,6 +15,7 @@
 #include <utility>
 #include <FairMQLogger.h>
 #include <FairMQMessage.h>
+#include <boost/format.hpp>
 #include <FairMQProgOptions.h>
 #include <iostream>
 #include <ctime>
@@ -33,23 +34,17 @@ struct f2eHeader {
 using namespace O2::FLP;
 
 FLPDevice::FLPDevice(std::shared_ptr<FLPSettings> settings) : Balancer::AbstractDevice(O2::Balancer::Globals::DeviceNames::FLP_NAME, settings){
-  this->mNumEPNs = settings->getEPNSettings().size();
+
   this->heartBeatConnection = std::unique_ptr<HeartbeatConnection>(
     new HeartbeatConnection(settings, this)
   );
   this->epnConnection = std::unique_ptr<EPNConnection>(
     new EPNConnection(settings,this)
   );
-  //this->addConnection(std::shared_ptr<Balancer::Connection>(new HeartbeatConnection(settings, this)));
-  //this->addConnection(std::shared_ptr<Balancer::Connection>(new EPNConnection(settings,this)));
-  this->mEventSize = settings->getSampleSize();
-
-
-  //while(  this->clusterManager->addGlobalVariable("sampleSize", "10");)
-
+  
+  this->mEventSize = 0;
 }
 
-        
 
 void FLPDevice::PreRun(){
     AbstractDevice::PreRun();
@@ -62,17 +57,24 @@ void FLPDevice::PreRun(){
 }
 
 
-bool FLPDevice::ConditionalRun(){
+void FLPDevice::ResetTask(){
+  
+}
 
+void FLPDevice::refreshDevice(){
+  std::unique_lock<std::mutex> lck (this->zoolock);
+  const std::string tmp = this->clusterManager->pathThatNeedsUpdate();
+  this->epnConnection->updateChannels(this->clusterManager->getRegisteredConnections(tmp, "stf2"));
+}
+
+bool FLPDevice::ConditionalRun(){
   
     FairMQChannel& dataInChannel = fChannels.at(this->heartBeatConnection->getName()).at(0);
     std::fstream fstream("/dev/null",  std::ifstream::binary | std::ios::in);
-
+    
     if(fstream.good()){
-      
       FairMQParts parts;
       const int size = this->mEventSize * 1024 * 1024;
-      //constexpr int size = 90;
       char* buffer = new char[size];  
       fstream.read(buffer,size);
 
@@ -85,18 +87,31 @@ bool FLPDevice::ConditionalRun(){
       ));
       if (dataInChannel.Receive(parts.At(0)) >= 0) {
         uint16_t currentTimeFrameid = *(static_cast<uint16_t*>(parts.At(0)->GetData()));
-        LOG(INFO) << "Current id " << currentTimeFrameid;
-        int direction = currentTimeFrameid % mNumEPNs;
-        LOG(INFO) << "Direction" << direction;
+        if(this->epnConnection->amountOfEpns() == 0){
+          LOG(WARN) << boost::format("Timeframe %i discarded, all the EPNS are ofline") % currentTimeFrameid;
+          return true;
+        }
+        int direction = currentTimeFrameid % this->epnConnection->amountOfEpns();
+      
+        LOG(INFO) << boost::format("Direction: %i, amount of epns: %i") % direction % this->epnConnection->amountOfEpns();
         if (Send(parts, "stf2", direction, 0) < 0) {
-           LOG(ERROR) << "Could not send to EPN " << direction;
+           LOG(ERROR) << boost::format("could not send to EPN %i") % direction;
         }
 
       }
   }
   fstream.close();
   return true;
+}
 
+void FLPDevice::Pause(){
+  LOG(INFO) << "pausing";
+
+}
+
+void FLPDevice::PostRun(){
+  LOG(INFO) << "TEST";
+  //this->ChangeState(FLPDevice::RESET_TASK);
 }
 
 FLPDevice::~FLPDevice(){

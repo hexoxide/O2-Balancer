@@ -14,32 +14,42 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <atomic>
 #include <mutex>
+#include <thread>
+
 #include "../Remote/ClusterManager.h"
 
 namespace O2{   
-    namespace Balancer{     
+    namespace Balancer{
+             
         class Connection;
+
         class Settings;
+
         class AbstractDevice : public FairMQDevice {
         private:
             friend Connection;
-            std::shared_ptr<Settings> settings;
-            //this->clusterManager = std::unique_ptr<Balancer::ClusterManager>(new Balancer::ClusterManager(ip,2181));
+            std::thread zooThread;
+            void checkZooKeeper();
             std::string defaultTransport;
             std::string getProperty(const std::string& varName, const std::string& defValue); 
         protected:
+            std::mutex zoolock;
+            std::shared_ptr<Settings> settings;
             std::shared_ptr<ClusterManager> clusterManager;
             std::vector<std::shared_ptr<Connection>> connnections;
-            virtual void PreRun() override;
-            virtual void PostRun() override;
-            std::mutex lock;
+            std::atomic<bool> nRefresh;
+            std::atomic<bool> nStop;
         public:
-            std::shared_ptr<ClusterManager> getClusterManager() const;
             AbstractDevice(const std::string& name, std::shared_ptr<Settings> settings);
-        
+            std::shared_ptr<ClusterManager> getClusterManager() const;
+            bool needRefresh() const;
+            virtual void refreshDevice() = 0;
+            bool needToStop() const;
             bool addHandle(const std::string& tag, const DeviceSetting& setting);
             std::string getDefaultTransport() const;
+            void quit();
         };
     }
 }

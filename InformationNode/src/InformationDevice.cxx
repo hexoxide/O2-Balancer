@@ -29,7 +29,6 @@
 using namespace O2;
 using namespace O2::InformationNode;
 
-//InformationDevice::InformationDevice(std::string ip, int heartbeat, int acknowledgePort, int heartbeatPort) : Balancer::AbstractDevice(O2::Balancer::Globals::DeviceNames::INFORMATION_NAME){
 InformationDevice::InformationDevice(std::shared_ptr<InfoSettings> settings) :  Balancer::AbstractDevice(O2::Balancer::Globals::DeviceNames::INFORMATION_NAME, settings){
   this->timeFrameId = 0;
   this->heartbeat = settings->getHeartRate();
@@ -41,11 +40,6 @@ InformationDevice::InformationDevice(std::shared_ptr<InfoSettings> settings) :  
   this->acknowledgeConnection = std::unique_ptr<AcknowledgeConnection>(new AcknowledgeConnection(
     settings->getIPAddress(),settings->getAcknowledgePort(),this
   ));
-  //this->addConnection(std::shared_ptr<Balancer::Connection>( new HeartbeatConnection(
-    //settings->getIPAddress(), settings->getHeartBeatPort(), this))
-  //);
-  //this->addConnection(std::shared_ptr<Balancer::Connection>( new AcknowledgeConnection(
-  //  settings->getIPAddress(),settings->getAcknowledgePort(),this)));
 }
 
 
@@ -57,6 +51,10 @@ void InformationDevice::InitTask(){
 
 }
 
+void InformationDevice::refreshDevice(){
+
+}
+
 void InformationDevice::PreRun(){
     AbstractDevice::PreRun(); 
     try{
@@ -64,8 +62,8 @@ void InformationDevice::PreRun(){
     } catch (const O2::Balancer::Exceptions::AbstractException& exc){
         LOG(ERROR) << exc.getMessage(); 
     }
-    //mLeaving = false;
-    //mAckListener = std::thread(&InformationDevice::ListenForAcknowledgement, this);
+    mLeaving = false;
+    mAckListener = std::thread(&InformationDevice::ListenForAcknowledgement, this);
 
 
 }
@@ -90,7 +88,7 @@ bool InformationDevice::ConditionalRun(){
 void InformationDevice::PostRun(){
     LOG(INFO) << "Stopping";
     mLeaving = true;
-    //mAckListener.join();
+    mAckListener.join();
     AbstractDevice::PostRun();
 }
 
@@ -98,11 +96,11 @@ void InformationDevice::ListenForAcknowledgement(){
   
   uint16_t id = 0;
 
-/*
+
   while (!mLeaving) {
     FairMQMessagePtr idMsg(NewMessage());
 
-    if (Receive(idMsg, mAckChannelName, 0, 1000) >= 0) {
+    if (Receive(idMsg, this->acknowledgeConnection->getName(), 0, 1000) >= 0) {
       id = *(static_cast<uint16_t*>(idMsg->GetData()));
       mTimeframeRTT.at(id).end = std::chrono::steady_clock::now();
       // store values in a file
@@ -113,6 +111,6 @@ void InformationDevice::ListenForAcknowledgement(){
       LOG(INFO) << "Timeframe #" << id << " acknowledged after " << elapsed.count() << " μs.";
     }
   }
-  */
+  
   LOG(INFO) << "Exiting Ack listener";
 }

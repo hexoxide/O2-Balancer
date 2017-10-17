@@ -13,12 +13,15 @@ using namespace O2::Balancer;
 AbstractDevice::AbstractDevice(const std::string& name, std::shared_ptr<Settings> settings){
     this->fId = name;
     this->settings = settings;
+    this->nStop = false;
+    this->nRefresh = false;
     this->clusterManager = std::shared_ptr<ClusterManager>(new ClusterManager(
         settings->getSettingsServer()->ip,
         settings->getSettingsServer()->port
     ));
-    this->fNetworkInterface = "default";
-    this->fNumIoThreads = 1;
+    this->zooThread = std::thread(&AbstractDevice::checkZooKeeper,this );
+   // this->fNetworkInterface = "default";
+ //   this->fNumIoThreads = 1;
    // this->fPortRangeMin = 22000;
    // this->fPortRangeMax = 32000;
    // this->fInitializationTimeoutInS = 1;
@@ -32,14 +35,22 @@ AbstractDevice::AbstractDevice(const std::string& name, std::shared_ptr<Settings
         Globals::FairMessageOptions::NANO_MSG,
         Globals::FairMessageOptions::SHARED_MEMORY
     );
+
+    if(this->defaultTransport != Globals::FairMessageOptions::ZERO_MQ){
+        LOG(WARN) << "ZeroMQ is the recommended transport, using " << this->defaultTransport << " might contain bugs";
+    }
 }
 
-void AbstractDevice::PreRun(){
-
-
+void AbstractDevice::checkZooKeeper(){
+    while(!this->nStop){
+        std::unique_lock<std::mutex> lck (this->zoolock);
+        this->nRefresh = this->clusterManager->requiresUpdate();
+    }
 }
 
 bool AbstractDevice::addHandle(const std::string& tag, const DeviceSetting& setting){
+    std::unique_lock<std::mutex> lck (this->zoolock);
+    
     return this->clusterManager->registerConnection(
         this->fId,
         tag,
@@ -47,12 +58,21 @@ bool AbstractDevice::addHandle(const std::string& tag, const DeviceSetting& sett
     );
 }
 
-void AbstractDevice::PostRun(){
+bool AbstractDevice::needRefresh() const{
+    return this->nRefresh;
+}
+
+     
+bool AbstractDevice::needToStop() const{
+    return this->nStop;
+}
+
+/*void AbstractDevice::PostRun(){
     LOG(INFO) << "Closing device : " << fId;
     this->clusterManager->close();
     this->clusterManager.reset();
     this->settings.reset();
-}
+}*/
 
 std::string AbstractDevice::getDefaultTransport() const{
     return this->defaultTransport;
@@ -74,3 +94,11 @@ std::shared_ptr<ClusterManager> AbstractDevice::getClusterManager() const{
     return this->clusterManager;
 }
 
+void AbstractDevice::quit(){
+    this->nStop = true;
+    LOG(INFO) << "closing thread";
+    this->zooThread.join();
+    this->clusterManager->close();
+    this->clusterManager.reset();
+    this->settings.reset();
+}

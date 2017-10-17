@@ -38,7 +38,7 @@ namespace O2{
             public:
             EPNDevice(std::shared_ptr<EPNSettings> settings);
             virtual ~EPNDevice();
-            
+            void refreshDevice() override;
             /// Discared incomplete timeframes after \p fBufferTimeoutInMs.
             void DiscardIncompleteTimeframes();
           protected:

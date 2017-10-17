@@ -31,8 +31,3 @@ AcknowledgeConnection::AcknowledgeConnection(Balancer::AbstractDevice* device, s
         dev[0].port
     );
 }
-
-void AcknowledgeConnection::updateConnection(std::shared_ptr<Balancer::ClusterManager> clusterManager){
-    Balancer::DeviceSetting dev = clusterManager->getRegisteredConnections("InformationNode", "ack")[0];
-    LOG(INFO) << "Connected with " << dev.ip << " " << dev.port;
-}

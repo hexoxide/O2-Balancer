@@ -9,14 +9,4 @@ InformationNode:
   Port: 5550
   Ip: 127.0.0.1
 
-EPNs:
-  - EPN0: 
-    Port: 5561
-    Ip: 127.0.0.1
-  - EPN1: 
-    Port: 5562
-    Ip: 127.0.0.1
-  - EPN2: 
-    Port: 5563
-    Ip: 127.0.0.1
     

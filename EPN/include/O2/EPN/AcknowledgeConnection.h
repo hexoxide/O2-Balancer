@@ -22,7 +22,6 @@ namespace O2{
             std::shared_ptr<Balancer::DeviceSetting> acknowledgeChannel;
         public:
             AcknowledgeConnection(Balancer::AbstractDevice* device,std::shared_ptr<EPNSettings> settings);
-            void updateConnection(std::shared_ptr<Balancer::ClusterManager> clusterManager) override;
         };
     }
 }

@@ -23,6 +23,6 @@ AcknowledgeConnection::AcknowledgeConnection(std::string ip, int port, Balancer:
         port
     );
 
-    this->updateAllReceiveBuffer(100000);
-  //  device->addHandle("ack", O2::Balancer::DeviceSetting(port,ip));
+    this->updateAllReceiveBuffer(10);
+
 }

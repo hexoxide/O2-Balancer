@@ -20,14 +20,10 @@
 namespace O2{
     namespace FLP{
         class FLPSettings : public Balancer::Settings{
-            std::vector<std::shared_ptr<Balancer::DeviceSetting>> epnSettings;
-            int sampleSize;
         protected:
             std::string getSettingsFile() const override;
         public:
             FLPSettings(const boost::program_options::variables_map& settings);
-            std::vector<std::shared_ptr<Balancer::DeviceSetting>> getEPNSettings() const;
-            int getSampleSize() const;
         };
     }
 }

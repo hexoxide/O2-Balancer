@@ -69,9 +69,32 @@ namespace O2{
                 
                 device->ChangeState(T::RUN);
 
-                while(!shouldStop){
-                   std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                while(!device->needToStop() && !shouldStop){
+                    if(device->needRefresh()){
+                        //Refresh the device, stopping everything and setup the new stuff
+                        device->ChangeState(T::STOP);
+                        device->WaitForEndOfState(T::STOP);
+
+                        device->ChangeState(T::RESET_TASK);
+                        device->WaitForEndOfState(T::RESET_TASK);
+
+                        device->ChangeState(T::RESET_DEVICE);
+                        device->WaitForEndOfState(T::RESET_DEVICE);
+                        device->refreshDevice();
+                        device->ChangeState(T::INIT_DEVICE);
+                        
+                        device->WaitForInitialValidation();
+                        device->WaitForEndOfState(T::INIT_DEVICE);
+                            
+                        device->ChangeState(T::INIT_TASK);
+                        device->WaitForEndOfState(T::INIT_TASK);
+
+                        device->ChangeState(T::RUN);
+                    }
                 }
+                
+                LOG(INFO) << "Stopping";
+             
                 device->ChangeState(T::STOP);
 
                 device->ChangeState(T::RESET_TASK);
@@ -80,7 +103,7 @@ namespace O2{
                 device->ChangeState(T::RESET_DEVICE);
                 device->WaitForEndOfState(T::RESET_DEVICE);
                 device->ChangeState(T::END);
-
+                /*
                 if (!device->CheckCurrentState(T::EXITING)){
 
                     device->ChangeState(T::RESET_TASK);
@@ -90,8 +113,8 @@ namespace O2{
                     device->WaitForEndOfState(T::RESET_DEVICE);
             
                     device->ChangeState(T::END);
-                }
-          
+                }*/
+                device->quit();
             }
         };
     }

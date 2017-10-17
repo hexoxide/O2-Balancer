@@ -46,7 +46,7 @@ namespace O2{
         /// Default destructor
         ~InformationDevice() override;
     
-    
+        void refreshDevice() override;
         /// Listens for acknowledgements from the epnReceivers when they collected full timeframe
         void ListenForAcknowledgement();
     

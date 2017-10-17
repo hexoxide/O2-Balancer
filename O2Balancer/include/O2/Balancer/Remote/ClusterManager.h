@@ -32,6 +32,9 @@ namespace O2{
          * */
         class ClusterManager{
             zhandle_t *zh;
+
+            std::string addRootIfNeccesary(const std::string& name) const;
+
             /**
              *  Setups the topology used within ZooKeeper.
              * */
@@ -43,6 +46,11 @@ namespace O2{
              *  @param port         The port of ZooKeeper. (example 2181)
              * */
             ClusterManager(const std::string& zooServer, const int& port);
+
+            bool requiresUpdate() const;
+
+
+            std::string pathThatNeedsUpdate();
 
             /**
              *  Shares an variable with all connected machines on the cluster.

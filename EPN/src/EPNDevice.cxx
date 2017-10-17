@@ -37,7 +37,7 @@ EPNDevice::EPNDevice(std::shared_ptr<EPNSettings> settings) : Balancer::Abstract
         
 void EPNDevice::InitTask(){
    // mNumFLPs = 2;// GetConfig()->GetValue<int>("num-flps");
-  
+    
     mTestMode = 1;//GetConfig()->GetValue<int>("test-mode");
     mInChannelName = "stf2";// GetConfig()->GetValue<std::string>("in-chan-name");
     mOutChannelName = "tf";//GetConfig()->GetValue<std::string>("out-chan-name");
@@ -60,6 +60,10 @@ void EPNDevice::DiscardIncompleteTimeframes(){
       ++it;
     }
   }
+}
+
+void EPNDevice::refreshDevice(){
+
 }
 
 void EPNDevice::Run(){

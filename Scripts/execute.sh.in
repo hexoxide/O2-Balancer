@@ -3,18 +3,13 @@
 
 cfg="@CMAKE_SOURCE_DIR@/Config/epnflpconfig.json"
 
-export O2Transport=nanomsg
+export O2Transport=zeromq
 
 SAMPLER="InformationNode"
 SAMPLER+=" --ip 127.0.0.1 --info-config @CMAKE_SOURCE_DIR@/Config/info-config.yaml "
 xterm -geometry 80x25+0+0 -hold -e @InformationNode_BINARY_DIR@/$SAMPLER &
 
 sleep 1s
-FLP="flp"
-FLP+=" --ip 127.0.0.1 --sample-size 5 --flp-config @CMAKE_SOURCE_DIR@/Config/flp-config.yaml"
-xterm -geometry 80x25+500+0  -e @FLP_BINARY_DIR@/$FLP &
-xterm -geometry 80x25+500+0 -hold -e @FLP_BINARY_DIR@/$FLP &
-xterm -geometry 80x25+500+0  -e @FLP_BINARY_DIR@/$FLP &
 
 EPNCFG=" --epn-config @CMAKE_SOURCE_DIR@/Config/epn-config.yaml"
 
@@ -32,3 +27,12 @@ EPN2="epn"
 EPN2+=$EPNCFG
 EPN2+="  --amount-flps 3 --ip 127.0.0.1 --flp-port 5563"
 xterm -geometry 80x25+1000+0 -hold -e @EPN_BINARY_DIR@/$EPN2 &
+
+sleep 1s
+
+FLP="flp"
+FLP+=" --ip 127.0.0.1 --sample-size 5 --flp-config @CMAKE_SOURCE_DIR@/Config/flp-config.yaml"
+xterm -geometry 80x25+500+0  -e @FLP_BINARY_DIR@/$FLP &
+xterm -geometry 80x25+500+0 -hold -e @FLP_BINARY_DIR@/$FLP &
+xterm -geometry 80x25+500+0  -e @FLP_BINARY_DIR@/$FLP &
+

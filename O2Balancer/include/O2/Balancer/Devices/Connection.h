@@ -74,6 +74,9 @@ namespace O2{
              * */
             void updateAllRateLogging(const int& logg);
 
+            size_t channelSize() const;
+
+            void updateChannels(std::vector<DeviceSetting> nChannels);
             /**
              *  Gets all the FairMQChannels and updates all the receive buffers. 
              *  @param buffer, the updated receive buffer
@@ -119,9 +122,7 @@ namespace O2{
              * @param port, The connection port.
              * */ 
             std::shared_ptr<DeviceSetting> addInputChannel(ConnectionType type, ConnectionMethod method, const std::string& ip, int port);
-          
-            void updateChannel(std::shared_ptr<DeviceSetting> oldChannel, std::shared_ptr<DeviceSetting> newChannel);
-            virtual void updateConnection(std::shared_ptr<ClusterManager> clusterManager);
+        
             std::string getName() const;
         };
     }
