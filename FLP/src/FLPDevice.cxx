@@ -65,8 +65,6 @@ void FLPDevice::refreshDevice(){
   std::unique_lock<std::mutex> lck (this->zoolock);
   const std::string tmp = this->clusterManager->pathThatNeedsUpdate();
   this->epnConnection->updateChannels(this->clusterManager->getRegisteredConnections(tmp, this->epnConnection->getName()));
-  this->epnConnection->updateAllSendBuffer(100000);
-  this->epnConnection->updateAllRateLogging(1);
 }
 
 bool FLPDevice::ConditionalRun(){

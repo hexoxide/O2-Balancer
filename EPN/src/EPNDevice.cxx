@@ -31,7 +31,7 @@ EPNDevice::EPNDevice(std::shared_ptr<EPNSettings> settings) : Balancer::Abstract
   this->acknowledgeConnection = std::unique_ptr<AcknowledgeConnection>(new AcknowledgeConnection(this,settings));
   this->outputConnection = std::unique_ptr<OutputConnection>(new OutputConnection(this,settings));
   this->mNumFLPs = settings->getAmountOfFLPs();
-  mBufferTimeoutInMs = 50;
+  mBufferTimeoutInMs = 10000;
  
 }
 
