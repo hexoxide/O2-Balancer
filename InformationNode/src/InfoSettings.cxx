@@ -7,10 +7,18 @@ InfoSettings::InfoSettings(const boost::program_options::variables_map& settings
     this->heartRate = res["heartrate"].as<int>();
     this->acknowledgePort = res["acknowledgePort"].as<int>();
     this->heartBeatPort = res["heartBeatPort"].as<int>();
+    int sSize = settings["sample-size"].as<int>();
+    
+    this->sampleSize = (sSize <= 0)? res["sample-size"].as<int>() : sSize;
+    
 }
 
 std::string InfoSettings::getSettingsFile() const {
     return "info-config";
+}
+
+int InfoSettings::getSampleSize() const{
+    return this->sampleSize;
 }
 
 int InfoSettings::getHeartRate() const{

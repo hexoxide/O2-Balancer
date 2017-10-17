@@ -2,8 +2,8 @@ InformationNode:
   Port: 5990
   Ip: 127.0.0.1
 
-Settings: 
-  SampleSize: 100
+
+sample-size: 100
 
 SettingsServer:
   Port: 2181

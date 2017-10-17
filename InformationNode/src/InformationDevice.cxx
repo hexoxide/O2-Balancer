@@ -33,6 +33,12 @@ InformationDevice::InformationDevice(std::shared_ptr<InfoSettings> settings) :  
   this->timeFrameId = 0;
   this->heartbeat = settings->getHeartRate();
 
+  try{
+    this->clusterManager->addGlobalInteger("sampleSize", settings->getSampleSize());
+  } catch (const O2::Balancer::Exceptions::AbstractException& exc){
+      LOG(ERROR) << exc.getMessage(); 
+  }
+
   this->heartbeatConnection = std::unique_ptr<HeartbeatConnection>(new HeartbeatConnection(
     settings->getIPAddress(), settings->getHeartBeatPort(), this
   )); 
@@ -57,11 +63,7 @@ void InformationDevice::refreshDevice(){
 
 void InformationDevice::PreRun(){
     AbstractDevice::PreRun(); 
-    try{
-      this->clusterManager->addGlobalInteger("sampleSize", 1);
-    } catch (const O2::Balancer::Exceptions::AbstractException& exc){
-        LOG(ERROR) << exc.getMessage(); 
-    }
+
     mLeaving = false;
     mAckListener = std::thread(&InformationDevice::ListenForAcknowledgement, this);
 

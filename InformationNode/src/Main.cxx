@@ -32,6 +32,7 @@ int main(int argc, char** argv){
         reinit_logger(true, "Information", SEVERITY_MINIMUM); 
         po::options_description options("Information node options");
         options.add_options()
+        ("sample-size", po::value<int>()->default_value(-1), "Sample size of all the flp")
         ("info-config", po::value<std::string>()->default_value("./information.yaml"), "Configuration file");
         auto vm = AddO2Options(options, argc, argv);
         
