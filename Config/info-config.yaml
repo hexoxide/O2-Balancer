@@ -10,6 +10,6 @@ SettingsServer:
   IP: localhost
 
 
-heartrate: 20
+heartrate: 1000
 acknowledgePort: 5990
 heartBeatPort: 5550

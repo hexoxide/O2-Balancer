@@ -14,8 +14,9 @@
 * @since 25-08-2017
 */
 #include <fstream>
+#include <vector>
 #include <ctime>
-
+#include <boost/algorithm/string.hpp>
 #include <FairMQLogger.h>
 #include <FairMQProgOptions.h>
 #include <O2/Balancer/Globals.h>
@@ -103,14 +104,18 @@ void InformationDevice::ListenForAcknowledgement(){
     FairMQMessagePtr idMsg(NewMessage());
 
     if (Receive(idMsg, this->acknowledgeConnection->getName(), 0, 1000) >= 0) {
-      id = *(static_cast<uint16_t*>(idMsg->GetData()));
+      //id = *(static_cast<uint16_t*>(idMsg->GetData()));
+      std::string dat = std::string(static_cast<char*>(idMsg->GetData()), idMsg->GetSize());
+      std::vector<std::string> x;
+      boost::split(x, dat, boost::is_any_of("#"));
+      id = std::atoi(x[1].c_str());
       mTimeframeRTT.at(id).end = std::chrono::steady_clock::now();
       // store values in a file
       auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(mTimeframeRTT.at(id).end - mTimeframeRTT.at(id).start);
 
       
-
-      LOG(INFO) << "Timeframe #" << id << " acknowledged after " << elapsed.count() << " μs.";
+      LOG(INFO) << dat;
+      LOG(INFO) << "Timeframe #" << id << " received from " << x[0] << "  acknowledged after " << elapsed.count() << " μs.";
     }
   }
   

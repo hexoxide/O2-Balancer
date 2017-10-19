@@ -71,6 +71,7 @@ void EPNDevice::refreshDevice(){
 }
 
 void EPNDevice::Run(){
+    const std::string IP = this->settings->getIPAddress();
     uint16_t id = 0; // holds the timeframe id of the currently arrived sub-timeframe.
     FairMQChannel& ackOutChannel = fChannels.at(mAckChannelName).at(0);
     
@@ -117,9 +118,10 @@ void EPNDevice::Run(){
             locker.unlock();*/
 
             // Send an acknowledgement back to the sampler to measure the round trip time
-            std::unique_ptr<FairMQMessage> ack(NewMessage(sizeof(uint16_t)));
-            memcpy(ack->GetData(), &id, sizeof(uint16_t));
-  
+            std::string result = IP + "#" + std::to_string(id);
+            std::unique_ptr<FairMQMessage> ack(NewMessage(sizeof(char) * result.length()));
+            std::memcpy(ack->GetData(), result.c_str(), sizeof(char) * result.length());
+            
             if (ackOutChannel.Send(ack, 0) <= 0) {
               LOG(ERROR) << "Could not send acknowledgement without blocking";
             }
