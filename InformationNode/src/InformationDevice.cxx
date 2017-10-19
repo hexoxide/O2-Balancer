@@ -26,7 +26,6 @@
 
 #include "O2/InformationNode/AcknowledgeConnection.h"
 
-
 using namespace O2;
 using namespace O2::InformationNode;
 
@@ -112,9 +111,6 @@ void InformationDevice::ListenForAcknowledgement(){
       mTimeframeRTT.at(id).end = std::chrono::steady_clock::now();
       // store values in a file
       auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(mTimeframeRTT.at(id).end - mTimeframeRTT.at(id).start);
-
-      
-      LOG(INFO) << dat;
       LOG(INFO) << "Timeframe #" << id << " received from " << x[0] << "  acknowledged after " << elapsed.count() << " μs.";
     }
   }
