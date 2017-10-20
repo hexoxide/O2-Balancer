@@ -20,6 +20,10 @@ namespace O2{
             int flpConnectionPort;
             int outputConnectionPort;
             int amountOfFLPs;
+            std::string goatIP;
+            int heartrate;
+            int amountAfterSignal;
+            int amountBeforeCrash;
         
         protected:
             std::string getSettingsFile() const override;
@@ -28,6 +32,11 @@ namespace O2{
             int FLPConnectionPort() const;
             int OutputConnectionPort() const;
             int getAmountOfFLPs() const;
+
+            std::string getGoatIP() const;
+            int getHeartrate() const;
+            int getAmountAfterSignal() const;
+            int getAmountBeforeCrash() const;
         };
     }
 }

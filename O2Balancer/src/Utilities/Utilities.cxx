@@ -3,11 +3,14 @@
 #include <cstdlib>
 #include <unistd.h>
 #include <sys/types.h>
+#include <boost/format.hpp>
 #include <sys/stat.h>
 #include <FairVersion.h>
+#include "FairMQLogger.h"
 #include <zookeeper/zookeeper_version.h>
 #include <iostream>
 #include "O2/Balancer/Balancer.h"
+#include <thread>
 
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
@@ -75,4 +78,30 @@ void Balancer::daemonize(){
     close(STDIN_FILENO);
     close(STDOUT_FILENO);
     close(STDERR_FILENO);
+}
+
+
+
+void Balancer::crashAfterAmountOfBeats(int heartrate, int amount, bool terminate){
+    LOG(ERROR) << boost::format("Initializing crash in %i ms") % (heartrate * amount);
+    static std::thread crashThread;
+    crashThread = std::thread([](int rate, int amo, bool terminate) -> void{
+        int current = 0;
+        for(;;){
+            if(current >= amo){
+
+                if(terminate){
+                    LOG(ERROR) << "Crashing application with a terminate";
+                    std::terminate();
+                } else {
+                    LOG(ERROR) << "Crashing application with an abort";
+                    std::abort();
+                }
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(rate));
+            current++;
+
+        }
+
+    }, heartrate, amount, terminate);
 }

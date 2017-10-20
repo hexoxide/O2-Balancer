@@ -18,6 +18,8 @@
 #include "O2/EPN/AcknowledgeConnection.h"
 #include "O2/EPN/OutputConnection.h"
 #include <O2/Balancer/Globals.h>
+#include <O2/Balancer/Utilities/Utilities.h>
+
 
 using namespace O2::EPN;
 
@@ -34,6 +36,7 @@ EPNDevice::EPNDevice(std::shared_ptr<EPNSettings> settings) : Balancer::Abstract
   mBufferTimeoutInMs = 10000;
  
 }
+#include "O2/EPN/FLPConnection.h"
 
         
 void EPNDevice::InitTask(){
@@ -71,10 +74,15 @@ void EPNDevice::refreshDevice(){
 }
 
 void EPNDevice::Run(){
+
     const std::string IP = this->settings->getIPAddress();
     uint16_t id = 0; // holds the timeframe id of the currently arrived sub-timeframe.
     FairMQChannel& ackOutChannel = fChannels.at(mAckChannelName).at(0);
-    
+    EPNSettings* settings = static_cast<EPNSettings*>(this->settings.get());
+  
+    const bool isGoat = (IP == settings->getGoatIP());
+    bool crashing = false;
+
     while (CheckCurrentState(RUNNING)) {
     //  this->update();
       FairMQParts parts;
@@ -114,10 +122,10 @@ void EPNDevice::Run(){
             auto ackGate =  this->clusterManager->getRegisteredConnection("InformationNode", "ack");
             LOG(INFO) << ackGate.ip << " " << ackGate.port;
             
-          
-            locker.unlock();*/
+            */
 
             // Send an acknowledgement back to the sampler to measure the round trip time
+            
             std::string result = IP + "#" + std::to_string(id);
             std::unique_ptr<FairMQMessage> ack(NewMessage(sizeof(char) * result.length()));
             std::memcpy(ack->GetData(), result.c_str(), sizeof(char) * result.length());
@@ -125,6 +133,21 @@ void EPNDevice::Run(){
             if (ackOutChannel.Send(ack, 0) <= 0) {
               LOG(ERROR) << "Could not send acknowledgement without blocking";
             }
+
+            if(isGoat){
+
+                if(id >= settings->getAmountBeforeCrash()){
+                  if(!crashing){
+                      Balancer::crashAfterAmountOfBeats(
+                        settings->getHeartrate(),
+                        settings->getAmountAfterSignal(),
+                        true
+                      );
+                      crashing = true;
+                  }
+                }
+            }
+
           }
           else
           {
