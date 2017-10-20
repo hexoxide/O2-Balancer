@@ -25,6 +25,9 @@ namespace O2{
   namespace InformationNode{
     class InfoSettings;
     
+    class AcknowledgeConnection;
+    class HeartbeatConnection;
+
     struct timeframeDuration{
         std::chrono::steady_clock::time_point start;
         std::chrono::steady_clock::time_point end;
@@ -33,14 +36,17 @@ namespace O2{
     /// Publishes timeframes IDs for flpSenders (used only in test mode)
     
     class InformationDevice : public Balancer::AbstractDevice{
-      public:
+    private:
+        std::unique_ptr<AcknowledgeConnection> acknowledgeConnection;
+        std::unique_ptr<HeartbeatConnection> heartbeatConnection;
+    public:
         /// Default constructor
         //InformationDevice(std::string ip, int heartbeat, int acknowledgePort, int heartbeatPort);
         InformationDevice(std::shared_ptr<InfoSettings> settings);
         /// Default destructor
         ~InformationDevice() override;
     
-    
+        void refreshDevice() override;
         /// Listens for acknowledgements from the epnReceivers when they collected full timeframe
         void ListenForAcknowledgement();
     

@@ -14,8 +14,9 @@
 * @since 25-08-2017
 */
 #include <fstream>
+#include <vector>
 #include <ctime>
-
+#include <boost/algorithm/string.hpp>
 #include <FairMQLogger.h>
 #include <FairMQProgOptions.h>
 #include <O2/Balancer/Globals.h>
@@ -25,20 +26,26 @@
 
 #include "O2/InformationNode/AcknowledgeConnection.h"
 
-
 using namespace O2;
 using namespace O2::InformationNode;
 
-//InformationDevice::InformationDevice(std::string ip, int heartbeat, int acknowledgePort, int heartbeatPort) : Balancer::AbstractDevice(O2::Balancer::Globals::DeviceNames::INFORMATION_NAME){
 InformationDevice::InformationDevice(std::shared_ptr<InfoSettings> settings) :  Balancer::AbstractDevice(O2::Balancer::Globals::DeviceNames::INFORMATION_NAME, settings){
   this->timeFrameId = 0;
   this->heartbeat = settings->getHeartRate();
 
-  this->addConnection(HeartbeatConnection(
-    settings->getIPAddress(), settings->getHeartBeatPort(), this)
-  );
-  this->addConnection(AcknowledgeConnection(
-    settings->getIPAddress(),settings->getAcknowledgePort(),this));
+  try{
+    this->clusterManager->addGlobalInteger("sampleSize", settings->getSampleSize());
+  } catch (const O2::Balancer::Exceptions::AbstractException& exc){
+      LOG(ERROR) << exc.getMessage(); 
+  }
+
+  this->heartbeatConnection = std::unique_ptr<HeartbeatConnection>(new HeartbeatConnection(
+    settings->getIPAddress(), settings->getHeartBeatPort(), this
+  )); 
+
+  this->acknowledgeConnection = std::unique_ptr<AcknowledgeConnection>(new AcknowledgeConnection(
+    settings->getIPAddress(),settings->getAcknowledgePort(),this
+  ));
 }
 
 
@@ -47,18 +54,16 @@ InformationDevice::~InformationDevice()
 = default;
 
 void InformationDevice::InitTask(){
-  mAckChannelName = "ack";
-  mOutChannelName = "stf1";
+
+}
+
+void InformationDevice::refreshDevice(){
 
 }
 
 void InformationDevice::PreRun(){
     AbstractDevice::PreRun(); 
-    try{
-      this->clusterManager->addGlobalInteger("sampleSize", 1);
-    } catch (const O2::Balancer::Exceptions::AbstractException& exc){
-        LOG(ERROR) << exc.getMessage(); 
-    }
+
     mLeaving = false;
     mAckListener = std::thread(&InformationDevice::ListenForAcknowledgement, this);
 
@@ -67,8 +72,9 @@ void InformationDevice::PreRun(){
 
 bool InformationDevice::ConditionalRun(){
   FairMQMessagePtr msg(NewSimpleMessage(timeFrameId));
+  
+  if (fChannels.at(heartbeatConnection->getName()).at(0).Send(msg) >= 0) {
 
-  if (fChannels.at(mOutChannelName).at(0).Send(msg) >= 0) {
     mTimeframeRTT[timeFrameId].start = std::chrono::steady_clock::now();
 
     this->timeFrameId = (timeFrameId == UINT16_MAX - 1)? 0 : timeFrameId + 1;
@@ -82,7 +88,7 @@ bool InformationDevice::ConditionalRun(){
 }
 
 void InformationDevice::PostRun(){
-
+    LOG(INFO) << "Stopping";
     mLeaving = true;
     mAckListener.join();
     AbstractDevice::PostRun();
@@ -96,17 +102,18 @@ void InformationDevice::ListenForAcknowledgement(){
   while (!mLeaving) {
     FairMQMessagePtr idMsg(NewMessage());
 
-    if (Receive(idMsg, mAckChannelName, 0, 1000) >= 0) {
-      id = *(static_cast<uint16_t*>(idMsg->GetData()));
+    if (Receive(idMsg, this->acknowledgeConnection->getName(), 0, 1000) >= 0) {
+      //id = *(static_cast<uint16_t*>(idMsg->GetData()));
+      std::string dat = std::string(static_cast<char*>(idMsg->GetData()), idMsg->GetSize());
+      std::vector<std::string> x;
+      boost::split(x, dat, boost::is_any_of("#"));
+      id = std::atoi(x[1].c_str());
       mTimeframeRTT.at(id).end = std::chrono::steady_clock::now();
       // store values in a file
       auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(mTimeframeRTT.at(id).end - mTimeframeRTT.at(id).start);
-
-      
-
-      LOG(INFO) << "Timeframe #" << id << " acknowledged after " << elapsed.count() << " μs.";
+      LOG(INFO) << "Timeframe #" << id << " received from " << x[0] << "  acknowledged after " << elapsed.count() << " μs.";
     }
   }
-
+  
   LOG(INFO) << "Exiting Ack listener";
 }

@@ -14,7 +14,7 @@ using namespace O2::EPN;
 
 FLPConnection::FLPConnection(Balancer::AbstractDevice* device, std::shared_ptr<EPNSettings> settings) : Balancer::Connection("stf2", device){
 
-    this->addChannel(
+    this->addOutputChannel(
         Balancer::ConnectionType::Pull,
         Balancer::ConnectionMethod::Bind,
         settings->getIPAddress(),

@@ -12,7 +12,7 @@
 using namespace O2::EPN;
 
 OutputConnection::OutputConnection(Balancer::AbstractDevice* device, std::shared_ptr<EPNSettings> settings) : Balancer::Connection("tf", device){
-    this->addChannel(
+    this->addOutputChannel(
         Balancer::ConnectionType::Publish,
         Balancer::ConnectionMethod::Bind,
         settings->getIPAddress(),

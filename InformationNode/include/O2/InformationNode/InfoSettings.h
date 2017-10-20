@@ -19,6 +19,7 @@ namespace O2{
             int heartRate;
             int acknowledgePort;
             int heartBeatPort; 
+            int sampleSize;
         protected:
             std::string getSettingsFile() const override;
 
@@ -27,6 +28,7 @@ namespace O2{
             int getHeartRate() const;
             int getAcknowledgePort() const;
             int getHeartBeatPort() const;
+            int getSampleSize() const;
         };
     }
 

@@ -16,20 +16,32 @@
 #include <queue>
 #include <string>
 #include <memory>
+#include <thread>
+#include <mutex>
+#include <atomic>
 #include "./FLPSettings.h"
 
 namespace O2{
     namespace FLP{
+
+      class EPNConnection;
+      class HeartbeatConnection;
+
         class FLPDevice : public Balancer::AbstractDevice{
           public:
             FLPDevice(std::shared_ptr<FLPSettings> settings);
             virtual ~FLPDevice();
-            
+            void refreshDevice() override;
           protected:
             virtual bool ConditionalRun() override;
-            void PreRun() override;
+            virtual void ResetTask() override;
+            virtual void PreRun() override;
+            virtual void Pause() override;
+            virtual void PostRun() override;
           private:
-           // std::unique_ptr<Balancer::ClusterManager> clusterManager;
+            std::unique_ptr<HeartbeatConnection> heartBeatConnection;
+            std::unique_ptr<EPNConnection> epnConnection;
+
             std::queue<FairMQParts> mSTFBuffer; ///< Buffer for sub-timeframes
             std::queue<std::chrono::steady_clock::time_point> mArrivalTime; ///< Stores arrival times of sub-timeframes
         

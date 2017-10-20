@@ -32,6 +32,9 @@ namespace O2{
          * */
         class ClusterManager{
             zhandle_t *zh;
+
+            std::string addRootIfNeccesary(const std::string& name) const;
+
             /**
              *  Setups the topology used within ZooKeeper.
              * */
@@ -44,6 +47,11 @@ namespace O2{
              * */
             ClusterManager(const std::string& zooServer, const int& port);
 
+            bool requiresUpdate() const;
+
+
+            std::string pathThatNeedsUpdate();
+
             /**
              *  Shares an variable with all connected machines on the cluster.
              *  However when the machine disconnects, the variable is lost.
@@ -52,7 +60,13 @@ namespace O2{
              * */
             void addGlobalString(const std::string& name, const std::string& value);
             
+            /**
+             *  Adds a global variable to be shared among the devices.
+             *  @param name,    The name that can be used to query the variable.
+             *  @param value,   The value of the variable
+             * */
             void addGlobalInteger(const std::string& name,  int value);
+            
             /**
              *  Gets a variable that is shared from an other machine.
              *  Although time out is not really required, Sometimes machines are not started in the same order thus requiring to wait a while.
@@ -62,13 +76,36 @@ namespace O2{
              * */
             std::string getGlobalString(const std::string& name, int timeout = 0);
             
+            /**
+             *  Gets a global integer shared among the cluster.
+             *  This will cast everything for you, when the integer can't be cast a type error will be thrown.
+             *  @throws ClusterTypeException,   when something went wrong with casting.
+             *  @param name,    the name of the global variable.
+             *  @param timeout, How long do you wish to wait in milliseconds?
+             *  @return the variable.
+             * */
             int getGlobalInteger(const std::string& name, int timeout);
 
             /**
-             *  Not yet implemented
+             *  Registers a (input) connection to be available.
+             *  Simply put, it will add a sequential Znode in Zookeeper containing a IP and the port.
+             *  Other devices can then connect, when the programs stops functioning the znode will dissapear.
+             *  @param classification,  The root node that contains all the children.
+             *  @param tag, The specific name of the Znode. This is not the queryable due the sequential nature of this method.
+             *  @param setting,     The device settings, (IP and port)
+             *  @return if the connection was succesfully made
              * */
-            void registerConnection(const std::string& classification, const std::string& tag, const DeviceSetting& setting );
+            bool registerConnection(const std::string& classification, const std::string& tag, const DeviceSetting& setting );
             
+            /**
+             *  Gets all the devices currently online.
+             *  This method should be called even when an device is unique.
+             *  @param classificiation, the root node that contains the devices.
+             *  @param tag, The specific name of the Znode. 
+             *  @return All the device settings(ip and port) with those specific tag.
+             * */
+            std::vector<DeviceSetting> getRegisteredConnections(const std::string& classification, const std::string& tag);
+         
             /**
              *  Closes the connection, making the class unusable after calling this.
              * */

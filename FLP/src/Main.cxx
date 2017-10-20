@@ -25,19 +25,11 @@ int main(int argc, char** argv){
     ("sample-size",  po::value<int>()->default_value(1))
     (CONFIG_FILE, po::value<std::string>()->default_value("./flp.yaml"), "Configuration file");
     
-
-
     auto vm = Balancer::AddO2Options(options, argc, argv);
 
 
     reinit_logger(true, "FLP", SEVERITY_MINIMUM);
 
-    //O2::Balancer::ClusterManager manager("localhost",2181);
-    //manager.registerCluster("FLP");
-    
-// vm[CONFIG_FILE].as<std::string>()
-    //Load the settings
-    //FLPSettings settings(vm);
     auto settings = std::shared_ptr<FLPSettings>(new FLPSettings(vm));
     try{
         Balancer::DeviceManager<FLPDevice> manager(

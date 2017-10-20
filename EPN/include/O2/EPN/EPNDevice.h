@@ -19,7 +19,14 @@
 
 namespace O2{
     namespace EPN{
+        class AcknowledgeConnection;
+        class FLPConnection;
+        class OutputConnection;
+
         class EPNDevice : public Balancer::AbstractDevice{
+            std::unique_ptr<AcknowledgeConnection> acknowledgeConnection;
+            std::unique_ptr<FLPConnection> flpConnection;
+            std::unique_ptr<OutputConnection> outputConnection;
         protected:
             struct TFBuffer
             {
@@ -31,7 +38,7 @@ namespace O2{
             public:
             EPNDevice(std::shared_ptr<EPNSettings> settings);
             virtual ~EPNDevice();
-            
+            void refreshDevice() override;
             /// Discared incomplete timeframes after \p fBufferTimeoutInMs.
             void DiscardIncompleteTimeframes();
           protected:

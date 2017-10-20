@@ -10,6 +10,7 @@
 #include "O2/EPN/EPNDevice.h"
 #include <memory>
 #include <fstream>
+#include <boost/format.hpp>
 #include <FairMQProgOptions.h>
 #include <future>
 #include <queue>
@@ -26,18 +27,18 @@ struct f2eHeader {
 };
 
 EPNDevice::EPNDevice(std::shared_ptr<EPNSettings> settings) : Balancer::AbstractDevice(O2::Balancer::Globals::DeviceNames::EPN_NAME, settings){
-  //Setting up the connections, which are stored in each individual class
-  this->addConnection(FLPConnection(this,settings));
-  this->addConnection(AcknowledgeConnection(this,settings));
-  this->addConnection(OutputConnection(this,settings));
+  this->flpConnection = std::unique_ptr<FLPConnection>(new FLPConnection(this,settings));
+  this->acknowledgeConnection = std::unique_ptr<AcknowledgeConnection>(new AcknowledgeConnection(this,settings));
+  this->outputConnection = std::unique_ptr<OutputConnection>(new OutputConnection(this,settings));
   this->mNumFLPs = settings->getAmountOfFLPs();
-  mBufferTimeoutInMs = 50;
+  mBufferTimeoutInMs = 10000;
+ 
 }
 
         
 void EPNDevice::InitTask(){
    // mNumFLPs = 2;// GetConfig()->GetValue<int>("num-flps");
-  
+    
     mTestMode = 1;//GetConfig()->GetValue<int>("test-mode");
     mInChannelName = "stf2";// GetConfig()->GetValue<std::string>("in-chan-name");
     mOutChannelName = "tf";//GetConfig()->GetValue<std::string>("out-chan-name");
@@ -47,6 +48,7 @@ void EPNDevice::InitTask(){
 
 void EPNDevice::DiscardIncompleteTimeframes(){
   auto it = mTimeframeBuffer.begin();
+
 
   while (it != mTimeframeBuffer.end()) {
     if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - (it->second).start).count() > mBufferTimeoutInMs) {
@@ -61,11 +63,20 @@ void EPNDevice::DiscardIncompleteTimeframes(){
   }
 }
 
+void EPNDevice::refreshDevice(){
+  std::unique_lock<std::mutex> lck (this->zoolock);
+  const std::string tmp = this->clusterManager->pathThatNeedsUpdate();
+  LOG(WARN) << boost::format("Refresh called on path %s, yet not fully supported on EPNs.") % tmp;
+  //this->epnConnection->updateChannels(this->clusterManager->getRegisteredConnections(tmp, this->epnConnection->getName()));
+}
+
 void EPNDevice::Run(){
+    const std::string IP = this->settings->getIPAddress();
     uint16_t id = 0; // holds the timeframe id of the currently arrived sub-timeframe.
     FairMQChannel& ackOutChannel = fChannels.at(mAckChannelName).at(0);
     
     while (CheckCurrentState(RUNNING)) {
+    //  this->update();
       FairMQParts parts;
   
       if (Receive(parts, mInChannelName, 0, 100) > 0) {
@@ -99,10 +110,18 @@ void EPNDevice::Run(){
           }
           LOG(INFO) << "Received " <<  (total / 1024 / 1024)  << " Mega Bytes";
           if (mTestMode > 0) {
+           /* std::unique_lock<std::mutex> locker(this->lock);
+            auto ackGate =  this->clusterManager->getRegisteredConnection("InformationNode", "ack");
+            LOG(INFO) << ackGate.ip << " " << ackGate.port;
+            
+          
+            locker.unlock();*/
+
             // Send an acknowledgement back to the sampler to measure the round trip time
-            std::unique_ptr<FairMQMessage> ack(NewMessage(sizeof(uint16_t)));
-            memcpy(ack->GetData(), &id, sizeof(uint16_t));
-  
+            std::string result = IP + "#" + std::to_string(id);
+            std::unique_ptr<FairMQMessage> ack(NewMessage(sizeof(char) * result.length()));
+            std::memcpy(ack->GetData(), result.c_str(), sizeof(char) * result.length());
+            
             if (ackOutChannel.Send(ack, 0) <= 0) {
               LOG(ERROR) << "Could not send acknowledgement without blocking";
             }
