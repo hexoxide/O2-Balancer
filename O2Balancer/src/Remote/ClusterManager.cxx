@@ -7,7 +7,7 @@
 #include "FairMQLogger.h"
 #include <zookeeper/zookeeper.h>
 #include "O2/Balancer/Globals.h"
-#include <boost/format.hpp>
+
 #include <chrono>
 #include <thread>
 #include <regex>
@@ -152,7 +152,12 @@ std::vector<DeviceSetting> ClusterManager::getRegisteredConnections(const std::s
             }
         }
     }
-
+    std::sort(result.begin(), result.end(), [this](DeviceSetting l, DeviceSetting r) -> bool {
+        if(l.ip == r.ip){
+            return l.port > r.port;
+        }
+        return l.ip > r.ip;
+    } );
  
     return result;
 }

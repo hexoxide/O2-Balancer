@@ -6,6 +6,7 @@
 #include "O2/Balancer/Globals.h"
 #include "O2/Balancer/Utilities/DeviceSetting.h"
 #include <cstdlib>
+#include <boost/format.hpp>
 #include "O2/Balancer/Exceptions/InitException.h"
 
 using namespace O2::Balancer;
@@ -50,7 +51,7 @@ void AbstractDevice::checkZooKeeper(){
 
 bool AbstractDevice::addHandle(const std::string& tag, const DeviceSetting& setting){
     std::unique_lock<std::mutex> lck (this->zoolock);
-    std::string name = tag + setting.ip + std::to_string(setting.port);
+    const std::string name = (boost::format("%s:%s:%d") % tag % setting.ip % setting.port).str();
     return this->clusterManager->registerConnection(
         this->fId,
         name,
