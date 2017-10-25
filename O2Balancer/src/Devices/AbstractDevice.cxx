@@ -50,10 +50,10 @@ void AbstractDevice::checkZooKeeper(){
 
 bool AbstractDevice::addHandle(const std::string& tag, const DeviceSetting& setting){
     std::unique_lock<std::mutex> lck (this->zoolock);
-    
+    std::string name = tag + setting.ip + std::to_string(setting.port);
     return this->clusterManager->registerConnection(
         this->fId,
-        tag,
+        name,
         setting
     );
 }

@@ -80,7 +80,8 @@ std::shared_ptr<DeviceSetting> Connection::addInputChannel(ConnectionType type, 
 }
 
 std::shared_ptr<DeviceSetting> Connection::addOutputChannel(ConnectionType type, ConnectionMethod method, const std::string& ip, int port){
-    //Stop what you are doing, and wait until it's registered in ZooKeeper. In case of failure try again later
+    //Stop what you are doing, and wait until it's registered in ZooKeeper. In case of failure try again later  
+    //const std::string name = this->name + ip + std::to_string(port); 
     while(!device->addHandle(this->name, O2::Balancer::DeviceSetting(port,ip))){
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         LOG(INFO) << "Sleeping for next handle";

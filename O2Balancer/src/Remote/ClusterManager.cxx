@@ -19,7 +19,7 @@ std::vector<std::string> changedPaths;
 ClusterManager::ClusterManager(const std::string& zooServer, const int& port){
     
     const std::string server = zooServer + ":" + std::to_string(port);
-    zoo_set_debug_level(ZOO_LOG_LEVEL_DEBUG);
+    zoo_set_debug_level(ZOO_LOG_LEVEL_INFO);
     this->zh = zookeeper_init(server.c_str(), [](zhandle_t *zzh, int type, int state, const char *path,
         void *watcherCtx)-> void {
             if(type == ZOO_CHILD_EVENT){
@@ -124,8 +124,9 @@ bool ClusterManager::registerConnection(const std::string& classification, const
         }
     }
     dir += "/" + tag;
+    LOG(INFO) << dir;
     const std::string value = setting.ip + ":" + std::to_string(setting.port); 
-    rc = zoo_create(zh,dir.c_str(),value.c_str(), value.length(), &ZOO_OPEN_ACL_UNSAFE, ZOO_EPHEMERAL | ZOO_SEQUENCE ,nullptr, 0);
+    rc = zoo_create(zh,dir.c_str(),value.c_str(), value.length(), &ZOO_OPEN_ACL_UNSAFE, ZOO_EPHEMERAL ,nullptr, 0);
     return rc == ZOK;
 }
 
