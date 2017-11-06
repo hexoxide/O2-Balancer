@@ -23,7 +23,7 @@
 #include <O2/Balancer/Exceptions/AbstractException.h>
 #include "O2/InformationNode/InformationDevice.h"
 #include "O2/InformationNode/InfoSettings.h"
-
+#include <O2/Balancer/Utilities/DataTypes.h>
 #include "O2/InformationNode/AcknowledgeConnection.h"
 
 using namespace O2;
@@ -33,11 +33,15 @@ InformationDevice::InformationDevice(std::shared_ptr<InfoSettings> settings) :  
   this->timeFrameId = 0;
   this->heartbeat = settings->getHeartRate();
   this->useClusterManager([this, settings](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void {
+    for(;;){  
       try{
-        manager->addGlobalInteger("sampleSize", settings->getSampleSize());
-      } catch (const O2::Balancer::Exceptions::AbstractException& exc){
-          LOG(ERROR) << exc.getMessage(); 
+          manager->addGlobalInteger("sampleSize", settings->getSampleSize());
+          break;
+        } catch (const O2::Balancer::Exceptions::AbstractException& exc){
+            LOG(ERROR) << exc.getMessage(); 
+            std::this_thread::sleep_for(std::chrono::milliseconds(3));
       }
+    }
   });
 
 
@@ -91,26 +95,27 @@ bool InformationDevice::conditionalRun(){
 void InformationDevice::postRun(){
     LOG(INFO) << "Stopping";
     mLeaving = true;
-    mAckListener.join();
+    if(mAckListener.joinable()){
+      mAckListener.join();
+    }
+
 }
 
 
 void InformationDevice::ListenForAcknowledgement(){
   
-  uint16_t id = 0;
+  O2::Balancer::heartbeatID id = 0;
 
 
   while (!mLeaving) {
     FairMQMessagePtr idMsg(NewMessage());
 
     if (Receive(idMsg, this->acknowledgeConnection->getName(), 0, 1000) >= 0) {
-      //id = *(static_cast<uint16_t*>(idMsg->GetData()));
       std::string dat = std::string(static_cast<char*>(idMsg->GetData()), idMsg->GetSize());
       std::vector<std::string> x;
       boost::split(x, dat, boost::is_any_of("#"));
       id = std::atoi(x[1].c_str());
       mTimeframeRTT.at(id).end = std::chrono::steady_clock::now();
-      // store values in a file
       auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(mTimeframeRTT.at(id).end - mTimeframeRTT.at(id).start);
       LOG(INFO) << "Timeframe #" << id << " received from " << x[0] << "  acknowledged after " << elapsed.count() << " μs.";
     }
