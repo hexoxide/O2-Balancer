@@ -16,8 +16,7 @@
 using namespace O2::EPN;
 
 AcknowledgeConnection::AcknowledgeConnection(Balancer::AbstractDevice* device, std::shared_ptr<EPNSettings> settings) : Balancer::Connection("ack", device){
-   //Balancer::DeviceSetting dev = device->getClusterManager()->getRegisteredConnections("InformationNode", "ack")[0];
-   LOG(INFO) << "TEST\n";
+
    auto dev =  device->getClusterManager()->getRegisteredConnections("InformationNode", "ack");
 
     while(dev.empty()){

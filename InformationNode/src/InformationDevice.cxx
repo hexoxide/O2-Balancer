@@ -32,12 +32,14 @@ using namespace O2::InformationNode;
 InformationDevice::InformationDevice(std::shared_ptr<InfoSettings> settings) :  Balancer::AbstractDevice(O2::Balancer::Globals::DeviceNames::INFORMATION_NAME, settings){
   this->timeFrameId = 0;
   this->heartbeat = settings->getHeartRate();
+  this->useClusterManager([this, settings](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void {
+      try{
+        manager->addGlobalInteger("sampleSize", settings->getSampleSize());
+      } catch (const O2::Balancer::Exceptions::AbstractException& exc){
+          LOG(ERROR) << exc.getMessage(); 
+      }
+  });
 
-  try{
-    this->clusterManager->addGlobalInteger("sampleSize", settings->getSampleSize());
-  } catch (const O2::Balancer::Exceptions::AbstractException& exc){
-      LOG(ERROR) << exc.getMessage(); 
-  }
 
   this->heartbeatConnection = std::unique_ptr<HeartbeatConnection>(new HeartbeatConnection(
     settings->getIPAddress(), settings->getHeartBeatPort(), this
@@ -61,8 +63,7 @@ void InformationDevice::refreshDevice(){
 
 }
 
-void InformationDevice::PreRun(){
-    AbstractDevice::PreRun(); 
+void InformationDevice::preRun(){
 
     mLeaving = false;
     mAckListener = std::thread(&InformationDevice::ListenForAcknowledgement, this);
@@ -70,7 +71,7 @@ void InformationDevice::PreRun(){
 
 }
 
-bool InformationDevice::ConditionalRun(){
+bool InformationDevice::conditionalRun(){
   FairMQMessagePtr msg(NewSimpleMessage(timeFrameId));
   
   if (fChannels.at(heartbeatConnection->getName()).at(0).Send(msg) >= 0) {
@@ -87,12 +88,12 @@ bool InformationDevice::ConditionalRun(){
   return true;
 }
 
-void InformationDevice::PostRun(){
+void InformationDevice::postRun(){
     LOG(INFO) << "Stopping";
     mLeaving = true;
     mAckListener.join();
-    AbstractDevice::PostRun();
 }
+
 
 void InformationDevice::ListenForAcknowledgement(){
   

@@ -1,7 +1,7 @@
 #include "O2/Balancer/Remote/ClusterManager.h"
 #include <boost/format.hpp> 
 #include "O2/Balancer/Exceptions/ClusterTypeException.h"
-#include "O2/Balancer/Utilities/DeviceSetting.h"
+#include "O2/Balancer/Utilities/DataTypes.h"
 #include "O2/Balancer/Exceptions/TimeOutException.h"
 #include "O2/Balancer/Exceptions/UnimplementedException.h"
 #include "FairMQLogger.h"
@@ -27,7 +27,7 @@ ClusterManager::ClusterManager(const std::string& zooServer, const int& port){
                 changedPaths.push_back(std::string(path));
             }
 
-    }, 5000, 0, 0, 0);
+    }, 5000, 0, 0, 100);
 
     this->setupDirectories();
 }
@@ -124,9 +124,8 @@ bool ClusterManager::registerConnection(const std::string& classification, const
         }
     }
     dir += "/" + tag;
-    LOG(INFO) << dir;
     const std::string value = setting.ip + ":" + std::to_string(setting.port); 
-    rc = zoo_create(zh,dir.c_str(),value.c_str(), value.length(), &ZOO_OPEN_ACL_UNSAFE, ZOO_EPHEMERAL ,nullptr, 0);
+    rc = zoo_create(zh,dir.c_str(),value.c_str(), value.length(), &ZOO_OPEN_ACL_UNSAFE, ZOO_EPHEMERAL | ZOO_SEQUENCE ,nullptr, 0);
     return rc == ZOK;
 }
 

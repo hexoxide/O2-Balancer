@@ -7,7 +7,7 @@ export O2Transport=zeromq
 
 SAMPLER="InformationNode"
 SAMPLER+=" --ip 127.0.0.1 --sample-size 5 --info-config @CMAKE_SOURCE_DIR@/Config/info-config.yaml "
-xterm -geometry 80x25+0+0 -hold -e @InformationNode_BINARY_DIR@/$SAMPLER &
+xterm -geometry 80x25+0+0 -e @InformationNode_BINARY_DIR@/$SAMPLER &
 
 sleep 1s
 

@@ -1,4 +1,4 @@
-#include "O2/Balancer/Utilities/DeviceSetting.h"
+#include "O2/Balancer/Utilities/DataTypes.h"
 #include <vector>
 
 #include <boost/algorithm/string.hpp>

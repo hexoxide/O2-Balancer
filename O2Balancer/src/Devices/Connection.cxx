@@ -1,7 +1,7 @@
 #include "O2/Balancer/Devices/Connection.h"
 #include "O2/Balancer/Devices/AbstractDevice.h"
 #include "O2/Balancer/Exceptions/UnimplementedException.h"
-#include "O2/Balancer/Utilities/DeviceSetting.h"
+#include "O2/Balancer/Utilities/DataTypes.h"
 #include <boost/format.hpp>
 #include <chrono>
 #include <thread>
@@ -42,6 +42,11 @@ void Connection::updateAllReceiveKernelSize(const int& size){
     for(auto& i : this->device->fChannels.at(name)){
         i.UpdateRcvKernelSize(size);
     }
+}
+
+void Connection::useClusterManager(std::function<void(std::shared_ptr<ClusterManager>)> cl){
+    std::unique_lock<std::mutex> lck (this->device->zoolock);
+    cl(this->device->clusterManager);
 }
 
 std::string Connection::typeToString(ConnectionType type) const{

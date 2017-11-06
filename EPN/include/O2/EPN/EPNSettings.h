@@ -11,7 +11,7 @@
 #define O2_EPN_EPNSETTINGS_H
 
 #include <vector>
-#include <O2/Balancer/Utilities/DeviceSetting.h>
+#include <O2/Balancer/Utilities/DataTypes.h>
 #include <O2/Balancer/Utilities/Settings.h>
 
 namespace O2{

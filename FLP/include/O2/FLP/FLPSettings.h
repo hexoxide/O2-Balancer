@@ -10,11 +10,8 @@
 #ifndef O2_FLP_FLP_SETTINGS_H
 #define O2_FLP_FLP_SETTINGS_H
 
-//#include <memory>
 #include <vector>
-//#include <O2/Balancer/Utilities/DeviceSetting.h>
-//#include <boost/program_options.hpp>
-#include <O2/Balancer/Utilities/DeviceSetting.h>
+#include <O2/Balancer/Utilities/DataTypes.h>
 #include <O2/Balancer/Utilities/Settings.h>
 
 namespace O2{

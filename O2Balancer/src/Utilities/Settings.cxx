@@ -1,5 +1,5 @@
 #include "O2/Balancer/Utilities/Settings.h"
-#include "O2/Balancer/Utilities/DeviceSetting.h"
+#include "O2/Balancer/Utilities/DataTypes.h"
 #include "O2/Balancer/Exceptions/InitException.h"
 #include "FairVersion.h"
 #include <yaml-cpp/yaml.h>

@@ -22,7 +22,7 @@ namespace O2{
         public:
             EPNConnection(std::shared_ptr<FLPSettings> settings, Balancer::AbstractDevice* device);
             int amountOfEpns() const;
-            void updateConnection(std::vector<DeviceSetting> newList);
+            void updateConnection();
         };
     }
 }

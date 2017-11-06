@@ -34,7 +34,7 @@ SET(
     ./src/Exceptions/ClusterHandlerException.cxx
     ./src/Exceptions/ClusterTypeException.cxx
     ./src/Exceptions/TimeOutException.cxx
-    ./src/Utilities/DeviceSetting.cxx
+    ./src/Utilities/DataTypes.cxx
     ./src/Remote/ClusterManager.cxx
     ./src/Utilities/Utilities.cxx
     ./src/Utilities/Settings.cxx
