@@ -49,13 +49,14 @@ namespace O2{
             virtual void postRun();
             virtual void run();
             virtual bool conditionalRun();
+            virtual void refreshDevice(bool inMainThread) = 0;
             void useClusterManager(std::function<void(std::shared_ptr<ClusterManager>)> cl);
         public:
             void restartDevice();
             AbstractDevice(const std::string& name, std::shared_ptr<Settings> settings, bool restartOnUpdate=false);
-            std::shared_ptr<ClusterManager> getClusterManager() const;
+            //std::shared_ptr<ClusterManager> getClusterManager() const;
             bool needRefresh() const;
-            virtual void refreshDevice() = 0;
+
             bool needToStop() const;
             bool addHandle(const std::string& tag, const DeviceSetting& setting);
             std::string getDefaultTransport() const;

@@ -49,7 +49,7 @@ void EPNDevice::DiscardIncompleteTimeframes(){
   }
 }
 
-void EPNDevice::refreshDevice(){
+void EPNDevice::refreshDevice(bool inMainThread){
   this->useClusterManager([this](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void{
     const std::string tmp = manager->pathThatNeedsUpdate();
     LOG(WARN) << boost::format("Refresh called on path %s, yet not fully supported on EPNs.") % tmp;
@@ -69,7 +69,7 @@ void EPNDevice::run(){
     while (CheckCurrentState(RUNNING)) {
       FairMQParts parts;
   
-      if (Receive(parts, this->flpConnection->getName(), 0, 100) > 0) {
+      if (Receive(parts, this->flpConnection->getName(), 0, 1000) > 0) {
         // store the received ID
         O2::Balancer::f2eHeader& header = *(static_cast<O2::Balancer::f2eHeader*>(parts.At(0)->GetData()));
         id = header.timeFrameId;

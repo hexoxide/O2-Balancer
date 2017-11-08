@@ -18,7 +18,7 @@ namespace O2{
         class FLPSettings;
         class DeviceSetting;
         class EPNConnection : public Balancer::Connection{
-            std::vector<Balancer::DeviceSetting> onlineEPNs;
+     
         public:
             EPNConnection(std::shared_ptr<FLPSettings> settings, Balancer::AbstractDevice* device);
             int amountOfEpns() const;

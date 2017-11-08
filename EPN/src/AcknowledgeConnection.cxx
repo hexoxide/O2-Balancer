@@ -13,20 +13,24 @@
 #include <chrono>
 #include <thread>
 #include "FairMQLogger.h"
+
 using namespace O2::EPN;
 
 AcknowledgeConnection::AcknowledgeConnection(Balancer::AbstractDevice* device, std::shared_ptr<EPNSettings> settings) : Balancer::Connection("ack", device){
+    this->useClusterManager([this](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void{
+        auto dev = manager->getRegisteredConnections("InformationNode", "ack");
+        while(dev.empty()){
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            dev = manager->getRegisteredConnections("InformationNode", "ack");
+        }
+        this->acknowledgeChannel = this->addInputChannel(
+            Balancer::ConnectionType::Push,
+            Balancer::ConnectionMethod::Connect,
+            dev[0].ip,
+            dev[0].port
+        );
+    });
+   //auto dev =  device->getClusterManager()->getRegisteredConnections("InformationNode", "ack");
 
-   auto dev =  device->getClusterManager()->getRegisteredConnections("InformationNode", "ack");
 
-    while(dev.empty()){
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        dev = device->getClusterManager()->getRegisteredConnections("InformationNode", "ack");
-    }
-   this->acknowledgeChannel = this->addInputChannel(
-        Balancer::ConnectionType::Push,
-        Balancer::ConnectionMethod::Connect,
-        dev[0].ip,
-        dev[0].port
-    );
 }

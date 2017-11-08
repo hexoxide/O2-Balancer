@@ -14,25 +14,24 @@ sleep 1s
 EPNCFG=" --epn-config @CMAKE_SOURCE_DIR@/Config/epn-config.yaml"
 
 EPN="epn"
-EPN+="  --amount-flps 3 --ip 127.0.0.1 --flp-port 5561"
+EPN+="  --amount-flps 2 --ip 127.0.0.1 --flp-port 5561"
 EPN+=$EPNCFG
 xterm -geometry 80x25+1000+0  -e @EPN_BINARY_DIR@/$EPN &
 
 EPN1="epn"
 EPN1+=$EPNCFG
-EPN1+="  --amount-flps 3 --ip 127.0.0.1 --flp-port 5562"
+EPN1+="  --amount-flps 2 --ip 127.0.0.1 --flp-port 5562"
 xterm -geometry 80x25+1000+0 -hold -e @EPN_BINARY_DIR@/$EPN1 &
 
 EPN2="epn"
 EPN2+=$EPNCFG
-EPN2+="  --amount-flps 3 --ip 127.0.0.1 --flp-port 5563"
+EPN2+="  --amount-flps 2 --ip 127.0.0.1 --flp-port 5563"
 xterm -geometry 80x25+1000+0 -hold -e @EPN_BINARY_DIR@/$EPN2 &
 
 sleep 1s
 
-FLP="flp"
-FLP+=" --ip 127.0.0.1 --sample-size 5 --flp-config @CMAKE_SOURCE_DIR@/Config/flp-config.yaml"
-xterm -geometry 80x25+500+0  -e @FLP_BINARY_DIR@/$FLP &
+FLP="flp --ip 127.0.0.1 --restartFairRoot false --sample-size 5 --flp-config @CMAKE_SOURCE_DIR@/Config/flp-config.yaml"
+FLP2="flp --ip 127.0.0.1 --restartFairRoot false --sample-size 5 --flp-config @CMAKE_SOURCE_DIR@/Config/flp-config.yaml"
 xterm -geometry 80x25+500+0 -hold -e @FLP_BINARY_DIR@/$FLP &
-xterm -geometry 80x25+500+0  -e @FLP_BINARY_DIR@/$FLP &
+xterm -geometry 80x25+500+0  -e @FLP_BINARY_DIR@/$FLP2 &
 

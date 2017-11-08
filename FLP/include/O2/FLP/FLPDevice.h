@@ -31,14 +31,16 @@ namespace O2{
           public:
             FLPDevice(std::shared_ptr<FLPSettings> settings);
             virtual ~FLPDevice();
-            void refreshDevice() override;
+        
           protected:
+            void refreshDevice(bool inMainThread) override;
             virtual bool conditionalRun() override;
             virtual void ResetTask() override;
             virtual void preRun() override;
             virtual void Pause() override;
             virtual void postRun() override;
           private:
+            std::vector<std::string> offlineEPNS;
             std::unique_ptr<HeartbeatConnection> heartBeatConnection;
             std::unique_ptr<EPNConnection> epnConnection;
 

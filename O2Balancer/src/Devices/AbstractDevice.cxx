@@ -50,14 +50,16 @@ AbstractDevice::AbstractDevice(const std::string& name, std::shared_ptr<Settings
 
 
 void AbstractDevice::useClusterManager(std::function<void(std::shared_ptr<ClusterManager>)> cl){
-    static bool entered = false;
-    if(entered){
-        throw O2::Balancer::Exceptions::UnimplementedException("A deadlock has occured, you can't call this function recursively");
-    }
-    entered = true;
+   // static bool entered = false;
+   // if(entered){
+   //     throw O2::Balancer::Exceptions::UnimplementedException("A deadlock has occured, you can't call this function recursively");
+   // }
+   // entered = true;
     std::unique_lock<std::mutex> lck (this->zoolock);
+
     cl(this->clusterManager);
-    entered = false;
+
+   // entered = false;
 }
 
 bool AbstractDevice::ConditionalRun() {
@@ -113,6 +115,10 @@ void AbstractDevice::checkZooKeeper(){
     while(!this->nStop){
         std::unique_lock<std::mutex> lck (this->zoolock);
         this->nRefresh = this->clusterManager->requiresUpdate() && this->restartOnUpdate;
+        lck.unlock();
+        if(this->clusterManager->requiresUpdate() && !this->restartOnUpdate){
+            this->refreshDevice(false);
+        }
     }
 }
 
@@ -126,7 +132,7 @@ void AbstractDevice::restartDevice(){
 
    ChangeState(AbstractDevice::RESET_DEVICE);
    WaitForEndOfState(AbstractDevice::RESET_DEVICE);
-   this->refreshDevice();
+   this->refreshDevice(true);
    ChangeState(AbstractDevice::INIT_DEVICE);
    
    WaitForInitialValidation();
@@ -182,9 +188,9 @@ std::string AbstractDevice::getProperty(const std::string& varName, const std::s
     return result;
 }
 
-std::shared_ptr<ClusterManager> AbstractDevice::getClusterManager() const{
-    return this->clusterManager;
-}
+//std::shared_ptr<ClusterManager> AbstractDevice::getClusterManager() const{
+//    return this->clusterManager;
+//}
 
 void AbstractDevice::quit(){
     this->nStop = true;
