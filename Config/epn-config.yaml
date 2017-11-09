@@ -6,6 +6,13 @@ SettingsServer:
 
 FLPConnectionPort: 5561
 
+# when the Device has the same ip as the goat, it will crash 
+Goat:
+  IP: 127.0.0.1
+  heartbeat: 1000
+  amount_before_signal: 30
+  amount_after_signal: 20
+
 InformationNode:
   Port: 5990
   Ip: 127.0.0.1

@@ -49,6 +49,14 @@ namespace O2{
                 variableChecksOut(var, tail...);
             }
         }
+
+
+        /**
+         * Crash after amount of heartrates.
+         * This crashes the program when the amount of heartrates occurs.
+         * 
+         * */
+         void crashAfterAmountOfBeats(int heartrate, int amount, bool terminate);
     }
 }
 

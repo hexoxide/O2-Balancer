@@ -33,11 +33,11 @@ namespace O2{
             virtual ~FLPDevice();
             void refreshDevice() override;
           protected:
-            virtual bool ConditionalRun() override;
+            virtual bool conditionalRun() override;
             virtual void ResetTask() override;
-            virtual void PreRun() override;
+            virtual void preRun() override;
             virtual void Pause() override;
-            virtual void PostRun() override;
+            virtual void postRun() override;
           private:
             std::unique_ptr<HeartbeatConnection> heartBeatConnection;
             std::unique_ptr<EPNConnection> epnConnection;

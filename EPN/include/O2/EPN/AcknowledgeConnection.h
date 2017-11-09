@@ -13,7 +13,7 @@
 
 #include <O2/Balancer/Devices/Connection.h>
 #include <O2/Balancer/Remote/ClusterManager.h>
-#include <O2/Balancer/Utilities/DeviceSetting.h>
+#include <O2/Balancer/Utilities/DataTypes.h>
 namespace O2{
     namespace EPN{
 

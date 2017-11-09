@@ -17,7 +17,7 @@
 #include <atomic>
 #include <mutex>
 #include <thread>
-
+#include <functional>
 #include "../Remote/ClusterManager.h"
 
 namespace O2{   
@@ -34,15 +34,25 @@ namespace O2{
             void checkZooKeeper();
             std::string defaultTransport;
             std::string getProperty(const std::string& varName, const std::string& defValue); 
-        protected:
+            bool restartOnUpdate;
             std::mutex zoolock;
-            std::shared_ptr<Settings> settings;
             std::shared_ptr<ClusterManager> clusterManager;
-            std::vector<std::shared_ptr<Connection>> connnections;
+            virtual bool ConditionalRun() override final;
+            virtual void PreRun() override final;
+            virtual void PostRun() override final;
+            virtual void Run() override final;
+        protected:
+            std::shared_ptr<Settings> settings;
             std::atomic<bool> nRefresh;
             std::atomic<bool> nStop;
+            virtual void preRun();
+            virtual void postRun();
+            virtual void run();
+            virtual bool conditionalRun();
+            void useClusterManager(std::function<void(std::shared_ptr<ClusterManager>)> cl);
         public:
-            AbstractDevice(const std::string& name, std::shared_ptr<Settings> settings);
+            void restartDevice();
+            AbstractDevice(const std::string& name, std::shared_ptr<Settings> settings, bool restartOnUpdate=false);
             std::shared_ptr<ClusterManager> getClusterManager() const;
             bool needRefresh() const;
             virtual void refreshDevice() = 0;

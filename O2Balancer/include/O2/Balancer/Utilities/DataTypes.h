@@ -7,14 +7,22 @@
 // In applying this license CERN does not waive the privileges and immunities
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
-#ifndef O2_BALANCER_DEVICE_SETTING_H
-#define O2_BALANCER_DEVICE_SETTING_H
+#ifndef O2_BALANCER_DATA_TYPE_H
+#define O2_BALANCER_DATA_TYPE_H
 
 #include <string>
 
 namespace O2{
-
     namespace Balancer{
+
+        //The type used for all the heartbeats. Allows for easy adapting the size and type
+        typedef uint16_t heartbeatID;
+
+        struct f2eHeader {
+            heartbeatID timeFrameId;
+            int      flpIndex;
+          };
+          
         /**
         *   Small classes to interchange data.
         *   @author H.J.M van der Heijden

@@ -1,13 +1,13 @@
 #include "O2/Balancer/Remote/ClusterManager.h"
 #include <boost/format.hpp> 
 #include "O2/Balancer/Exceptions/ClusterTypeException.h"
-#include "O2/Balancer/Utilities/DeviceSetting.h"
+#include "O2/Balancer/Utilities/DataTypes.h"
 #include "O2/Balancer/Exceptions/TimeOutException.h"
 #include "O2/Balancer/Exceptions/UnimplementedException.h"
 #include "FairMQLogger.h"
 #include <zookeeper/zookeeper.h>
 #include "O2/Balancer/Globals.h"
-#include <boost/format.hpp>
+
 #include <chrono>
 #include <thread>
 #include <regex>
@@ -19,7 +19,7 @@ std::vector<std::string> changedPaths;
 ClusterManager::ClusterManager(const std::string& zooServer, const int& port){
     
     const std::string server = zooServer + ":" + std::to_string(port);
-    zoo_set_debug_level(ZOO_LOG_LEVEL_DEBUG);
+    zoo_set_debug_level(ZOO_LOG_LEVEL_INFO);
     this->zh = zookeeper_init(server.c_str(), [](zhandle_t *zzh, int type, int state, const char *path,
         void *watcherCtx)-> void {
             if(type == ZOO_CHILD_EVENT){
@@ -27,7 +27,7 @@ ClusterManager::ClusterManager(const std::string& zooServer, const int& port){
                 changedPaths.push_back(std::string(path));
             }
 
-    }, 5000, 0, 0, 0);
+    }, 5000, 0, 0, 100);
 
     this->setupDirectories();
 }
@@ -151,7 +151,12 @@ std::vector<DeviceSetting> ClusterManager::getRegisteredConnections(const std::s
             }
         }
     }
-
+    std::sort(result.begin(), result.end(), [this](DeviceSetting l, DeviceSetting r) -> bool {
+        if(l.ip == r.ip){
+            return l.port > r.port;
+        }
+        return l.ip > r.ip;
+    } );
  
     return result;
 }

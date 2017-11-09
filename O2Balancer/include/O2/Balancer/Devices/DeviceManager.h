@@ -71,25 +71,7 @@ namespace O2{
 
                 while(!device->needToStop() && !shouldStop){
                     if(device->needRefresh()){
-                        //Refresh the device, stopping everything and setup the new stuff
-                        device->ChangeState(T::STOP);
-                        device->WaitForEndOfState(T::STOP);
-
-                        device->ChangeState(T::RESET_TASK);
-                        device->WaitForEndOfState(T::RESET_TASK);
-
-                        device->ChangeState(T::RESET_DEVICE);
-                        device->WaitForEndOfState(T::RESET_DEVICE);
-                        device->refreshDevice();
-                        device->ChangeState(T::INIT_DEVICE);
-                        
-                        device->WaitForInitialValidation();
-                        device->WaitForEndOfState(T::INIT_DEVICE);
-                            
-                        device->ChangeState(T::INIT_TASK);
-                        device->WaitForEndOfState(T::INIT_TASK);
-
-                        device->ChangeState(T::RUN);
+                        device->restartDevice();
                     }
                 }
                 

@@ -49,15 +49,14 @@ namespace O2{
         void refreshDevice() override;
         /// Listens for acknowledgements from the epnReceivers when they collected full timeframe
         void ListenForAcknowledgement();
-    
       protected:
         /// Overloads the InitTask() method of FairMQDevice
         void InitTask() override;
     
-        /// Overloads the Run() method of FairMQDevice
-        bool ConditionalRun() override;
-        void PreRun() override;
-        void PostRun() override;
+      
+        bool conditionalRun() override;
+        void preRun() override;
+        void postRun() override;
         std::array<timeframeDuration, UINT16_MAX> mTimeframeRTT; ///< Container for the roundtrip values per timeframe ID
   
         int heartbeat;

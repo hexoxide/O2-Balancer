@@ -42,19 +42,13 @@ namespace O2{
             /// Discared incomplete timeframes after \p fBufferTimeoutInMs.
             void DiscardIncompleteTimeframes();
           protected:
-            virtual void InitTask() override;
-            void Run() override;
+            void run() override;
     
-            std::unordered_map<uint16_t, TFBuffer> mTimeframeBuffer; ///< Stores (sub-)timeframes
-            std::unordered_set<uint16_t> mDiscardedSet; ///< Set containing IDs of dropped timeframes
+            std::unordered_map<O2::Balancer::heartbeatID , TFBuffer> mTimeframeBuffer; ///< Stores (sub-)timeframes
+            std::unordered_set<O2::Balancer::heartbeatID > mDiscardedSet; ///< Set containing IDs of dropped timeframes
     
             int mNumFLPs; ///< Number of flpSenders
             int mBufferTimeoutInMs; ///< Time after which incomplete timeframes are dropped
-            int mTestMode; ///< Run the device in test mode (only syncSampler+flpSender+epnReceiver)
-    
-            std::string mInChannelName;
-            std::string mOutChannelName;
-            std::string mAckChannelName;
         };
     }
 }

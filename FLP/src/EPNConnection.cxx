@@ -19,10 +19,11 @@ EPNConnection::EPNConnection(std::shared_ptr<FLPSettings> settings, Balancer::Ab
     auto dev = device->getClusterManager()->getRegisteredConnections("EPN", "stf2");
     while(dev.empty()){
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
         dev = device->getClusterManager()->getRegisteredConnections("EPN", "stf2");
     }
 
-    for( auto& epn : dev){
+    for(auto& epn : dev){
         LOG(INFO) << "sending data to : " << epn.ip << ":" << epn.port;
 
         this->addInputChannel(
@@ -38,8 +39,14 @@ EPNConnection::EPNConnection(std::shared_ptr<FLPSettings> settings, Balancer::Ab
     
 }
 
-void EPNConnection::updateConnection(std::vector<DeviceSetting> newList){
-    
+void EPNConnection::updateConnection(){
+  //  const std::string tmp = this->device->clusterManager->pathThatNeedsUpdate();
+    this->useClusterManager([this](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void {
+        const std::string tmp = manager->pathThatNeedsUpdate();//only the epn path needs update
+        this->updateChannels(manager->getRegisteredConnections(tmp, this->getName()));
+        this->updateAllSendBuffer(100000);
+        this->updateAllRateLogging(1);
+    });
 }
 
 int EPNConnection::amountOfEpns() const{

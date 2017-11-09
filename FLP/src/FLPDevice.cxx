@@ -17,7 +17,6 @@
 #include <FairMQMessage.h>
 #include <boost/format.hpp>
 #include <FairMQProgOptions.h>
-#include <iostream>
 #include <ctime>
 #include <cstring>
 #include "O2/FLP/HeartBeatConnection.h"
@@ -26,14 +25,9 @@
 #include <O2/Balancer/Exceptions/ClusterHandlerException.h>
 
 
-struct f2eHeader {
-  uint16_t timeFrameId;
-  int      flpIndex;
-};
-
 using namespace O2::FLP;
 
-FLPDevice::FLPDevice(std::shared_ptr<FLPSettings> settings) : Balancer::AbstractDevice(O2::Balancer::Globals::DeviceNames::FLP_NAME, settings){
+FLPDevice::FLPDevice(std::shared_ptr<FLPSettings> settings) : Balancer::AbstractDevice(O2::Balancer::Globals::DeviceNames::FLP_NAME, settings, true){
 
   this->heartBeatConnection = std::unique_ptr<HeartbeatConnection>(
     new HeartbeatConnection(settings, this)
@@ -43,17 +37,18 @@ FLPDevice::FLPDevice(std::shared_ptr<FLPSettings> settings) : Balancer::Abstract
   );
   
   this->mEventSize = 0;
+
 }
 
 
-void FLPDevice::PreRun(){
-    AbstractDevice::PreRun();
-    try{
-      this->mEventSize = this->clusterManager->getGlobalInteger("sampleSize", 1000);
-
-    } catch (const O2::Balancer::Exceptions::ClusterHandlerException& ex){
-        LOG(ERROR) << ex.getMessage();
-    }
+void FLPDevice::preRun(){
+    this->useClusterManager([this](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void{
+        try{
+            this->mEventSize = manager->getGlobalInteger("sampleSize", 1000);
+        } catch (const O2::Balancer::Exceptions::ClusterHandlerException& ex){
+            LOG(ERROR) << ex.getMessage();
+        }
+    });
 }
 
 
@@ -62,15 +57,11 @@ void FLPDevice::ResetTask(){
 }
 
 void FLPDevice::refreshDevice(){
-  std::unique_lock<std::mutex> lck (this->zoolock);
-  const std::string tmp = this->clusterManager->pathThatNeedsUpdate();
-  this->epnConnection->updateChannels(this->clusterManager->getRegisteredConnections(tmp, this->epnConnection->getName()));
-  this->epnConnection->updateAllSendBuffer(100000);
-  this->epnConnection->updateAllRateLogging(1);
-  
+  this->epnConnection->updateConnection();
 }
 
-bool FLPDevice::ConditionalRun(){
+
+bool FLPDevice::conditionalRun(){
   
     FairMQChannel& dataInChannel = fChannels.at(this->heartBeatConnection->getName()).at(0);
     std::fstream fstream("/dev/null",  std::ifstream::binary | std::ios::in);
@@ -89,7 +80,7 @@ bool FLPDevice::ConditionalRun(){
         buffer
       ));
       if (dataInChannel.Receive(parts.At(0)) >= 0) {
-        uint16_t currentTimeFrameid = *(static_cast<uint16_t*>(parts.At(0)->GetData()));
+        O2::Balancer::heartbeatID currentTimeFrameid = *(static_cast<O2::Balancer::heartbeatID *>(parts.At(0)->GetData()));
         if(this->epnConnection->amountOfEpns() == 0){
           LOG(WARN) << boost::format("Timeframe %i discarded, all the EPNS are ofline") % currentTimeFrameid;
           return true;
@@ -112,9 +103,7 @@ void FLPDevice::Pause(){
 
 }
 
-void FLPDevice::PostRun(){
-  LOG(INFO) << "TEST";
-  //this->ChangeState(FLPDevice::RESET_TASK);
+void FLPDevice::postRun(){
 }
 
 FLPDevice::~FLPDevice(){

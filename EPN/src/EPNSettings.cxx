@@ -23,9 +23,31 @@ EPNSettings::EPNSettings(const boost::program_options::variables_map& settings) 
     if(settings["flp-port"].as<int>() != 0){
         this->flpConnectionPort = settings["flp-port"].as<int>();
     }
-    
+       
+    if(config["Goat"]){
+        this->goatIP = config["Goat"]["IP"].as<std::string>();
+        this->amountAfterSignal = config["Goat"]["amount_after_signal"].as<int>();
+        this->amountBeforeCrash = config["Goat"]["amount_before_signal"].as<int>();
+        this->heartrate = config["Goat"]["heartbeat"].as<int>();
+    }
+
+}
 
 
+std::string EPNSettings::getGoatIP() const{
+    return goatIP;
+}
+
+int EPNSettings::getHeartrate() const{
+    return heartrate;
+}
+
+int EPNSettings::getAmountAfterSignal() const{
+    return amountAfterSignal;
+}
+
+int EPNSettings::getAmountBeforeCrash() const{
+    return amountBeforeCrash;
 }
 
 std::string EPNSettings::getSettingsFile() const{

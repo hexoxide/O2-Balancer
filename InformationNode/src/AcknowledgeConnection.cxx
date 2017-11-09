@@ -10,7 +10,7 @@
 
 #include "O2/InformationNode/AcknowledgeConnection.h"
 #include "O2/InformationNode/InformationDevice.h"
-#include <O2/Balancer/Utilities/DeviceSetting.h>
+#include <O2/Balancer/Utilities/DataTypes.h>
 using namespace O2;
 using namespace O2::InformationNode;
 

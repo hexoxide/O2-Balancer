@@ -1,7 +1,7 @@
 #include "O2/Balancer/Devices/Connection.h"
 #include "O2/Balancer/Devices/AbstractDevice.h"
 #include "O2/Balancer/Exceptions/UnimplementedException.h"
-#include "O2/Balancer/Utilities/DeviceSetting.h"
+#include "O2/Balancer/Utilities/DataTypes.h"
 #include <boost/format.hpp>
 #include <chrono>
 #include <thread>
@@ -44,6 +44,11 @@ void Connection::updateAllReceiveKernelSize(const int& size){
     }
 }
 
+void Connection::useClusterManager(std::function<void(std::shared_ptr<ClusterManager>)> cl){
+    std::unique_lock<std::mutex> lck (this->device->zoolock);
+    cl(this->device->clusterManager);
+}
+
 std::string Connection::typeToString(ConnectionType type) const{
     switch(type){
         case ConnectionType::Publish:
@@ -80,7 +85,8 @@ std::shared_ptr<DeviceSetting> Connection::addInputChannel(ConnectionType type, 
 }
 
 std::shared_ptr<DeviceSetting> Connection::addOutputChannel(ConnectionType type, ConnectionMethod method, const std::string& ip, int port){
-    //Stop what you are doing, and wait until it's registered in ZooKeeper. In case of failure try again later
+    //Stop what you are doing, and wait until it's registered in ZooKeeper. In case of failure try again later  
+    //const std::string name = this->name + ip + std::to_string(port); 
     while(!device->addHandle(this->name, O2::Balancer::DeviceSetting(port,ip))){
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         LOG(INFO) << "Sleeping for next handle";

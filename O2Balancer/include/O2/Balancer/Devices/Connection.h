@@ -12,6 +12,7 @@
 #ifndef O2_BALANCER_DEVICES_CONNECTION_H
 #define O2_BALANCER_DEVICES_CONNECTION_H
 
+#include <functional>
 #include <string>
 #include <vector>
 #include <FairMQChannel.h>
@@ -60,6 +61,10 @@ namespace O2{
             std::string methodToString(ConnectionMethod method) const;
             std::string name;
             AbstractDevice* device;
+        protected:
+            void useClusterManager(std::function<void(std::shared_ptr<ClusterManager>)> cl);
+            
+
         public:
             /**
              *  A generic connection class for maintaining connections.
