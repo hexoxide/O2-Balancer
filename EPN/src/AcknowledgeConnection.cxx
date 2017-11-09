@@ -30,6 +30,7 @@ AcknowledgeConnection::AcknowledgeConnection(Balancer::AbstractDevice* device, s
             dev[0].port
         );
     });
+    this->updateAllSendBuffer(10000);
    //auto dev =  device->getClusterManager()->getRegisteredConnections("InformationNode", "ack");
 
 

@@ -50,6 +50,6 @@ void EPNConnection::updateConnection(){
     });
 }
 
-int EPNConnection::amountOfEpns() const{
+size_t EPNConnection::amountOfEpns() const{
     return this->channelSize();
 }

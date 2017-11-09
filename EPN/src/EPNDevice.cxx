@@ -29,7 +29,7 @@ EPNDevice::EPNDevice(std::shared_ptr<EPNSettings> settings) : Balancer::Abstract
   this->acknowledgeConnection = std::unique_ptr<AcknowledgeConnection>(new AcknowledgeConnection(this,settings));
   this->outputConnection = std::unique_ptr<OutputConnection>(new OutputConnection(this,settings));
   this->mNumFLPs = settings->getAmountOfFLPs();
-  this->mBufferTimeoutInMs = 10000;
+  this->mBufferTimeoutInMs = 900000;
 }
 
 
@@ -58,9 +58,8 @@ void EPNDevice::refreshDevice(bool inMainThread){
 
 void EPNDevice::run(){
     const std::string IP = this->settings->getIPAddress();
-    O2::Balancer::heartbeatID  id = 0; // holds the timeframe id of the currently arrived sub-timeframe.
+    O2::Balancer::heartbeatID  id = 0;
     FairMQChannel& ackOutChannel = fChannels.at(this->acknowledgeConnection->getName()).at(0);
-    // fChannels.at(mAckChannelName).at(0);
     EPNSettings* settings = static_cast<EPNSettings*>(this->settings.get());
   
     const bool isGoat = (IP == settings->getGoatIP());

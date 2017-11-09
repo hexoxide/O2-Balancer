@@ -61,9 +61,8 @@ void FLPDevice::refreshDevice(bool inMainThread){
   if(inMainThread){
     this->epnConnection->updateConnection();
   } else { 
-    LOG(INFO) << " Refreshing";
-    this->useClusterManager([this](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void{
-
+    LOG(INFO) << "Refreshing";
+    this->useClusterManager([this](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void {
       const std::string name = this->epnConnection->getName();
       const std::string tmp = manager->pathThatNeedsUpdate();//only the epn path needs update
       const auto nChannels = manager->getRegisteredConnections(tmp, name);
@@ -151,7 +150,7 @@ bool FLPDevice::conditionalRun(){
           break;
           // LOG(INFO) << dataOutChannel.GetAddress();
         } while(true);
-
+    
         LOG(INFO) << boost::format("Direction: %i, amount of epns: %i") % direction % this->epnConnection->amountOfEpns();
         if (Send(parts, this->epnConnection->getName(), direction, 0) < 0) {
            LOG(ERROR) << boost::format("could not send to EPN %i") % direction;
