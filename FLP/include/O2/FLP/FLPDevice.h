@@ -36,8 +36,6 @@ namespace O2{
             void refreshDevice(bool inMainThread) override;
             virtual bool conditionalRun() override;
             virtual void preRun() override;
-            virtual void Pause() override;
-            virtual void postRun() override;
           private:
             std::unique_ptr<HeartbeatConnection> heartBeatConnection;
             std::unique_ptr<EPNConnection> epnConnection;

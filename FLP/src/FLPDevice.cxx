@@ -104,13 +104,6 @@ bool FLPDevice::conditionalRun(){
   return true;
 }
 
-void FLPDevice::Pause(){
-  LOG(INFO) << "pausing";
-
-}
-
-void FLPDevice::postRun(){
-}
 
 FLPDevice::~FLPDevice(){
   LOG(INFO) << "closing";

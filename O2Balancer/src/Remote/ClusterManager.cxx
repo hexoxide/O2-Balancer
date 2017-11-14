@@ -27,7 +27,7 @@ ClusterManager::ClusterManager(const std::string& zooServer, const int& port){
                 changedPaths.push_back(std::string(path));
             }
 
-    }, 5000, 0, 0, 100);
+    }, 5000, 0, 0, 0);
 
     this->setupDirectories();
 }
