@@ -12,6 +12,7 @@
 #include "O2/FLP/FLPDevice.h"
 #include "O2/FLP/FLPSettings.h"
 #include <chrono>
+#include <boost/format.hpp>
 #include <thread>
 using namespace O2::FLP;
 
@@ -37,8 +38,42 @@ EPNConnection::EPNConnection(std::shared_ptr<FLPSettings> settings, Balancer::Ab
         this->updateAllRateLogging(1);
 
     });
-   
-    
+}
+
+void EPNConnection::updateBlacklist(){
+    this->useClusterManager([this](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void {
+        const std::string classification = manager->pathThatNeedsUpdate();
+        const std::string name =  this->getName();
+        std::vector<std::string> offline = this->getOfflineDevices(manager->getRegisteredConnections(classification,name));
+        this->offlineEPNS.swap(offline);
+    });
+}
+
+size_t EPNConnection::balance(O2::Balancer::heartbeatID id){
+    size_t direction = 0;
+    O2::Balancer::heartbeatID dirbalancer = id + this->incrementer;
+    this->incrementer = this->incrementer % this->amountOfEpns();    
+    do {
+        direction = dirbalancer % (this->amountOfEpns() - this->offlineEPNS.size());
+        FairMQChannel& dataOutChannel = this->getChannels().at(direction);
+        bool invalid = false;
+        for(const std::string& ip : this->offlineEPNS){
+            if(ip == dataOutChannel.GetAddress()){
+                dirbalancer += 1;
+                LOG(WARN) << "skipping machine " << ip;
+                invalid=true;
+                break;
+            }
+        }
+        if(invalid){
+            continue;
+        }
+        incrementer += 1;
+
+        break;
+    } while(true);
+    return direction;
+
 }
 
 void EPNConnection::updateConnection(){

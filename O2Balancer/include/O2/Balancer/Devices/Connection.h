@@ -72,12 +72,14 @@ namespace O2{
              *  @param device,  The fairroot device that requires handling. 
              * */
             Connection(const std::string& name, AbstractDevice* device);
-
+            std::vector<std::string> getOfflineDevices(std::vector<DeviceSetting> nChannels);
             /**
              *  Gets all the FairMQChannels and updates all the loggings
              *  @param logg, The logging variable
              * */
             void updateAllRateLogging(const int& logg);
+
+            std::vector<FairMQChannel>& getChannels() const;
 
             size_t channelSize() const;
 

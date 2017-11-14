@@ -52,47 +52,14 @@ void FLPDevice::preRun(){
 }
 
 
-void FLPDevice::ResetTask(){
-  
-}
 
 void FLPDevice::refreshDevice(bool inMainThread){
 
   if(inMainThread){
     this->epnConnection->updateConnection();
   } else { 
-    LOG(INFO) << "Refreshing";
-    this->useClusterManager([this](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void {
-      const std::string name = this->epnConnection->getName();
-      const std::string tmp = manager->pathThatNeedsUpdate();//only the epn path needs update
-      const auto nChannels = manager->getRegisteredConnections(tmp, name);
-      for(size_t i = 0; i < fChannels.at(name).size(); i++){
-          bool used = false;;
-          const std::string oldIp = fChannels.at(name)[i].GetAddress();
-          for(auto newDevice : nChannels){
-              const std::string other = "tcp://" + newDevice.ip + ":" + std::to_string(newDevice.port);
-              if(oldIp == other){
-                  used = true;
-                  break;
-              }
-          }
-          if(!used){
-              bool alreadyInList = false;
-              //LOG(WARN) << boost::format("Device %s is offline, disabling channel") % oldIp;
-              for(const std::string& of : offlineEPNS){
-                if(of == oldIp){
-                  alreadyInList = true;
-                  break;
-                }
-              }
-              if(!alreadyInList){
-                LOG(WARN) << "Blacklisting " << oldIp;
-                offlineEPNS.push_back(oldIp);
-              }
-          }
-      }
-
-    });
+    LOG(INFO) << "Refreshing blacklist";
+    this->epnConnection->updateBlacklist();
   }
 }
 
@@ -118,40 +85,15 @@ bool FLPDevice::conditionalRun(){
 
       if (dataInChannel.Receive(parts.At(0)) >= 0) {
         const O2::Balancer::heartbeatID currentTimeFrameid = *(static_cast<O2::Balancer::heartbeatID *>(parts.At(0)->GetData()));
-        int dirbalancer = currentTimeFrameid;
         
         if(this->epnConnection->amountOfEpns() == 0){
           LOG(WARN) << boost::format("Timeframe %i discarded, all the EPNS are ofline") % currentTimeFrameid;
           return true;
         }
-        int direction = 0;
         
-        do{
-
-          direction = dirbalancer % this->epnConnection->amountOfEpns();
-          FairMQChannel& dataOutChannel = fChannels.at(this->epnConnection->getName()).at(direction);
-          if(this->epnConnection->amountOfEpns() == this->offlineEPNS.size()){
-            LOG(WARN) << boost::format("Timeframe %i discarded, all the EPNS are ofline") % currentTimeFrameid;
-            return true;
-          }
-          bool invalid = false;
-          for(const std::string& ip : offlineEPNS){
-            if(ip == dataOutChannel.GetAddress()){
-              dirbalancer++;
-              LOG(WARN) << "skipping machine " << ip;
-              invalid=true;
-              continue;
-            }
-          }
-          if(invalid){
-            continue;
-          }
-
-          break;
-          // LOG(INFO) << dataOutChannel.GetAddress();
-        } while(true);
-    
-        LOG(INFO) << boost::format("Direction: %i, amount of epns: %i") % direction % this->epnConnection->amountOfEpns();
+        int direction = this->epnConnection->balance(currentTimeFrameid);
+        
+        LOG(INFO) << boost::format("Direction: %i, amount of epns: %i, heartbeat: %i") % direction % this->epnConnection->amountOfEpns() % currentTimeFrameid;
         if (Send(parts, this->epnConnection->getName(), direction, 0) < 0) {
            LOG(ERROR) << boost::format("could not send to EPN %i") % direction;
         }

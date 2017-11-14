@@ -23,7 +23,4 @@ HeartbeatConnection::HeartbeatConnection(std::shared_ptr<FLPSettings> settings, 
 
     this->updateAllRateLogging(1);
     this->updateAllReceiveBuffer(100000);
-
-
-
 }

@@ -123,25 +123,33 @@ void AbstractDevice::checkZooKeeper(){
 }
 
 void AbstractDevice::restartDevice(){
+
    //Refresh the device, stopping everything and setup the new stuff
-   ChangeState(AbstractDevice::STOP);
-   WaitForEndOfState(AbstractDevice::STOP);
+    std::chrono::time_point<std::chrono::system_clock> start, end;
+    std::chrono::duration<double> elapsed_seconds;
+    start = std::chrono::system_clock::now();
 
-   ChangeState(AbstractDevice::RESET_TASK);
-   WaitForEndOfState(AbstractDevice::RESET_TASK);
+    ChangeState(AbstractDevice::STOP);
+    WaitForEndOfState(AbstractDevice::STOP);
 
-   ChangeState(AbstractDevice::RESET_DEVICE);
-   WaitForEndOfState(AbstractDevice::RESET_DEVICE);
-   this->refreshDevice(true);
-   ChangeState(AbstractDevice::INIT_DEVICE);
+    ChangeState(AbstractDevice::RESET_TASK);
+    WaitForEndOfState(AbstractDevice::RESET_TASK);
+
+    ChangeState(AbstractDevice::RESET_DEVICE);
+    WaitForEndOfState(AbstractDevice::RESET_DEVICE);
+    this->refreshDevice(true);
+    ChangeState(AbstractDevice::INIT_DEVICE);
    
-   WaitForInitialValidation();
-   WaitForEndOfState(AbstractDevice::INIT_DEVICE);
+    WaitForInitialValidation();
+    WaitForEndOfState(AbstractDevice::INIT_DEVICE);
        
-   ChangeState(AbstractDevice::INIT_TASK);
-   WaitForEndOfState(AbstractDevice::INIT_TASK);
+    ChangeState(AbstractDevice::INIT_TASK);
+    WaitForEndOfState(AbstractDevice::INIT_TASK);
 
-   ChangeState(AbstractDevice::RUN);
+    ChangeState(AbstractDevice::RUN);
+    end = std::chrono::system_clock::now();
+    elapsed_seconds = end - start;
+    LOG(INFO) << "Reset time: " << elapsed_seconds.count() << " seconds";
 }
 
 bool AbstractDevice::addHandle(const std::string& tag, const DeviceSetting& setting){

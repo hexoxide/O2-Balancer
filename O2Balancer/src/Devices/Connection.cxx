@@ -96,15 +96,17 @@ std::shared_ptr<DeviceSetting> Connection::addOutputChannel(ConnectionType type,
 }
 
 
+std::vector<FairMQChannel>& Connection::getChannels() const{
+    return this->device->fChannels.at(this->getName());
+}
 
 
 size_t Connection::channelSize() const{
-    return this->device->fChannels.at(name).size();
+    return this->device->fChannels.at(this->getName()).size();
 }
 
-void Connection::updateChannels(std::vector<DeviceSetting> nChannels){
-    //First filter all the old ips out
-    std::vector<std::string> deleteIp;
+std::vector<std::string> Connection::getOfflineDevices(std::vector<DeviceSetting> nChannels){
+    std::vector<std::string> results;
     for(size_t i = 0; i < this->device->fChannels.at(name).size(); i++){
         bool used = false;;
         const std::string oldIp = this->device->fChannels.at(name)[i].GetAddress();
@@ -117,9 +119,15 @@ void Connection::updateChannels(std::vector<DeviceSetting> nChannels){
         }
         if(!used){
             LOG(WARN) << boost::format("Device %s is offline, disabling channel") % oldIp;
-            deleteIp.push_back(oldIp);
+            results.push_back(oldIp);
         }
     }
+    return results;
+}
+
+void Connection::updateChannels(std::vector<DeviceSetting> nChannels){
+    //First filter all the old ips out
+    std::vector<std::string> deleteIp = this->getOfflineDevices(nChannels);
     this->device->fChannels.at(name).erase(
         std::remove_if(
             this->device->fChannels.at(name).begin(),

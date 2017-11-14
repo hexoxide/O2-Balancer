@@ -12,17 +12,24 @@
 #define O2_FLP_EPN_CONNECTION_H
 
 #include <O2/Balancer/Devices/Connection.h>
+#include <O2/Balancer/Utilities/DataTypes.h>
+#include <vector>
+#include <string>
+
 
 namespace O2{
     namespace FLP{
         class FLPSettings;
         class DeviceSetting;
         class EPNConnection : public Balancer::Connection{
-     
+            std::vector<std::string> offlineEPNS;
+            size_t incrementer = 0;
         public:
             EPNConnection(std::shared_ptr<FLPSettings> settings, Balancer::AbstractDevice* device);
             size_t amountOfEpns() const;
+            size_t balance(O2::Balancer::heartbeatID id);
             void updateConnection();
+            void updateBlacklist();
         };
     }
 }
