@@ -51,27 +51,32 @@ void EPNConnection::updateBlacklist(){
 
 size_t EPNConnection::balance(O2::Balancer::heartbeatID id){
     size_t direction = 0;
-    O2::Balancer::heartbeatID dirbalancer = id + this->incrementer;
+    O2::Balancer::heartbeatID dirbalancer = id;
     this->incrementer = this->incrementer % this->amountOfEpns();    
-    do {
-        direction = dirbalancer % (this->amountOfEpns() - this->offlineEPNS.size());
-        FairMQChannel& dataOutChannel = this->getChannels().at(direction);
-        bool invalid = false;
-        for(const std::string& ip : this->offlineEPNS){
-            if(ip == dataOutChannel.GetAddress()){
-                dirbalancer += 1;
-                LOG(WARN) << "skipping machine " << ip;
-                invalid=true;
-                break;
-            }
-        }
-        if(invalid){
-            continue;
-        }
-        incrementer += 1;
+    if(this->offlineEPNS.size() == 0){
+        direction = dirbalancer % this->amountOfEpns();
+    } else {
+        do {
+                direction = dirbalancer % (this->amountOfEpns() - this->offlineEPNS.size());
+                FairMQChannel& dataOutChannel = this->getChannels().at(direction);
+                bool invalid = false;
+                for(const std::string& ip : this->offlineEPNS){
+                    if(ip == dataOutChannel.GetAddress()){
+                        dirbalancer += 1;
+                        LOG(WARN) << "skipping machine " << ip;
+                        invalid=true;
+                        break;
+                    }
+                }
+                if(invalid){
+                    continue;
+                }
+                incrementer += 1;
 
-        break;
-    } while(true);
+                break;
+            } while(true);
+    }
+   
     return direction;
 
 }
