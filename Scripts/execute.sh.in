@@ -30,7 +30,7 @@ xterm -geometry 80x25+1000+0 -hold -e @EPN_BINARY_DIR@/$EPN2 &
 
 sleep 1s
 
-FLP="flp --ip 127.0.0.1 --restartFairRoot true --sample-size 5 --flp-config @CMAKE_SOURCE_DIR@/Config/flp-config.yaml"
+FLP="flp --ip 127.0.0.1 --restartFairRoot false --sample-size 5 --flp-config @CMAKE_SOURCE_DIR@/Config/flp-config.yaml"
 FLP2="flp --ip 127.0.0.1 --restartFairRoot true --sample-size 5 --flp-config @CMAKE_SOURCE_DIR@/Config/flp-config.yaml"
 xterm -geometry 80x25+500+0 -hold -e @FLP_BINARY_DIR@/$FLP &
 xterm -geometry 80x25+500+0  -e @FLP_BINARY_DIR@/$FLP2 &

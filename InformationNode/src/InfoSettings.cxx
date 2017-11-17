@@ -2,7 +2,7 @@
 #include <yaml-cpp/yaml.h>
 using namespace O2::InformationNode;
 
-InfoSettings::InfoSettings(const boost::program_options::variables_map& settings ) : Settings() {
+InfoSettings::InfoSettings(const boost::program_options::variables_map& settings) : Settings() {
     YAML::Node res = this->load(settings);
     this->heartRate = res["heartrate"].as<int>();
     this->acknowledgePort = res["acknowledgePort"].as<int>();
@@ -10,24 +10,24 @@ InfoSettings::InfoSettings(const boost::program_options::variables_map& settings
     int sSize = settings["sample-size"].as<int>();
     
     this->sampleSize = (sSize <= 0)? res["sample-size"].as<int>() : sSize;
-    
 }
 
 std::string InfoSettings::getSettingsFile() const {
     return "info-config";
 }
 
-int InfoSettings::getSampleSize() const{
+int InfoSettings::getSampleSize() const {
     return this->sampleSize;
 }
 
-int InfoSettings::getHeartRate() const{
+int InfoSettings::getHeartRate() const {
     return this->heartRate;
 }
-int InfoSettings::getAcknowledgePort() const{
+
+int InfoSettings::getAcknowledgePort() const {
     return this->acknowledgePort;
 }
 
-int InfoSettings::getHeartBeatPort() const{
+int InfoSettings::getHeartBeatPort() const {
     return this->heartBeatPort;
 }

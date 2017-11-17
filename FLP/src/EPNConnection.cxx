@@ -10,18 +10,19 @@
 
 #include "O2/FLP/EPNConnection.h"
 #include "O2/FLP/FLPDevice.h"
-#include "O2/FLP/FLPSettings.h"
-#include <chrono>
-#include <boost/format.hpp>
-#include <thread>
+#include <O2/Balancer/Exceptions/UnimplementedException.h>
+
 using namespace O2::FLP;
 
-EPNConnection::EPNConnection(std::shared_ptr<FLPSettings> settings, Balancer::AbstractDevice* device) : Balancer::Connection("stf2", device){
+constexpr char EPN_TAG[] = "EPN";
+constexpr char EPN_CHANNEL[] = "stf2";
+
+EPNConnection::EPNConnection(std::shared_ptr<FLPSettings>, Balancer::AbstractDevice* device) : Balancer::Connection("stf2", device){
     this->useClusterManager([this](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void{
-        auto dev = manager->getRegisteredConnections("EPN", "stf2");
+        auto dev = manager->getRegisteredConnections(EPN_TAG,EPN_CHANNEL);
         while(dev.empty()){
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            dev = manager->getRegisteredConnections("EPN", "stf2");
+            dev = manager->getRegisteredConnections(EPN_TAG, EPN_CHANNEL);
         }
     
         for(auto& epn : dev){
@@ -50,10 +51,44 @@ void EPNConnection::updateBlacklist(){
 }
 
 size_t EPNConnection::balance(O2::Balancer::heartbeatID id){
-    size_t direction = 0;
-    O2::Balancer::heartbeatID dirbalancer = id;
-    this->incrementer = this->incrementer % this->amountOfEpns();    
-    if(this->offlineEPNS.size() == 0){
+
+    if(this->offlineEPNS.empty()) {
+        return id % this->amountOfEpns();
+    } else if(this->offlineEPNS.size() == this->getChannels().size()) {
+        LOG(WARN) << "No EPN is online... ";
+        return id % this->amountOfEpns();
+    } else {
+        auto channels = this->getChannels();
+
+        //store all the online epns in a list
+        std::vector<std::string> filteredList;
+        for(const auto& i : channels) {
+            bool isOffline = false;
+            for (const std::string &offline : this->offlineEPNS) {
+                if (offline == i.GetAddress()) {
+                    isOffline = true;
+                    break;
+                }
+            }
+            if (!isOffline) {
+                filteredList.emplace_back(i.GetAddress());
+            }
+        }
+
+        //do the round robin on the filtered list
+        const size_t storedList = id % filteredList.size();
+
+        for(size_t i = 0; i < channels.size(); i++){
+            if(channels.at(i).GetAddress() == filteredList.at(storedList)){
+                return i;
+            }
+        }
+        throw Balancer::Exceptions::UnimplementedException("Could choose a index");
+
+    }
+
+
+    /*if(this->offlineEPNS.empty()){
         direction = dirbalancer % this->amountOfEpns();
     } else {
         do {
@@ -75,9 +110,9 @@ size_t EPNConnection::balance(O2::Balancer::heartbeatID id){
 
                 break;
             } while(true);
-    }
-   
-    return direction;
+    }*/
+   return 0;
+   // return direction;
 
 }
 

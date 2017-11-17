@@ -33,7 +33,7 @@ namespace O2{
         class ClusterManager{
             zhandle_t *zh;
 
-            std::string addRootIfNeccesary(const std::string& name) const;
+            std::string addRootIfNecessary(const std::string &name) const;
 
             /**
              *  Setups the topology used within ZooKeeper.

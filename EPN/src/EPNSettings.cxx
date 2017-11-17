@@ -15,7 +15,7 @@
 using namespace O2;
 using namespace O2::EPN;
 
-EPNSettings::EPNSettings(const boost::program_options::variables_map& settings) : Settings(){
+EPNSettings::EPNSettings(const boost::program_options::variables_map& settings) : Settings() {
     YAML::Node config = this->load(settings);
     this->amountOfFLPs = settings["amount-flps"].as<int>();
     this->flpConnectionPort = config["FLPConnectionPort"].as<int>();
@@ -24,7 +24,7 @@ EPNSettings::EPNSettings(const boost::program_options::variables_map& settings) 
         this->flpConnectionPort = settings["flp-port"].as<int>();
     }
        
-    if(config["Goat"]){
+    if(config["Goat"]) {
         this->goatIP = config["Goat"]["IP"].as<std::string>();
         this->amountAfterSignal = config["Goat"]["amount_after_signal"].as<int>();
         this->amountBeforeCrash = config["Goat"]["amount_before_signal"].as<int>();
@@ -34,36 +34,36 @@ EPNSettings::EPNSettings(const boost::program_options::variables_map& settings) 
 }
 
 
-std::string EPNSettings::getGoatIP() const{
+std::string EPNSettings::getGoatIP() const {
     return goatIP;
 }
 
-int EPNSettings::getHeartrate() const{
+int EPNSettings::getHeartrate() const {
     return heartrate;
 }
 
-int EPNSettings::getAmountAfterSignal() const{
+int EPNSettings::getAmountAfterSignal() const {
     return amountAfterSignal;
 }
 
-int EPNSettings::getAmountBeforeCrash() const{
+int EPNSettings::getAmountBeforeCrash() const {
     return amountBeforeCrash;
 }
 
-std::string EPNSettings::getSettingsFile() const{
+std::string EPNSettings::getSettingsFile() const {
     return "epn-config";
 }
 
-int EPNSettings::FLPConnectionPort() const{
-    
+int EPNSettings::FLPConnectionPort() const {
     return this->flpConnectionPort;
 }
-int EPNSettings::OutputConnectionPort() const{
+
+int EPNSettings::OutputConnectionPort() const {
     return this->outputConnectionPort;    
 }
 
-int EPNSettings::getAmountOfFLPs() const{
-    if(this->amountOfFLPs == 0){
+int EPNSettings::getAmountOfFLPs() const {
+    if(this->amountOfFLPs == 0) {
         throw Balancer::Exceptions::InitException("There need to be at least one FLP defined");
     }
     return this->amountOfFLPs;

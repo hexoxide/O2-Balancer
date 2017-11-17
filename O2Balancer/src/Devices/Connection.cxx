@@ -3,8 +3,6 @@
 #include "O2/Balancer/Exceptions/UnimplementedException.h"
 #include "O2/Balancer/Utilities/DataTypes.h"
 #include <boost/format.hpp>
-#include <chrono>
-#include <thread>
 using namespace O2::Balancer;
 
 Connection::Connection(const std::string& name, AbstractDevice* device){
@@ -14,9 +12,9 @@ Connection::Connection(const std::string& name, AbstractDevice* device){
         std::pair<std::string, std::vector<FairMQChannel>>(name, std::vector<FairMQChannel>()));
 }
 
-void Connection::updateAllRateLogging(const int& logg){
+void Connection::updateAllRateLogging(const int& logRate){
      for(auto& i : this->device->fChannels.at(name)){
-        i.UpdateRateLogging(logg);
+        i.UpdateRateLogging(logRate);
     }
 }
 
@@ -76,11 +74,11 @@ std::string Connection::methodToString(ConnectionMethod method) const{
 }
 
 std::shared_ptr<DeviceSetting> Connection::addInputChannel(ConnectionType type, ConnectionMethod method,const std::string& ip, int port){
-    this->device->fChannels.at(name).push_back(FairMQChannel(
-        this->typeToString(type),
+    this->device->fChannels.at(name).emplace_back(
+            this->typeToString(type),
         this->methodToString(method),
         "tcp://" + std::string(ip) + ":" + std::to_string(port)
-    ));
+    );
     return std::shared_ptr<DeviceSetting>(new DeviceSetting(port,ip));
 }
 
@@ -107,9 +105,9 @@ size_t Connection::channelSize() const{
 
 std::vector<std::string> Connection::getOfflineDevices(std::vector<DeviceSetting> nChannels){
     std::vector<std::string> results;
-    for(size_t i = 0; i < this->device->fChannels.at(name).size(); i++){
+    for (auto &i : this->device->fChannels.at(name)) {
         bool used = false;;
-        const std::string oldIp = this->device->fChannels.at(name)[i].GetAddress();
+        const std::string oldIp = i.GetAddress();
         for(auto newDevice : nChannels){
             const std::string other = "tcp://" + newDevice.ip + ":" + std::to_string(newDevice.port);
             if(oldIp == other){
@@ -133,8 +131,8 @@ void Connection::updateChannels(std::vector<DeviceSetting> nChannels){
             this->device->fChannels.at(name).begin(),
             this->device->fChannels.at(name).end(), 
             [&, deleteIp](FairMQChannel& e) -> bool{
-                for(size_t i = 0; i < deleteIp.size(); i++ ){
-                    if(deleteIp[i] == e.GetAddress()){
+                for (const auto &i : deleteIp) {
+                    if(i == e.GetAddress()){
                         return true;
                     } 
                 }

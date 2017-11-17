@@ -1,7 +1,6 @@
 #include "O2/Balancer/Utilities/Settings.h"
 #include "O2/Balancer/Utilities/DataTypes.h"
 #include "O2/Balancer/Exceptions/InitException.h"
-#include "FairVersion.h"
 #include <yaml-cpp/yaml.h>
 #include <iostream>
 
@@ -49,7 +48,7 @@ std::shared_ptr<DeviceSetting> Settings::getInformationNodeSetting() const{
 }
 
 std::string Settings::getIPAddress() const{
-    if(this->ipAddress == ""){
+    if(this->ipAddress.empty()){
         if(this->informationSettings == nullptr){
             throw Exceptions::InitException("Ip address was not initialized");
         }

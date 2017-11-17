@@ -8,8 +8,6 @@
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
 #include "O2/EPN/EPNDevice.h"
-#include <memory>
-#include <fstream>
 #include <boost/format.hpp>
 #include <FairMQProgOptions.h>
 #include <future>
@@ -49,7 +47,7 @@ void EPNDevice::DiscardIncompleteTimeframes(){
   }
 }
 
-void EPNDevice::refreshDevice(bool inMainThread){
+void EPNDevice::refreshDevice(bool){
   this->useClusterManager([this](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void{
     const std::string tmp = manager->pathThatNeedsUpdate();
     LOG(WARN) << boost::format("Refresh called on path %s, yet not fully supported on EPNs.") % tmp;
@@ -60,7 +58,7 @@ void EPNDevice::run(){
     const std::string IP = this->settings->getIPAddress();
     O2::Balancer::heartbeatID  id = 0;
     FairMQChannel& ackOutChannel = fChannels.at(this->acknowledgeConnection->getName()).at(0);
-    EPNSettings* settings = static_cast<EPNSettings*>(this->settings.get());
+    auto settings = dynamic_cast<EPNSettings*>(this->settings.get());
   
     const bool isGoat = (IP == settings->getGoatIP());
     bool crashing = false;

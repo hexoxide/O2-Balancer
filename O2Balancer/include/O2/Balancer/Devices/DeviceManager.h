@@ -37,7 +37,7 @@ namespace O2{
         public:
             /**
              *  Creates the device and initializes FairRoot.
-             *  When called, the signals will be catched.
+             *  When called, the signals will be catch.
              *  @param args     The constructor arguments for the purposed device
              * */
             template<typename... Arguments>
@@ -63,7 +63,7 @@ namespace O2{
             }
             /**
              *  Starts the state of the device.
-             *  Will return when the abort signall is called.
+             *  Will return when the abort signal is called.
              * */
             void run(){
                 

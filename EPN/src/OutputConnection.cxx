@@ -11,7 +11,7 @@
 #include "O2/EPN/EPNSettings.h"
 using namespace O2::EPN;
 
-OutputConnection::OutputConnection(Balancer::AbstractDevice* device, std::shared_ptr<EPNSettings> settings) : Balancer::Connection("tf", device){
+OutputConnection::OutputConnection(Balancer::AbstractDevice* device, std::shared_ptr<EPNSettings>) : Balancer::Connection("tf", device){
  /*   this->addOutputChannel(
         Balancer::ConnectionType::Publish,
         Balancer::ConnectionMethod::Bind,

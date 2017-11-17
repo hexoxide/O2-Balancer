@@ -9,16 +9,8 @@
 // or submit itself to any jurisdiction.
 
 #include "O2/FLP/FLPDevice.h"
-#include <cstdint> // UINT64_MAX
-#include <cassert>
-#include <chrono>
-#include <utility>
-#include <FairMQLogger.h>
-#include <FairMQMessage.h>
 #include <boost/format.hpp>
 #include <FairMQProgOptions.h>
-#include <ctime>
-#include <cstring>
 #include "O2/FLP/HeartBeatConnection.h"
 #include "O2/FLP/EPNConnection.h"
 #include <O2/Balancer/Globals.h>
@@ -72,7 +64,7 @@ bool FLPDevice::conditionalRun(){
     if(fstream.good()){
       FairMQParts parts;
       const int size = this->mEventSize * 1024 * 1024;
-      char* buffer = new char[size];  
+      auto buffer = new char[size];
       fstream.read(buffer,size);
 
       parts.AddPart(NewMessage());
@@ -87,13 +79,13 @@ bool FLPDevice::conditionalRun(){
         const O2::Balancer::heartbeatID currentTimeFrameid = *(static_cast<O2::Balancer::heartbeatID *>(parts.At(0)->GetData()));
         
         if(this->epnConnection->amountOfEpns() == 0){
-          LOG(WARN) << boost::format("Timeframe %i discarded, all the EPNS are ofline") % currentTimeFrameid;
+          LOG(WARN) << boost::format("Timeframe %i discarded, all the EPNs are offline") % currentTimeFrameid;
           return true;
         }
         
         int direction = this->epnConnection->balance(currentTimeFrameid);
         
-        LOG(INFO) << boost::format("Direction: %i, amount of epns: %i, heartbeat: %i") % direction % this->epnConnection->amountOfEpns() % currentTimeFrameid;
+        LOG(INFO) << boost::format("Direction: %i, amount of EPNs: %i, heartbeat: %i") % direction % this->epnConnection->amountOfEpns() % currentTimeFrameid;
         if (Send(parts, this->epnConnection->getName(), direction, 0) < 0) {
            LOG(ERROR) << boost::format("could not send to EPN %i") % direction;
         }

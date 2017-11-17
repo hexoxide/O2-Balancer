@@ -11,8 +11,6 @@
 #include "O2/FLP/FLPDevice.h"
 #include <O2/Balancer/Devices/DeviceManager.h>
 #include <O2/Balancer/Utilities/Utilities.h>
-#include "O2/FLP/FLPSettings.h"
-#include <O2/Balancer/Exceptions/InitException.h>
 namespace po = boost::program_options;
 
 

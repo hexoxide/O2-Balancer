@@ -21,7 +21,7 @@ namespace O2{
     namespace Balancer{
 
         /**
-         *  Staticly typed wrapper for FairRoot for all the connection types.
+         *  Statically typed wrapper for FairRoot for all the connection types.
          *  This is to prevent typos.
          * */
         enum class ConnectionType{
@@ -33,7 +33,7 @@ namespace O2{
     
 
         /**
-         *  Staticly typed wrapper for FairRoot for all the ConnectionMethods.
+         *  Statically typed wrapper for FairRoot for all the ConnectionMethods.
          *  Primarily used to prevent typos.
          * */
         enum class ConnectionMethod{
@@ -54,8 +54,8 @@ namespace O2{
         */
         class Connection{
             /*
-            *   FairMQ dynamicly creates connections.
-            *   This function allows us to make it more staticly.
+            *   FairMQ dynamically creates connections.
+            *   This function allows us to make it more statically.
             */
             std::string typeToString(ConnectionType type) const;
             std::string methodToString(ConnectionMethod method) const;
@@ -74,10 +74,10 @@ namespace O2{
             Connection(const std::string& name, AbstractDevice* device);
             std::vector<std::string> getOfflineDevices(std::vector<DeviceSetting> nChannels);
             /**
-             *  Gets all the FairMQChannels and updates all the loggings
-             *  @param logg, The logging variable
+             *  Gets all the FairMQChannels and updates all the log rates.
+             *  @param logRate, The logging variable
              * */
-            void updateAllRateLogging(const int& logg);
+            void updateAllRateLogging(const int& logRate);
 
             std::vector<FairMQChannel>& getChannels() const;
 

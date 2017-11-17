@@ -10,13 +10,11 @@
 #include "O2/EPN/AcknowledgeConnection.h"
 #include <O2/Balancer/Devices/AbstractDevice.h>
 #include "O2/EPN/EPNSettings.h"
-#include <chrono>
-#include <thread>
-#include "FairMQLogger.h"
+
 
 using namespace O2::EPN;
 
-AcknowledgeConnection::AcknowledgeConnection(Balancer::AbstractDevice* device, std::shared_ptr<EPNSettings> settings) : Balancer::Connection("ack", device){
+AcknowledgeConnection::AcknowledgeConnection(Balancer::AbstractDevice* device, std::shared_ptr<EPNSettings>) : Balancer::Connection("ack", device){
     this->useClusterManager([this](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void{
         auto dev = manager->getRegisteredConnections("InformationNode", "ack");
         while(dev.empty()){

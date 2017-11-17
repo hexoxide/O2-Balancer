@@ -7,23 +7,23 @@
 // In applying this license CERN does not waive the privileges and immunities
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
-#ifndef O2_BALANCER_GLOBALS_H
-#define O2_BALANCER_GLOBALS_H
+#ifndef O2BALANCER_GLOBALS_H
+#define O2BALANCER_GLOBALS_H
 
 
-namespace O2{
-    namespace Balancer{
+namespace O2 {
+    namespace Balancer {
         /**
          * Namespace containing various magic numbers and variables used throughout the library and the derived programs.
          * @author H.J.M van der Heijden
          * @date 10 October 2017
          * */
-        namespace Globals{
+        namespace Globals {
 
             /**
              * The names and ids for all the derived programs to be used in ZooKeeper and FairRoot.
              * */
-            namespace DeviceNames{
+            namespace DeviceNames {
                 constexpr char INFORMATION_NAME[] = "InformationNode";
                 constexpr char FLP_NAME[] = "FLP";
                 constexpr char EPN_NAME[] = "EPN";
@@ -34,7 +34,7 @@ namespace O2{
             /**
              * Namespace containing all the default options for message queuing in fairroot.
              * */
-            namespace FairMessageOptions{
+            namespace FairMessageOptions {
                 constexpr char ZERO_MQ[] = "zeromq";
                 constexpr char NANO_MSG[] = "nanomsg";
                 constexpr char SHARED_MEMORY[] = "shmem";
@@ -43,14 +43,14 @@ namespace O2{
             /**
              *  Variables that can be set within the environment.
              * */
-            namespace EnvironmentVariables{
+            namespace EnvironmentVariables {
                 constexpr char O2_TRANSPORT_VAR[] =  "O2Transport";
             }
 
             /**
              * The layout and names used within Zookeeper.
              * */
-            namespace ZooKeeperTopology{
+            namespace ZooKeeperTopology {
                 constexpr char VAR_ZNODE_ROOT[] = "/globals";
             }
 

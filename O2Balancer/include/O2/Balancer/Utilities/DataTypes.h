@@ -31,7 +31,7 @@ namespace O2{
         struct DeviceSetting{
             int port;
             std::string ip;
-            DeviceSetting(int port, std::string ip);
+            DeviceSetting(const int port, const std::string& ip);
             DeviceSetting(const std::string& setting);
             
         };

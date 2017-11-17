@@ -16,8 +16,6 @@
 #include "O2/InformationNode/InformationDevice.h"
 #include <O2/Balancer/Devices/DeviceManager.h>
 #include <O2/Balancer/Utilities/Utilities.h>
-#include <O2/Balancer/Exceptions/InitException.h>
-#include <O2/Balancer/Remote/ClusterManager.h>
 #include "O2/InformationNode/InfoSettings.h"
 
 std::unique_ptr< O2::Balancer::DeviceManager<O2::InformationNode::InformationDevice>> deviceManager;
@@ -48,18 +46,13 @@ int main(int argc, char** argv){
 
         deviceManager->run();
         
-    } catch(O2::Balancer::Exceptions::InitException exception){
+    } catch(const O2::Balancer::Exceptions::InitException& exception){
         LOG(ERROR) << "Failed to initialize due, error :" << exception.getMessage();
-      //  manager.close();
+
         return EXIT_FAILURE;
-    } catch (O2::Balancer::Exceptions::AbstractException exception){
+    } catch (const O2::Balancer::Exceptions::AbstractException& exception){
         LOG(ERROR) << exception.getMessage();
-    //    manager.close();
         return EXIT_FAILURE;
-    }// catch(std::exception ex){
-    //    LOG(ERROR) << "Unkown exception occured";
-   //     return EXIT_FAILURE;
-    //}
-  //  manager.close();
+    }
     return EXIT_SUCCESS;
 }

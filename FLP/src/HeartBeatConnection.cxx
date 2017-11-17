@@ -10,7 +10,7 @@
 
 #include "O2/FLP/HeartBeatConnection.h"
 #include "O2/FLP/FLPDevice.h"
-#include "O2/FLP/FLPSettings.h"
+
 using namespace O2::FLP;
 
 HeartbeatConnection::HeartbeatConnection(std::shared_ptr<FLPSettings> settings, Balancer::AbstractDevice* device) : Balancer::Connection("stf1", device){
