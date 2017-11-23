@@ -14,10 +14,11 @@
 
 using namespace O2::EPN;
 
-AcknowledgeConnection::AcknowledgeConnection(Balancer::AbstractDevice* device, std::shared_ptr<EPNSettings>) : Balancer::Connection("ack", device){
-    this->useClusterManager([this](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void{
+AcknowledgeConnection::AcknowledgeConnection(Balancer::AbstractDevice* device,
+                                             std::shared_ptr<EPNSettings>) : Balancer::Connection("ack", device) {
+    this->useClusterManager([this](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void {
         auto dev = manager->getRegisteredConnections("InformationNode", "ack");
-        while(dev.empty()){
+        while(dev.empty()) {
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
             dev = manager->getRegisteredConnections("InformationNode", "ack");
         }
@@ -29,7 +30,4 @@ AcknowledgeConnection::AcknowledgeConnection(Balancer::AbstractDevice* device, s
         );
     });
     this->updateAllSendBuffer(10000);
-   //auto dev =  device->getClusterManager()->getRegisteredConnections("InformationNode", "ack");
-
-
 }

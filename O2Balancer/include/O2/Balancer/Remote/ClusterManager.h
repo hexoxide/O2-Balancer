@@ -33,6 +33,12 @@ namespace O2{
         class ClusterManager{
             zhandle_t *zh;
 
+            /**
+             * Zookeeper requires for every path to implicitly add a root.
+             * When a string doesnt start with \ it will add it
+             * @param name The znode of zookeeper
+             * @return the znode with a \ prefixed (if it wasn't already)
+             */
             std::string addRootIfNecessary(const std::string &name) const;
 
             /**
@@ -46,6 +52,7 @@ namespace O2{
              *  @param port         The port of ZooKeeper. (example 2181)
              * */
             ClusterManager(const std::string& zooServer, const int& port);
+
 
             bool requiresUpdate() const;
 

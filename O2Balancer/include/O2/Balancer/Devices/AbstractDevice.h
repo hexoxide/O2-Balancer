@@ -52,10 +52,25 @@ namespace O2{
             virtual void refreshDevice(bool inMainThread) = 0;
             void useClusterManager(std::function<void(std::shared_ptr<ClusterManager>)> cl);
         public:
-            void restartDevice();
+            /**
+             * Instantiates a device, setting all the FairMQ settings.
+             * @param name The name to identify the device
+             * @param settings The global settings used by each device
+             * @param restartOnUpdate Does it need to restart when zookeeper has an update?
+             */
             AbstractDevice(const std::string& name, std::shared_ptr<Settings> settings, bool restartOnUpdate=false);
-            //std::shared_ptr<ClusterManager> getClusterManager() const;
+            /**
+             * Restarts FairMQ, getting all the new paths from FairRoot and updates the channels.
+             * Should only be called from the main loop!
+             */
+            void restartDevice();
+
+            /**
+             * If zookeeper has an update, this will be true. (when restartonupdate is true)
+             * @return ZooKeeper has an update
+             */
             bool needRefresh() const;
+
 
             bool needToStop() const;
             bool addHandle(const std::string& tag, const DeviceSetting& setting);

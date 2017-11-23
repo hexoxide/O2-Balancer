@@ -1,3 +1,13 @@
+// Copyright CERN and copyright holders of ALICE O2. This software is
+// distributed under the terms of the GNU General Public License v3 (GPL
+// Version 3), copied verbatim in the file "COPYING".
+//
+// See http://alice-o2.web.cern.ch/license for full licensing information.
+//
+// In applying this license CERN does not waive the privileges and immunities
+// granted to it by virtue of its status as an Intergovernmental Organization
+// or submit itself to any jurisdiction.
+
 #include "O2/Balancer/Devices/Connection.h"
 #include "O2/Balancer/Devices/AbstractDevice.h"
 #include "O2/Balancer/Exceptions/UnimplementedException.h"
@@ -5,50 +15,51 @@
 #include <boost/format.hpp>
 using namespace O2::Balancer;
 
-Connection::Connection(const std::string& name, AbstractDevice* device){
+Connection::Connection(const std::string& name, AbstractDevice* device) {
     this->name = name;
     this->device = device;
     this->device->fChannels.insert(
         std::pair<std::string, std::vector<FairMQChannel>>(name, std::vector<FairMQChannel>()));
 }
 
-void Connection::updateAllRateLogging(const int& logRate){
-     for(auto& i : this->device->fChannels.at(name)){
+void Connection::updateAllRateLogging(const int& logRate) {
+     for(auto& i : this->device->fChannels.at(name)) {
         i.UpdateRateLogging(logRate);
     }
 }
 
-void Connection::updateAllReceiveBuffer(const int& buffer){
-    for(auto& i : this->device->fChannels.at(name)){
+void Connection::updateAllReceiveBuffer(const int& buffer) {
+    for(auto& i : this->device->fChannels.at(name)) {
         i.UpdateRcvBufSize(buffer);
     }
 }
 
-void Connection::updateAllSendBuffer(const int& buffer){
-    for(auto& i : this->device->fChannels.at(name)){
+void Connection::updateAllSendBuffer(const int& buffer) {
+    for(auto& i : this->device->fChannels.at(name)) {
         i.UpdateSndBufSize(buffer);
     }
 }
 
-void Connection::updateAllSendKernelSize(const int& size){
-    for(auto& i : this->device->fChannels.at(name)){
+void Connection::updateAllSendKernelSize(const int& size) {
+    for(auto& i : this->device->fChannels.at(name)) {
         i.UpdateSndKernelSize(size);
     }
 }
 
-void Connection::updateAllReceiveKernelSize(const int& size){
-    for(auto& i : this->device->fChannels.at(name)){
+void Connection::updateAllReceiveKernelSize(const int& size) {
+    for(auto& i : this->device->fChannels.at(name)) {
         i.UpdateRcvKernelSize(size);
     }
 }
 
-void Connection::useClusterManager(std::function<void(std::shared_ptr<ClusterManager>)> cl){
+void Connection::useClusterManager(std::function<void(std::shared_ptr<ClusterManager>)> cl) {
     std::unique_lock<std::mutex> lck (this->device->zoolock);
     cl(this->device->clusterManager);
 }
 
-std::string Connection::typeToString(ConnectionType type) const{
-    switch(type){
+std::string Connection::typeToString(ConnectionType type) const {
+
+    switch(type) {
         case ConnectionType::Publish:
         return "pub";
         case ConnectionType::Pull:
@@ -62,8 +73,9 @@ std::string Connection::typeToString(ConnectionType type) const{
     }
 }
 
-std::string Connection::methodToString(ConnectionMethod method) const{
-    switch(method){
+std::string Connection::methodToString(ConnectionMethod method) const {
+
+    switch(method) {
         case ConnectionMethod::Bind:
         return "bind";
         case ConnectionMethod::Connect:
@@ -73,7 +85,10 @@ std::string Connection::methodToString(ConnectionMethod method) const{
     }
 }
 
-std::shared_ptr<DeviceSetting> Connection::addInputChannel(ConnectionType type, ConnectionMethod method,const std::string& ip, int port){
+std::shared_ptr<DeviceSetting> Connection::addInputChannel(ConnectionType type,
+                                                           ConnectionMethod method,
+                                                           const std::string& ip,
+                                                           int port) {
     this->device->fChannels.at(name).emplace_back(
             this->typeToString(type),
         this->methodToString(method),
@@ -82,7 +97,10 @@ std::shared_ptr<DeviceSetting> Connection::addInputChannel(ConnectionType type, 
     return std::shared_ptr<DeviceSetting>(new DeviceSetting(port,ip));
 }
 
-std::shared_ptr<DeviceSetting> Connection::addOutputChannel(ConnectionType type, ConnectionMethod method, const std::string& ip, int port){
+std::shared_ptr<DeviceSetting> Connection::addOutputChannel(ConnectionType type,
+                                                            ConnectionMethod method,
+                                                            const std::string& ip,
+                                                            int port) {
     //Stop what you are doing, and wait until it's registered in ZooKeeper. In case of failure try again later  
     //const std::string name = this->name + ip + std::to_string(port); 
     while(!device->addHandle(this->name, O2::Balancer::DeviceSetting(port,ip))){
@@ -94,16 +112,16 @@ std::shared_ptr<DeviceSetting> Connection::addOutputChannel(ConnectionType type,
 }
 
 
-std::vector<FairMQChannel>& Connection::getChannels() const{
+std::vector<FairMQChannel>& Connection::getChannels() const {
     return this->device->fChannels.at(this->getName());
 }
 
 
-size_t Connection::channelSize() const{
+size_t Connection::channelSize() const {
     return this->device->fChannels.at(this->getName()).size();
 }
 
-std::vector<std::string> Connection::getOfflineDevices(std::vector<DeviceSetting> nChannels){
+std::vector<std::string> Connection::getOfflineDevices(std::vector<DeviceSetting> nChannels) {
     std::vector<std::string> results;
     for (auto &i : this->device->fChannels.at(name)) {
         bool used = false;;
@@ -123,8 +141,8 @@ std::vector<std::string> Connection::getOfflineDevices(std::vector<DeviceSetting
     return results;
 }
 
-void Connection::updateChannels(std::vector<DeviceSetting> nChannels){
-    //First filter all the old ips out
+void Connection::updateChannels(std::vector<DeviceSetting> nChannels) {
+    // First filter all the old ips out
     std::vector<std::string> deleteIp = this->getOfflineDevices(nChannels);
     this->device->fChannels.at(name).erase(
         std::remove_if(
@@ -150,6 +168,6 @@ void Connection::updateChannels(std::vector<DeviceSetting> nChannels){
 
 
 
-std::string Connection::getName() const{
+std::string Connection::getName() const {
     return this->name;
 }
