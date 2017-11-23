@@ -37,7 +37,6 @@ int main(int argc, char** argv){
         manager.run();    
     } catch (const O2::Balancer::Exceptions::AbstractException& exception){
         LOG(ERROR) << exception.getMessage();
-       // manager.close();
         return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;

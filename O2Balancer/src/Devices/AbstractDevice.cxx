@@ -1,3 +1,13 @@
+// Copyright CERN and copyright holders of ALICE O2. This software is
+// distributed under the terms of the GNU General Public License v3 (GPL
+// Version 3), copied verbatim in the file "COPYING".
+//
+// See http://alice-o2.web.cern.ch/license for full licensing information.
+//
+// In applying this license CERN does not waive the privileges and immunities
+// granted to it by virtue of its status as an Intergovernmental Organization
+// or submit itself to any jurisdiction.
+
 #include "O2/Balancer/Devices/AbstractDevice.h"
 #include "O2/Balancer/Devices/Connection.h"
 #include "O2/Balancer/Utilities/Utilities.h"
@@ -12,7 +22,9 @@ using namespace O2::Balancer;
 
 constexpr char EXCEPTION_MESSAGE[] = "The following exception occurred ";
 
-AbstractDevice::AbstractDevice(const std::string& name, std::shared_ptr<Settings> settings, bool restartOnUpdate){
+AbstractDevice::AbstractDevice(const std::string& name,
+                               std::shared_ptr<Settings> settings,
+                               bool restartOnUpdate) {
     this->fId = name;
     this->settings = settings;
     this->nStop = false;
@@ -49,23 +61,16 @@ AbstractDevice::AbstractDevice(const std::string& name, std::shared_ptr<Settings
 }
 
 
-void AbstractDevice::useClusterManager(std::function<void(std::shared_ptr<ClusterManager>)> cl){
-   // static bool entered = false;
-   // if(entered){
-   //     throw O2::Balancer::Exceptions::UnimplementedException("A deadlock has occurred, you can't call this function recursively");
-   // }
-   // entered = true;
+void AbstractDevice::useClusterManager(std::function<void(std::shared_ptr<ClusterManager>)> cl) {
     std::unique_lock<std::mutex> lck (this->zoolock);
 
     cl(this->clusterManager);
-
-   // entered = false;
 }
 
 bool AbstractDevice::ConditionalRun() {
     try{
         return this->conditionalRun();
-    } catch (const O2::Balancer::Exceptions::AbstractException& exception){
+    } catch (const O2::Balancer::Exceptions::AbstractException& exception) {
         LOG(ERROR) << EXCEPTION_MESSAGE << exception.getMessage();
         return false;
     }
@@ -74,12 +79,12 @@ bool AbstractDevice::ConditionalRun() {
 void AbstractDevice::PreRun() {
     try{
         this->preRun();
-    } catch (const O2::Balancer::Exceptions::AbstractException& exception){
+    } catch (const O2::Balancer::Exceptions::AbstractException& exception) {
         LOG(ERROR) << EXCEPTION_MESSAGE << exception.getMessage();
     }
 }
 
-void AbstractDevice::Run(){
+void AbstractDevice::Run() {
     try{
         this->run();
     } catch (const O2::Balancer::Exceptions::AbstractException& exception){
@@ -90,41 +95,41 @@ void AbstractDevice::Run(){
 void AbstractDevice::PostRun() {
     try{
         this->postRun();
-    } catch (const O2::Balancer::Exceptions::AbstractException& exception){
+    } catch (const O2::Balancer::Exceptions::AbstractException& exception) {
         LOG(ERROR) << EXCEPTION_MESSAGE << exception.getMessage();
     }
 }
 
-void AbstractDevice::preRun(){
+void AbstractDevice::preRun() {
     FairMQDevice::PreRun();
 }
 
-void AbstractDevice::run(){
+void AbstractDevice::run() {
     FairMQDevice::Run();
 }
 
-void AbstractDevice::postRun(){
+void AbstractDevice::postRun() {
     FairMQDevice::PostRun();
 }
-bool AbstractDevice::conditionalRun(){
+bool AbstractDevice::conditionalRun() {
     FairMQDevice::ConditionalRun();
 }
 
 
-void AbstractDevice::checkZooKeeper(){
-    while(!this->nStop){
+void AbstractDevice::checkZooKeeper() {
+    while(!this->nStop) {
         std::unique_lock<std::mutex> lck (this->zoolock);
         this->nRefresh = this->clusterManager->requiresUpdate() && this->restartOnUpdate;
         lck.unlock();
-        if(this->clusterManager->requiresUpdate() && !this->restartOnUpdate){
+        if(this->clusterManager->requiresUpdate() && !this->restartOnUpdate) {
             this->refreshDevice(false);
         }
     }
 }
 
-void AbstractDevice::restartDevice(){
+void AbstractDevice::restartDevice() {
 
-   //Refresh the device, stopping everything and setup the new stuff
+    // Refresh the device, stopping everything and setup the new stuff
     std::chrono::time_point<std::chrono::system_clock> start, end;
     std::chrono::duration<double> elapsed_seconds{};
     start = std::chrono::system_clock::now();
@@ -152,7 +157,7 @@ void AbstractDevice::restartDevice(){
     LOG(INFO) << "Reset time: " << elapsed_seconds.count() << " seconds";
 }
 
-bool AbstractDevice::addHandle(const std::string& tag, const DeviceSetting& setting){
+bool AbstractDevice::addHandle(const std::string& tag, const DeviceSetting& setting) {
     std::unique_lock<std::mutex> lck (this->zoolock);
 
     return this->clusterManager->registerConnection(
@@ -162,25 +167,17 @@ bool AbstractDevice::addHandle(const std::string& tag, const DeviceSetting& sett
     );
 }
 
-bool AbstractDevice::needRefresh() const{
+bool AbstractDevice::needRefresh() const {
     return this->nRefresh;
 }
 
      
-bool AbstractDevice::needToStop() const{
+bool AbstractDevice::needToStop() const {
     return this->nStop;
 }
 
 
-
-/*void AbstractDevice::PostRun(){
-    LOG(INFO) << "Closing device : " << fId;
-    this->clusterManager->close();
-    this->clusterManager.reset();
-    this->settings.reset();
-}*/
-
-std::string AbstractDevice::getDefaultTransport() const{
+std::string AbstractDevice::getDefaultTransport() const {
     return this->defaultTransport;
 }
 
@@ -197,7 +194,7 @@ std::string AbstractDevice::getProperty(const std::string& varName, const std::s
 }
 
 
-void AbstractDevice::quit(){
+void AbstractDevice::quit() {
     this->nStop = true;
     LOG(INFO) << "closing thread";
     if(this->zooThread.joinable()){

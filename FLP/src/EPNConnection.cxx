@@ -60,9 +60,9 @@ size_t EPNConnection::balance(O2::Balancer::heartbeatID id){
     } else {
         auto channels = this->getChannels();
 
-        //store all the online epns in a list
+        // store all the online epns in a list
         std::vector<std::string> filteredList;
-        for(const auto& i : channels) {
+        for (const auto &i : channels) {
             bool isOffline = false;
             for (const std::string &offline : this->offlineEPNS) {
                 if (offline == i.GetAddress()) {
@@ -78,42 +78,17 @@ size_t EPNConnection::balance(O2::Balancer::heartbeatID id){
         //do the round robin on the filtered list
         const size_t storedList = id % filteredList.size();
 
-        for(size_t i = 0; i < channels.size(); i++){
-            if(channels.at(i).GetAddress() == filteredList.at(storedList)){
+        // Detect to which channel it points
+        for (size_t i = 0; i < channels.size(); i++) {
+            if (channels.at(i).GetAddress() == filteredList.at(storedList)) {
                 return i;
             }
         }
+        // This shouldn't be called.
+        // But just in case throw an error
         throw Balancer::Exceptions::UnimplementedException("Could choose a index");
 
     }
-
-
-    /*if(this->offlineEPNS.empty()){
-        direction = dirbalancer % this->amountOfEpns();
-    } else {
-        do {
-                direction = dirbalancer % (this->amountOfEpns() - this->offlineEPNS.size());
-                FairMQChannel& dataOutChannel = this->getChannels().at(direction);
-                bool invalid = false;
-                for(const std::string& ip : this->offlineEPNS){
-                    if(ip == dataOutChannel.GetAddress()){
-                        dirbalancer += 1;
-                        LOG(WARN) << "skipping machine " << ip;
-                        invalid=true;
-                        break;
-                    }
-                }
-                if(invalid){
-                    continue;
-                }
-                incrementer += 1;
-
-                break;
-            } while(true);
-    }*/
-   return 0;
-   // return direction;
-
 }
 
 void EPNConnection::updateConnection(){

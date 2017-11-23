@@ -1,3 +1,13 @@
+// Copyright CERN and copyright holders of ALICE O2. This software is
+// distributed under the terms of the GNU General Public License v3 (GPL
+// Version 3), copied verbatim in the file "COPYING".
+//
+// See http://alice-o2.web.cern.ch/license for full licensing information.
+//
+// In applying this license CERN does not waive the privileges and immunities
+// granted to it by virtue of its status as an Intergovernmental Organization
+// or submit itself to any jurisdiction.
+
 #include "O2/Balancer/Utilities/Utilities.h"
 #include <boost/format.hpp>
 #include <sys/stat.h>
@@ -16,8 +26,8 @@ using namespace O2;
 
 namespace po = boost::program_options;
 
-po::variables_map O2::Balancer::AddO2Options(boost::program_options::options_description& options, int argc, char** argv){
-    try{
+po::variables_map O2::Balancer::AddO2Options(boost::program_options::options_description& options, int argc, char** argv) {
+    try {
         options.add_options()
         ("version", "Shows O2 library version")
         ("daemonize", "sets a daemon")
@@ -29,7 +39,7 @@ po::variables_map O2::Balancer::AddO2Options(boost::program_options::options_des
         po::store(po::parse_command_line(argc, argv, options), vm);
      
         
-        if(vm.count("version")){
+        if(vm.count("version")) {
             std::cout << "O2 Balancer prototype version: " << O2::Balancer::VERSION_MAJOR << "." <<  O2::Balancer::VERSION_MINOR << "." << O2::Balancer::VERSION_PATCH << "\n" ;
             std::cout << "Using FairRoot version : " << TOSTRING(FAIRROOT_VERSION) << "\n";
             std::cout << "Using ZooKeeper version : " << ZOO_MAJOR_VERSION << "." << ZOO_MINOR_VERSION << "." << ZOO_PATCH_VERSION << "\n";
@@ -43,31 +53,31 @@ po::variables_map O2::Balancer::AddO2Options(boost::program_options::options_des
         }
         po::notify(vm);   
 
-        if(vm.count("daemonize")){
+        if(vm.count("daemonize")) {
             daemonize();
         }
 
         return vm;
-    } catch(const boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<boost::program_options::required_option> >& exc){
+    } catch(const boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<boost::program_options::required_option> >& exc) {
         throw O2::Balancer::Exceptions::InitException(exc.what());
     }
 
 }
 
-void Balancer::daemonize(){
+void Balancer::daemonize() {
     pid_t pid,sid;
     //Fork the program
     pid = fork();
-    if(pid < 0){
+    if(pid < 0) {
         std::exit(EXIT_FAILURE);
     }
 
-    if(pid > 0){
+    if(pid > 0) {
         std::exit(EXIT_SUCCESS);
     }
     umask(0);
     sid = setsid();
-    if(sid < 0){
+    if(sid < 0) {
         std::exit(EXIT_FAILURE);
     }
     close(STDIN_FILENO);
@@ -77,15 +87,17 @@ void Balancer::daemonize(){
 
 
 
-void Balancer::crashAfterAmountOfBeats(int heartrate, int amount, bool terminate){
+void Balancer::crashAfterAmountOfBeats(int heartrate,
+                                       int amount,
+                                       bool terminate) {
     LOG(ERROR) << boost::format("Initializing crash in %i ms") % (heartrate * amount);
     static std::thread crashThread;
-    crashThread = std::thread([](int rate, int amo, bool terminate) -> void{
+    crashThread = std::thread([](int rate, int amo, bool terminate) -> void {
         int current = 0;
-        for(;;){
-            if(current >= amo){
+        for(;;) {
+            if(current >= amo) {
 
-                if(terminate){
+                if(terminate) {
                     LOG(ERROR) << "Crashing application with a terminate";
                     std::terminate();
                 } else {

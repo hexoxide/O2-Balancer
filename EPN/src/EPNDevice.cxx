@@ -33,7 +33,7 @@ EPNDevice::EPNDevice(std::shared_ptr<EPNSettings> settings) : Balancer::Abstract
 
 
 
-void EPNDevice::DiscardIncompleteTimeframes(){
+void EPNDevice::DiscardIncompleteTimeframes() {
   auto it = mTimeframeBuffer.begin();
   while (it != mTimeframeBuffer.end()) {
     if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - (it->second).start).count() > mBufferTimeoutInMs) {
