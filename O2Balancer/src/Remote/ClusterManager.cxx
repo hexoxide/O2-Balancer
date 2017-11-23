@@ -24,10 +24,10 @@ ClusterManager::ClusterManager(const std::string& zooServer, const int& port){
         void *watcherCtx)-> void {
             if(type == ZOO_CHILD_EVENT){
                 LOG(INFO) << boost::format("Child event happened at %s") % std::string(path);
-                changedPaths.push_back(std::string(path));
+                changedPaths.emplace_back(path);
             }
 
-    }, 5000, 0, 0, 100);
+    }, 5000, nullptr, nullptr, 0);
 
     this->setupDirectories();
 }
@@ -50,7 +50,6 @@ void ClusterManager::addGlobalString(const std::string& name, const std::string&
     int rc = zoo_create(zh,dir.c_str(),value.c_str(), value.length(), &ZOO_OPEN_ACL_UNSAFE, ZOO_EPHEMERAL,
     nullptr, 0);
     if(rc != ZOK){
-       // LOG(ERROR) << "Could not create variable";
         throw Exceptions::ClusterHandlerException((boost::format("Could not create a variable with name %s and value %s") % name % value).str());
     }
 }
@@ -68,7 +67,7 @@ int ClusterManager::getGlobalInteger(const std::string& name, int timeout){
     }
 }
 
-std::string ClusterManager::addRootIfNeccesary(const std::string& name) const{
+std::string ClusterManager::addRootIfNecessary(const std::string &name) const{
     if(name.length() > 0){
         if(name[0] != '/'){
             return "/" + name;
@@ -84,12 +83,12 @@ std::string ClusterManager::getGlobalString(const std::string& name, int timeout
     int currentWaitTime = 0;
     int done = 0;
     while(done == 0){
-        int buflen = 512;
-        char buffer[buflen]; 
+        int bufferLength = 512;
+        char buffer[bufferLength];
         struct Stat stat;
-        done = zoo_get(this->zh, directory.c_str()  , 0, buffer, &buflen, &stat);
+        done = zoo_get(this->zh, directory.c_str()  , 0, buffer, &bufferLength, &stat);
         if(done == ZOK){
-            return std::string(buffer, buflen);
+            return std::string(buffer, bufferLength);
         } else {
             if(timeout == 0 && currentWaitTime > timeout){
                 throw Exceptions::TimeOutException((boost::format("Query for finding variable %s did timeout after %i milliseconds") % name % timeout).str());
@@ -113,7 +112,7 @@ void ClusterManager::setupDirectories(){
 
 
 bool ClusterManager::registerConnection(const std::string& classification, const std::string& tag, const DeviceSetting& setting ){
-    std::string dir = this->addRootIfNeccesary(classification);//"/" + classification;
+    std::string dir = this->addRootIfNecessary(classification);//"/" + classification;
     int rc;
     struct Stat v;
     if(zoo_exists(zh,dir.c_str(), true, &v) != ZOK){
@@ -133,7 +132,7 @@ bool ClusterManager::registerConnection(const std::string& classification, const
 std::vector<DeviceSetting> ClusterManager::getRegisteredConnections(const std::string& classification, const std::string& tag){
     std::vector<DeviceSetting> result;
     struct String_vector vec;
-    std::string dir = this->addRootIfNeccesary(classification);//"/" + classification;
+    std::string dir = this->addRootIfNecessary(classification);
     //All connections listed are sequential(just to keep generic code)
     int rc = zoo_get_children(this->zh, dir.c_str(), 1, &vec);
     if(rc == ZOK){
@@ -142,11 +141,11 @@ std::vector<DeviceSetting> ClusterManager::getRegisteredConnections(const std::s
             tmp.append(vec.data[i]);
             //Is the tag part of the string
             if (tmp.find(tag) != std::string::npos) {
-                int buflen = 512;
-                char buffer[buflen]; 
+                int bufferLength = 512;
+                char buffer[bufferLength];
                 struct Stat stat;
-                if(zoo_get(this->zh, tmp.c_str(),0, buffer, &buflen, &stat) == ZOK){
-                    result.push_back(DeviceSetting(std::string(buffer,buflen)));
+                if(zoo_get(this->zh, tmp.c_str(),0, buffer, &bufferLength, &stat) == ZOK){
+                    result.emplace_back(std::string(buffer,bufferLength));
                 }
             }
         }

@@ -11,14 +11,28 @@
 #include "O2/FLP/FLPSettings.h"
 #include <O2/Balancer/Exceptions/InitException.h>
 #include <yaml-cpp/yaml.h>
-#include <iostream>
 
 using namespace O2;
 using namespace O2::FLP;
 
 FLPSettings::FLPSettings(const boost::program_options::variables_map& settings) : Settings(){
     YAML::Node config = this->load(settings);
+    if(config["restartFairRoot"]){
+        this->vRestartFairRoot = config["restartFairRoot"].as<bool>();
+    } else {
+        this->vRestartFairRoot = true;
+    }
 
+    if(settings["restartFairRoot"].as<std::string>() != ""){
+        this->vRestartFairRoot = (settings["restartFairRoot"].as<std::string>() != "false");
+    }
+    
+
+ 
+}
+
+bool FLPSettings::restartFairRoot() const{
+    return vRestartFairRoot;
 }
 
 std::string FLPSettings::getSettingsFile() const{

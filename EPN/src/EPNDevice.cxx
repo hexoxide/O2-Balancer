@@ -8,8 +8,6 @@
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
 #include "O2/EPN/EPNDevice.h"
-#include <memory>
-#include <fstream>
 #include <boost/format.hpp>
 #include <FairMQProgOptions.h>
 #include <future>
@@ -29,7 +27,7 @@ EPNDevice::EPNDevice(std::shared_ptr<EPNSettings> settings) : Balancer::Abstract
   this->acknowledgeConnection = std::unique_ptr<AcknowledgeConnection>(new AcknowledgeConnection(this,settings));
   this->outputConnection = std::unique_ptr<OutputConnection>(new OutputConnection(this,settings));
   this->mNumFLPs = settings->getAmountOfFLPs();
-  this->mBufferTimeoutInMs = 10000;
+  this->mBufferTimeoutInMs = 900000;
 }
 
 
@@ -49,7 +47,7 @@ void EPNDevice::DiscardIncompleteTimeframes(){
   }
 }
 
-void EPNDevice::refreshDevice(){
+void EPNDevice::refreshDevice(bool){
   this->useClusterManager([this](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void{
     const std::string tmp = manager->pathThatNeedsUpdate();
     LOG(WARN) << boost::format("Refresh called on path %s, yet not fully supported on EPNs.") % tmp;
@@ -58,10 +56,9 @@ void EPNDevice::refreshDevice(){
 
 void EPNDevice::run(){
     const std::string IP = this->settings->getIPAddress();
-    O2::Balancer::heartbeatID  id = 0; // holds the timeframe id of the currently arrived sub-timeframe.
+    O2::Balancer::heartbeatID  id = 0;
     FairMQChannel& ackOutChannel = fChannels.at(this->acknowledgeConnection->getName()).at(0);
-    // fChannels.at(mAckChannelName).at(0);
-    EPNSettings* settings = static_cast<EPNSettings*>(this->settings.get());
+    auto settings = dynamic_cast<EPNSettings*>(this->settings.get());
   
     const bool isGoat = (IP == settings->getGoatIP());
     bool crashing = false;
@@ -69,7 +66,7 @@ void EPNDevice::run(){
     while (CheckCurrentState(RUNNING)) {
       FairMQParts parts;
   
-      if (Receive(parts, this->flpConnection->getName(), 0, 100) > 0) {
+      if (Receive(parts, this->flpConnection->getName(), 0, 1000) > 0) {
         // store the received ID
         O2::Balancer::f2eHeader& header = *(static_cast<O2::Balancer::f2eHeader*>(parts.At(0)->GetData()));
         id = header.timeFrameId;

@@ -10,19 +10,18 @@
 #include "O2/EPN/EPNDevice.h"
 #include <O2/Balancer/Devices/DeviceManager.h>
 #include <O2/Balancer/Utilities/Utilities.h>
-#include <O2/Balancer/Exceptions/InitException.h>
 
 
 namespace po = boost::program_options;
 
-int main(int argc, char** argv){
+int main(int argc, char** argv) {
     using namespace O2;
     using namespace O2::EPN;
     
     po::options_description options("EPN options");
     constexpr char CONFIG_FILE[] = "epn-config";
 
-    try{
+    try {
         options.add_options()
         (CONFIG_FILE, po::value<std::string>()->default_value("./epn.yaml"), "Configuration file")
         ("amount-flps", po::value<int>()->default_value(2))
@@ -30,19 +29,12 @@ int main(int argc, char** argv){
         auto vm = Balancer::AddO2Options(options, argc, argv);
     
         auto settings = std::shared_ptr<EPNSettings>(new EPNSettings(vm));
-    
         reinit_logger(true, "EPN", SEVERITY_MINIMUM);
-      
         Balancer::DeviceManager<EPNDevice> device(settings);
         device.run();
-    } catch(const O2::Balancer::Exceptions::AbstractException& ex){
+    } catch(const O2::Balancer::Exceptions::AbstractException& ex) {
         LOG(ERROR) << "Could not start due exception " << ex.getMessage();
         return EXIT_FAILURE;
     }
-
-
-
-
-   // manager.close();
     return EXIT_SUCCESS;
 }

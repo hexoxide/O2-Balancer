@@ -12,15 +12,12 @@
 
 using namespace O2::EPN;
 
-FLPConnection::FLPConnection(Balancer::AbstractDevice* device, std::shared_ptr<EPNSettings> settings) : Balancer::Connection("stf2", device){
-
+FLPConnection::FLPConnection(Balancer::AbstractDevice* device, std::shared_ptr<EPNSettings> settings) : Balancer::Connection("stf2", device) {
     this->addOutputChannel(
         Balancer::ConnectionType::Pull,
         Balancer::ConnectionMethod::Bind,
         settings->getIPAddress(),
-        settings->FLPConnectionPort()
-    );
+        settings->FLPConnectionPort());
 
     this->updateAllReceiveBuffer(100000);
-
 }

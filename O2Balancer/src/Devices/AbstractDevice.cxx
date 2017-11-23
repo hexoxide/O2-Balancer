@@ -1,16 +1,16 @@
 #include "O2/Balancer/Devices/AbstractDevice.h"
 #include "O2/Balancer/Devices/Connection.h"
-#include "O2/Balancer/Remote/ClusterManager.h"
 #include "O2/Balancer/Utilities/Utilities.h"
 #include "O2/Balancer/Utilities/Settings.h"
 #include "O2/Balancer/Globals.h"
 #include "O2/Balancer/Utilities/DataTypes.h"
 #include "O2/Balancer/Exceptions/UnimplementedException.h"
-#include <cstdlib>
-#include <boost/format.hpp>
-#include "O2/Balancer/Exceptions/InitException.h"
+
 
 using namespace O2::Balancer;
+
+
+constexpr char EXCEPTION_MESSAGE[] = "The following exception occurred ";
 
 AbstractDevice::AbstractDevice(const std::string& name, std::shared_ptr<Settings> settings, bool restartOnUpdate){
     this->fId = name;
@@ -50,21 +50,23 @@ AbstractDevice::AbstractDevice(const std::string& name, std::shared_ptr<Settings
 
 
 void AbstractDevice::useClusterManager(std::function<void(std::shared_ptr<ClusterManager>)> cl){
-    static bool entered = false;
-    if(entered){
-        throw O2::Balancer::Exceptions::UnimplementedException("A deadlock has occured, you can't call this function recursively");
-    }
-    entered = true;
+   // static bool entered = false;
+   // if(entered){
+   //     throw O2::Balancer::Exceptions::UnimplementedException("A deadlock has occurred, you can't call this function recursively");
+   // }
+   // entered = true;
     std::unique_lock<std::mutex> lck (this->zoolock);
+
     cl(this->clusterManager);
-    entered = false;
+
+   // entered = false;
 }
 
 bool AbstractDevice::ConditionalRun() {
     try{
         return this->conditionalRun();
-    } catch (O2::Balancer::Exceptions::AbstractException exception){
-        LOG(ERROR) << "The following uncatched exception occured " << exception.getMessage();
+    } catch (const O2::Balancer::Exceptions::AbstractException& exception){
+        LOG(ERROR) << EXCEPTION_MESSAGE << exception.getMessage();
         return false;
     }
 }
@@ -72,24 +74,24 @@ bool AbstractDevice::ConditionalRun() {
 void AbstractDevice::PreRun() {
     try{
         this->preRun();
-    } catch (O2::Balancer::Exceptions::AbstractException exception){
-        LOG(ERROR) << "The following uncatched exception occured " << exception.getMessage();
+    } catch (const O2::Balancer::Exceptions::AbstractException& exception){
+        LOG(ERROR) << EXCEPTION_MESSAGE << exception.getMessage();
     }
 }
 
 void AbstractDevice::Run(){
     try{
         this->run();
-    } catch (O2::Balancer::Exceptions::AbstractException exception){
-        LOG(ERROR) << "The following uncatched exception occured " << exception.getMessage();
+    } catch (const O2::Balancer::Exceptions::AbstractException& exception){
+        LOG(ERROR) << EXCEPTION_MESSAGE << exception.getMessage();
     }
 }
 
 void AbstractDevice::PostRun() {
     try{
         this->postRun();
-    } catch (O2::Balancer::Exceptions::AbstractException exception){
-        LOG(ERROR) << "The following uncatched exception occured " << exception.getMessage();
+    } catch (const O2::Balancer::Exceptions::AbstractException& exception){
+        LOG(ERROR) << EXCEPTION_MESSAGE << exception.getMessage();
     }
 }
 
@@ -113,29 +115,41 @@ void AbstractDevice::checkZooKeeper(){
     while(!this->nStop){
         std::unique_lock<std::mutex> lck (this->zoolock);
         this->nRefresh = this->clusterManager->requiresUpdate() && this->restartOnUpdate;
+        lck.unlock();
+        if(this->clusterManager->requiresUpdate() && !this->restartOnUpdate){
+            this->refreshDevice(false);
+        }
     }
 }
 
 void AbstractDevice::restartDevice(){
+
    //Refresh the device, stopping everything and setup the new stuff
-   ChangeState(AbstractDevice::STOP);
-   WaitForEndOfState(AbstractDevice::STOP);
+    std::chrono::time_point<std::chrono::system_clock> start, end;
+    std::chrono::duration<double> elapsed_seconds{};
+    start = std::chrono::system_clock::now();
 
-   ChangeState(AbstractDevice::RESET_TASK);
-   WaitForEndOfState(AbstractDevice::RESET_TASK);
+    ChangeState(AbstractDevice::STOP);
+    WaitForEndOfState(AbstractDevice::STOP);
 
-   ChangeState(AbstractDevice::RESET_DEVICE);
-   WaitForEndOfState(AbstractDevice::RESET_DEVICE);
-   this->refreshDevice();
-   ChangeState(AbstractDevice::INIT_DEVICE);
+    ChangeState(AbstractDevice::RESET_TASK);
+    WaitForEndOfState(AbstractDevice::RESET_TASK);
+
+    ChangeState(AbstractDevice::RESET_DEVICE);
+    WaitForEndOfState(AbstractDevice::RESET_DEVICE);
+    this->refreshDevice(true);
+    ChangeState(AbstractDevice::INIT_DEVICE);
    
-   WaitForInitialValidation();
-   WaitForEndOfState(AbstractDevice::INIT_DEVICE);
+    WaitForInitialValidation();
+    WaitForEndOfState(AbstractDevice::INIT_DEVICE);
        
-   ChangeState(AbstractDevice::INIT_TASK);
-   WaitForEndOfState(AbstractDevice::INIT_TASK);
+    ChangeState(AbstractDevice::INIT_TASK);
+    WaitForEndOfState(AbstractDevice::INIT_TASK);
 
-   ChangeState(AbstractDevice::RUN);
+    ChangeState(AbstractDevice::RUN);
+    end = std::chrono::system_clock::now();
+    elapsed_seconds = end - start;
+    LOG(INFO) << "Reset time: " << elapsed_seconds.count() << " seconds";
 }
 
 bool AbstractDevice::addHandle(const std::string& tag, const DeviceSetting& setting){
@@ -173,7 +187,7 @@ std::string AbstractDevice::getDefaultTransport() const{
 std::string AbstractDevice::getProperty(const std::string& varName, const std::string& defValue) {
     auto result = std::getenv(varName.c_str());
 
-    if(result == nullptr && defValue != ""){
+    if(result == nullptr && !defValue.empty()){
         return defValue;
     }
     if(result == nullptr){
@@ -182,9 +196,6 @@ std::string AbstractDevice::getProperty(const std::string& varName, const std::s
     return result;
 }
 
-std::shared_ptr<ClusterManager> AbstractDevice::getClusterManager() const{
-    return this->clusterManager;
-}
 
 void AbstractDevice::quit(){
     this->nStop = true;

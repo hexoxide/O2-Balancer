@@ -59,11 +59,9 @@ InformationDevice::InformationDevice(std::shared_ptr<InfoSettings> settings) :  
 InformationDevice::~InformationDevice()
 = default;
 
-void InformationDevice::InitTask(){
 
-}
 
-void InformationDevice::refreshDevice(){
+void InformationDevice::refreshDevice(bool inMainThread){
 
 }
 

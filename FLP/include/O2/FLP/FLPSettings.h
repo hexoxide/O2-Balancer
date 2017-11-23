@@ -19,8 +19,10 @@ namespace O2{
         class FLPSettings : public Balancer::Settings{
         protected:
             std::string getSettingsFile() const override;
+            bool vRestartFairRoot;
         public:
             FLPSettings(const boost::program_options::variables_map& settings);
+            bool restartFairRoot() const;
         };
     }
 }

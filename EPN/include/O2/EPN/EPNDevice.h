@@ -38,11 +38,11 @@ namespace O2{
             public:
             EPNDevice(std::shared_ptr<EPNSettings> settings);
             virtual ~EPNDevice();
-            void refreshDevice() override;
             /// Discared incomplete timeframes after \p fBufferTimeoutInMs.
             void DiscardIncompleteTimeframes();
           protected:
             void run() override;
+            void refreshDevice(bool inMainThread) override;
     
             std::unordered_map<O2::Balancer::heartbeatID , TFBuffer> mTimeframeBuffer; ///< Stores (sub-)timeframes
             std::unordered_set<O2::Balancer::heartbeatID > mDiscardedSet; ///< Set containing IDs of dropped timeframes

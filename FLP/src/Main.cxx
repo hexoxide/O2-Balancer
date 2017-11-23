@@ -11,8 +11,6 @@
 #include "O2/FLP/FLPDevice.h"
 #include <O2/Balancer/Devices/DeviceManager.h>
 #include <O2/Balancer/Utilities/Utilities.h>
-#include "O2/FLP/FLPSettings.h"
-#include <O2/Balancer/Exceptions/InitException.h>
 namespace po = boost::program_options;
 
 
@@ -23,6 +21,7 @@ int main(int argc, char** argv){
     constexpr char CONFIG_FILE[] = "flp-config";
     options.add_options()
     ("sample-size",  po::value<int>()->default_value(1))
+    ("restartFairRoot", po::value<std::string>()->default_value(""))
     (CONFIG_FILE, po::value<std::string>()->default_value("./flp.yaml"), "Configuration file");
     
     auto vm = Balancer::AddO2Options(options, argc, argv);

@@ -4,7 +4,7 @@
 #include <boost/algorithm/string.hpp>
 using namespace O2::Balancer;
 
-DeviceSetting::DeviceSetting(int port, std::string ip){
+DeviceSetting::DeviceSetting(const int port, const std::string& ip){
     this->port = port;
     this->ip = ip;
 }

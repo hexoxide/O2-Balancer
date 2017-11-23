@@ -9,16 +9,8 @@
 // or submit itself to any jurisdiction.
 
 #include "O2/FLP/FLPDevice.h"
-#include <cstdint> // UINT64_MAX
-#include <cassert>
-#include <chrono>
-#include <utility>
-#include <FairMQLogger.h>
-#include <FairMQMessage.h>
 #include <boost/format.hpp>
 #include <FairMQProgOptions.h>
-#include <ctime>
-#include <cstring>
 #include "O2/FLP/HeartBeatConnection.h"
 #include "O2/FLP/EPNConnection.h"
 #include <O2/Balancer/Globals.h>
@@ -27,7 +19,7 @@
 
 using namespace O2::FLP;
 
-FLPDevice::FLPDevice(std::shared_ptr<FLPSettings> settings) : Balancer::AbstractDevice(O2::Balancer::Globals::DeviceNames::FLP_NAME, settings, true){
+FLPDevice::FLPDevice(std::shared_ptr<FLPSettings> settings) : Balancer::AbstractDevice(O2::Balancer::Globals::DeviceNames::FLP_NAME, settings, settings->restartFairRoot()){
 
   this->heartBeatConnection = std::unique_ptr<HeartbeatConnection>(
     new HeartbeatConnection(settings, this)
@@ -52,12 +44,15 @@ void FLPDevice::preRun(){
 }
 
 
-void FLPDevice::ResetTask(){
-  
-}
 
-void FLPDevice::refreshDevice(){
-  this->epnConnection->updateConnection();
+void FLPDevice::refreshDevice(bool inMainThread){
+
+  if(inMainThread){
+    this->epnConnection->updateConnection();
+  } else { 
+    LOG(INFO) << "Refreshing blacklist";
+    this->epnConnection->updateBlacklist();
+  }
 }
 
 
@@ -69,7 +64,7 @@ bool FLPDevice::conditionalRun(){
     if(fstream.good()){
       FairMQParts parts;
       const int size = this->mEventSize * 1024 * 1024;
-      char* buffer = new char[size];  
+      auto buffer = new char[size];
       fstream.read(buffer,size);
 
       parts.AddPart(NewMessage());
@@ -79,15 +74,18 @@ bool FLPDevice::conditionalRun(){
         [](void* /*data*/, void* object) {delete[] static_cast<char*> (object); },
         buffer
       ));
+
       if (dataInChannel.Receive(parts.At(0)) >= 0) {
-        O2::Balancer::heartbeatID currentTimeFrameid = *(static_cast<O2::Balancer::heartbeatID *>(parts.At(0)->GetData()));
+        const O2::Balancer::heartbeatID currentTimeFrameid = *(static_cast<O2::Balancer::heartbeatID *>(parts.At(0)->GetData()));
+        
         if(this->epnConnection->amountOfEpns() == 0){
-          LOG(WARN) << boost::format("Timeframe %i discarded, all the EPNS are ofline") % currentTimeFrameid;
+          LOG(WARN) << boost::format("Timeframe %i discarded, all the EPNs are offline") % currentTimeFrameid;
           return true;
         }
-        int direction = currentTimeFrameid % this->epnConnection->amountOfEpns();
-      
-        LOG(INFO) << boost::format("Direction: %i, amount of epns: %i") % direction % this->epnConnection->amountOfEpns();
+        
+        int direction = this->epnConnection->balance(currentTimeFrameid);
+        
+        LOG(INFO) << boost::format("Direction: %i, amount of EPNs: %i, heartbeat: %i") % direction % this->epnConnection->amountOfEpns() % currentTimeFrameid;
         if (Send(parts, this->epnConnection->getName(), direction, 0) < 0) {
            LOG(ERROR) << boost::format("could not send to EPN %i") % direction;
         }
@@ -98,13 +96,6 @@ bool FLPDevice::conditionalRun(){
   return true;
 }
 
-void FLPDevice::Pause(){
-  LOG(INFO) << "pausing";
-
-}
-
-void FLPDevice::postRun(){
-}
 
 FLPDevice::~FLPDevice(){
   LOG(INFO) << "closing";

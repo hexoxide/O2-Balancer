@@ -3,13 +3,13 @@ InformationNode:
   Ip: 127.0.0.1
 
 
-sample-size: 100
+sample-size: 10
 
 SettingsServer:
   Port: 2181
   IP: localhost
 
 
-heartrate: 1000
+heartrate: 2000
 acknowledgePort: 5990
 heartBeatPort: 5550

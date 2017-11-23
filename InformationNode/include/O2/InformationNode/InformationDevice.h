@@ -46,14 +46,10 @@ namespace O2{
         /// Default destructor
         ~InformationDevice() override;
     
-        void refreshDevice() override;
+        void refreshDevice(bool inMainThread) override;
         /// Listens for acknowledgements from the epnReceivers when they collected full timeframe
         void ListenForAcknowledgement();
       protected:
-        /// Overloads the InitTask() method of FairMQDevice
-        void InitTask() override;
-    
-      
         bool conditionalRun() override;
         void preRun() override;
         void postRun() override;
