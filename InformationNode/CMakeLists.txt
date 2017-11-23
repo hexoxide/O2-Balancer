@@ -13,6 +13,14 @@ SET(
     ./src/InfoSettings.cxx
 )
 
+SET(
+        INFORMATION_NODE_HEADERS
+        ./include/O2/InformationNode/AcknowledgeConnection.h
+        ./include/O2/InformationNode/HeartbeatConnection.h
+        ./include/O2/InformationNode/InformationDevice.h
+        ./include/O2/InformationNode/InfoSettings.h
+)
+
 GET_DIRECTORY_PROPERTY(
     O2Balancer_INCLUDE_DIRS 
     DIRECTORY ${CMAKE_SOURCE_DIR}/O2Balancer/ 
@@ -20,13 +28,13 @@ GET_DIRECTORY_PROPERTY(
 )
 
 SET(
-    INFORMATION_NODE_HEADERS
+    INFORMATION_LIB_NODE_HEADERS
     ./include
     ${O2Balancer_INCLUDE_DIRS}
 )
 
-INCLUDE_DIRECTORIES(${INFORMATION_NODE_HEADERS} )
-ADD_EXECUTABLE(InformationNode ${INFORMATION_NODE_SOURCES})
+INCLUDE_DIRECTORIES(${INFORMATION_LIB_NODE_HEADERS} )
+ADD_EXECUTABLE(InformationNode ${INFORMATION_NODE_SOURCES} ${INFORMATION_NODE_HEADERS})
 
 TARGET_LINK_LIBRARIES(
     InformationNode

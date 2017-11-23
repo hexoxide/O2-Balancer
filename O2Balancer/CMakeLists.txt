@@ -14,6 +14,29 @@ SET(O2Balancer_INCLUDE_DIRS
     ${ZOOKEEPER_INCLUDE_DIR}
 )
 
+SET(
+        O2Balancer_HEADERS
+        ./include/O2/Balancer/Devices/AbstractDevice.h
+        ./include/O2/Balancer/Devices/Connection.h
+        ./include/O2/Balancer/Devices/DeviceManager.h
+
+        ./include/O2/Balancer/Exceptions/AbstractException.h
+        ./include/O2/Balancer/Exceptions/ClusterHandlerException.h
+        ./include/O2/Balancer/Exceptions/ClusterTypeException.h
+        ./include/O2/Balancer/Exceptions/InitException.h
+        ./include/O2/Balancer/Exceptions/TimeOutException.h
+        ./include/O2/Balancer/Exceptions/UnimplementedException.h
+
+        ./include/O2/Balancer/Remote/ClusterManager.h
+
+        ./include/O2/Balancer/Utilities/DataTypes.h
+        ./include/O2/Balancer/Utilities/Settings.h
+        ./include/O2/Balancer/Utilities/Utilities.h
+
+        ./include/O2/Balancer/Globals.h
+
+)
+
 INCLUDE_DIRECTORIES(
     ${O2Balancer_INCLUDE_DIRS}
 )
@@ -41,8 +64,9 @@ SET(
 )
 
 ADD_LIBRARY(
-    O2Balancer SHARED 
-    ${O2_LIB_SRC}
+        O2Balancer SHARED
+        ${O2_LIB_SRC}
+        ${O2Balancer_HEADERS}
 )
 
 TARGET_LINK_LIBRARIES(
