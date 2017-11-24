@@ -55,28 +55,30 @@ void FLPDevice::refreshDevice(bool inMainThread) {
     }
 }
 
+int FLPDevice::getSampleSize() const{
+    switch (this->sampleType) {
+        case SampleType::Random: {
+            return generateRandomSize(this->averageSampleSize);
+            break;
+        }
+        case SampleType::Sine: {
+            return generateSineSize(this->averageSampleSize, lastHeartbeat);
+            break;
+        }
+        default: {
+            return this->averageSampleSize;
+
+        }
+    }
+}
 
 bool FLPDevice::conditionalRun() {
     FairMQChannel &dataInChannel = fChannels.at(this->heartBeatConnection->getName()).at(0);
     std::fstream fstream("/dev/null", std::ifstream::binary | std::ios::in);
     if (fstream.good()) {
         FairMQParts parts;
-        int generatedSize;
-        switch (this->sampleType) {
-            case SampleType::Random: {
-                generatedSize = generateRandomSize(this->averageSampleSize);
-                break;
-            }
-            case SampleType::Sine: {
-                generatedSize = generateSineSize(this->averageSampleSize, lastHeartbeat);
-                LOG(INFO) << generatedSize;
-                break;
-            }
-            default: {
-                generatedSize = this->averageSampleSize;
-                break;
-            }
-        }
+        const int generatedSize = getSampleSize();
+
         //const int generatedSize = generateRandomSize(this->averageSampleSize);//generateSineSize(this->averageSampleSize, 1);
 
         const int size = generatedSize * 1024 * 1024;

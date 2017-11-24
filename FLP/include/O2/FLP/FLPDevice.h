@@ -46,6 +46,7 @@ namespace O2 {
             virtual void preRun() override;
 
         private:
+            int getSampleSize() const;
             O2::Balancer::heartbeatID lastHeartbeat;
             SampleType sampleType;
             std::unique_ptr<HeartbeatConnection> heartBeatConnection;
