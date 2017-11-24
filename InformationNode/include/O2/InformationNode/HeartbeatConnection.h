@@ -11,11 +11,12 @@
 #define O2_INFORMATIONNODE_HEARTBEAT_CONNECTION_H
 
 #include <O2/Balancer/Devices/Connection.h>
-namespace O2{
-    namespace InformationNode{
-        class HeartbeatConnection : public Balancer::Connection{
+
+namespace O2 {
+    namespace InformationNode {
+        class HeartbeatConnection : public Balancer::Connection {
         public:
-            HeartbeatConnection(std::string ip,int port, Balancer::AbstractDevice* device);
+            HeartbeatConnection(std::string ip, int port, Balancer::AbstractDevice *device);
         };
     }
 

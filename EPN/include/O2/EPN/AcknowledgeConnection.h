@@ -14,14 +14,22 @@
 #include <O2/Balancer/Devices/Connection.h>
 #include <O2/Balancer/Remote/ClusterManager.h>
 #include <O2/Balancer/Utilities/DataTypes.h>
-namespace O2{
-    namespace EPN{
+
+namespace O2 {
+    namespace EPN {
 
         class EPNSettings;
-        class AcknowledgeConnection : public Balancer::Connection{
+
+        /**
+         * Management of the acknowledge connection.
+         * Connects the EPN Device to the information node.
+         * Allowing it to send an acknowledgement when a full TF is received.
+         * @author H.J.M van der Heijden
+         */
+        class AcknowledgeConnection : public Balancer::Connection {
             std::shared_ptr<Balancer::DeviceSetting> acknowledgeChannel;
         public:
-            AcknowledgeConnection(Balancer::AbstractDevice* device,std::shared_ptr<EPNSettings> settings);
+            AcknowledgeConnection(Balancer::AbstractDevice *device, std::shared_ptr<EPNSettings> settings);
         };
     }
 }

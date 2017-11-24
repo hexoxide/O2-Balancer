@@ -12,15 +12,15 @@
 
 #include <O2/Balancer/Devices/Connection.h>
 
-namespace O2{
-    namespace InformationNode{
+namespace O2 {
+    namespace InformationNode {
 
         /**
          * 
          */
-        class AcknowledgeConnection : public Balancer::Connection{
+        class AcknowledgeConnection : public Balancer::Connection {
         public:
-            AcknowledgeConnection(std::string ip, int port, Balancer::AbstractDevice* device);
+            AcknowledgeConnection(std::string ip, int port, Balancer::AbstractDevice *device);
         };
     }
 

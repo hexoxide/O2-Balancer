@@ -14,9 +14,15 @@
 #include <O2/Balancer/Utilities/DataTypes.h>
 #include <O2/Balancer/Utilities/Settings.h>
 
-namespace O2{
-    namespace EPN{
-        class EPNSettings : public Balancer::Settings{
+namespace O2 {
+    namespace EPN {
+
+        /**
+         * Loads, determines and collects all settings required to run the EPN.
+         * The EPN can be a goat. Which means that it call an abort on itself after a certain amount of heartbeats
+         * @author H.J.M van der Heijden.
+         */
+        class EPNSettings : public Balancer::Settings {
             int flpConnectionPort;
             int outputConnectionPort;
             int amountOfFLPs;
@@ -24,18 +30,56 @@ namespace O2{
             int heartrate;
             int amountAfterSignal;
             int amountBeforeCrash;
-        
+
         protected:
             std::string getSettingsFile() const override;
-        public:           
-            EPNSettings(const boost::program_options::variables_map& settings);
+
+        public:
+            /**
+             * Only constructor, with boost command line arguments
+             * @param settings Containing the preparsed command line arguments from boost.
+             */
+            EPNSettings(const boost::program_options::variables_map &settings);
+
+            /**
+             * Gets port that the FLPs can use
+             * @return The flp port
+             */
             int FLPConnectionPort() const;
+
+
             int OutputConnectionPort() const;
+
+            /**
+             * Get the amount of flps currently sending data to this EPN.
+             * This is required, otherwise there is no possibility to know if a full time frame is accepted
+             * @return The amount of online flps.
+             */
             int getAmountOfFLPs() const;
 
+            /**
+             * The IP that will be sacreficed and crashes.
+             * When the ip matches this machines ip. It will crash
+             * @return IP address of the EPN that will crash
+             */
             std::string getGoatIP() const;
+
+            /**
+             * Gets the heartrate to be mimiced for the EPN crash when this is the Goat.
+             * @return Mimicked heartrate
+             */
             int getHeartrate() const;
+
+            /**
+             * How long should the goat wait before it mimicks a crash
+             * @return Heartbeats to wait
+             */
             int getAmountAfterSignal() const;
+
+            /**
+             * How long should it wait after the signal to crash?
+             * @return Heartbeats to wait
+             */
             int getAmountBeforeCrash() const;
         };
     }

@@ -17,36 +17,46 @@
 #include <chrono>
 #include <unordered_set>
 
-namespace O2{
-    namespace EPN{
+namespace O2 {
+    namespace EPN {
         class AcknowledgeConnection;
+
         class FLPConnection;
+
         class OutputConnection;
 
-        class EPNDevice : public Balancer::AbstractDevice{
+        /**
+         * Central class that manages all the connections of the epn.
+         * Contains the central logic of the EPN.
+         * @author H.J.M van der Heijden
+         */
+        class EPNDevice : public Balancer::AbstractDevice {
             std::unique_ptr<AcknowledgeConnection> acknowledgeConnection;
             std::unique_ptr<FLPConnection> flpConnection;
             std::unique_ptr<OutputConnection> outputConnection;
         protected:
-            struct TFBuffer
-            {
+            struct TFBuffer {
                 FairMQParts parts;
                 std::chrono::steady_clock::time_point start;
                 std::chrono::steady_clock::time_point end;
             };
-            
-            public:
+
+        public:
             EPNDevice(std::shared_ptr<EPNSettings> settings);
+
             virtual ~EPNDevice();
+
             /// Discared incomplete timeframes after \p fBufferTimeoutInMs.
             void DiscardIncompleteTimeframes();
-          protected:
+
+        protected:
             void run() override;
+
             void refreshDevice(bool inMainThread) override;
-    
-            std::unordered_map<O2::Balancer::heartbeatID , TFBuffer> mTimeframeBuffer; ///< Stores (sub-)timeframes
-            std::unordered_set<O2::Balancer::heartbeatID > mDiscardedSet; ///< Set containing IDs of dropped timeframes
-    
+
+            std::unordered_map<O2::Balancer::heartbeatID, TFBuffer> mTimeframeBuffer; ///< Stores (sub-)timeframes
+            std::unordered_set<O2::Balancer::heartbeatID> mDiscardedSet; ///< Set containing IDs of dropped timeframes
+
             int mNumFLPs; ///< Number of flpSenders
             int mBufferTimeoutInMs; ///< Time after which incomplete timeframes are dropped
         };

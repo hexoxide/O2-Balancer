@@ -18,19 +18,20 @@
 typedef struct _zhandle zhandle_t;
 
 
-namespace O2{
+namespace O2 {
 
-    namespace Balancer{
+    namespace Balancer {
 
-        
+
         class DeviceSetting;
+
         /**
          * The file that interacts and shares data among the other machines on the cluster.
          * For this, ZooKeeper C library is used. 
          * @author H.J.M van der Heijden
          * @date 10 October 2017
          * */
-        class ClusterManager{
+        class ClusterManager {
             zhandle_t *zh;
 
             /**
@@ -45,13 +46,14 @@ namespace O2{
              *  Setups the topology used within ZooKeeper.
              * */
             void setupDirectories();
+
         public:
             /**
              *  Constructor that connects to the specified IP and Port used by the ZooKeeper server.
              *  @param zooServer    The IP address. (example "localhost")
              *  @param port         The port of ZooKeeper. (example 2181)
              * */
-            ClusterManager(const std::string& zooServer, const int& port);
+            ClusterManager(const std::string &zooServer, const int &port);
 
 
             bool requiresUpdate() const;
@@ -65,15 +67,15 @@ namespace O2{
              *  @name   The identifier of the variable.
              *  @value  The value of the variable
              * */
-            void addGlobalString(const std::string& name, const std::string& value);
-            
+            void addGlobalString(const std::string &name, const std::string &value);
+
             /**
              *  Adds a global variable to be shared among the devices.
              *  @param name,    The name that can be used to query the variable.
              *  @param value,   The value of the variable
              * */
-            void addGlobalInteger(const std::string& name,  int value);
-            
+            void addGlobalInteger(const std::string &name, int value);
+
             /**
              *  Gets a variable that is shared from an other machine.
              *  Although time out is not really required, Sometimes machines are not started in the same order thus requiring to wait a while.
@@ -81,8 +83,8 @@ namespace O2{
              *  @value name,    the identifier of the variable
              *  @value timeout, The amount of time you wish to wait until giving up.
              * */
-            std::string getGlobalString(const std::string& name, int timeout = 0);
-            
+            std::string getGlobalString(const std::string &name, int timeout = 0);
+
             /**
              *  Gets a global integer shared among the cluster.
              *  This will cast everything for you, when the integer can't be cast a type error will be thrown.
@@ -91,7 +93,7 @@ namespace O2{
              *  @param timeout, How long do you wish to wait in milliseconds?
              *  @return the variable.
              * */
-            int getGlobalInteger(const std::string& name, int timeout);
+            int getGlobalInteger(const std::string &name, int timeout);
 
             /**
              *  Registers a (input) connection to be available.
@@ -102,8 +104,9 @@ namespace O2{
              *  @param setting,     The device settings, (IP and port)
              *  @return if the connection was succesfully made
              * */
-            bool registerConnection(const std::string& classification, const std::string& tag, const DeviceSetting& setting );
-            
+            bool
+            registerConnection(const std::string &classification, const std::string &tag, const DeviceSetting &setting);
+
             /**
              *  Gets all the devices currently online.
              *  This method should be called even when an device is unique.
@@ -111,8 +114,9 @@ namespace O2{
              *  @param tag, The specific name of the Znode. 
              *  @return All the device settings(ip and port) with those specific tag.
              * */
-            std::vector<DeviceSetting> getRegisteredConnections(const std::string& classification, const std::string& tag);
-         
+            std::vector<DeviceSetting>
+            getRegisteredConnections(const std::string &classification, const std::string &tag);
+
             /**
              *  Closes the connection, making the class unusable after calling this.
              * */

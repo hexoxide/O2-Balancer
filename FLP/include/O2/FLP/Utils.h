@@ -7,25 +7,18 @@
 // In applying this license CERN does not waive the privileges and immunities
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
+#ifndef O2_BALANCER_UTILS_H
+#define O2_BALANCER_UTILS_H
 
-#include "O2/Balancer/Utilities/DataTypes.h"
-#include <vector>
+#include <O2/Balancer/Utilities/DataTypes.h>
 
-#include <boost/algorithm/string.hpp>
+namespace O2 {
+    namespace FLP {
+        int generateSineSize(int average, O2::Balancer::heartbeatID heartbeat);
 
-using namespace O2::Balancer;
-
-DeviceSetting::DeviceSetting(const int port,
-                             const std::string &ip) {
-    this->port = port;
-    this->ip = ip;
+        int generateRandomSize(int average);
+    }
 }
 
-DeviceSetting::DeviceSetting(const std::string &setting) {
-    std::vector<std::string> x;
-    boost::split(x, setting, boost::is_any_of(":"));
-    this->ip = x[0];
-    this->port = std::stoi(x[1]);
 
-}
-
+#endif //O2_BALANCER_UTILS_H

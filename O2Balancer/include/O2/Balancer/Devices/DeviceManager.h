@@ -14,13 +14,14 @@
 #include <thread>
 #include <memory>
 #include <csignal>
-namespace O2{
-    namespace Balancer{
+
+namespace O2 {
+    namespace Balancer {
         /**
          *  Global static variable, to be changed after the program quits.
          *  Required for signaling.
          * */
-        namespace{
+        namespace {
             bool shouldStop;
         }
         class AbstractDevice;
@@ -32,8 +33,8 @@ namespace O2{
          *  @date 10 October 2017
          * */
         template<class T>
-        class DeviceManager{
-             std::unique_ptr<T> device;
+        class DeviceManager {
+            std::unique_ptr<T> device;
         public:
             /**
              *  Creates the device and initializes FairRoot.
@@ -41,42 +42,43 @@ namespace O2{
              *  @param args     The constructor arguments for the purposed device
              * */
             template<typename... Arguments>
-            DeviceManager(Arguments... args){
+            DeviceManager(Arguments... args) {
                 shouldStop = false;
-            
+
                 device = std::unique_ptr<T>(new T(args...));
                 device->CatchSignals();
-                std::signal(SIGINT,[](int sig) -> void{
+                std::signal(SIGINT, [](int sig) -> void {
                     shouldStop = true;
                     LOG(INFO) << "Stopping device!";
                 });
                 device->SetTransport(device->getDefaultTransport());
                 device->ChangeState(T::INIT_DEVICE);
-                    
+
                 device->WaitForInitialValidation();
                 device->WaitForEndOfState(T::INIT_DEVICE);
-                    
+
                 device->ChangeState(T::INIT_TASK);
                 device->WaitForEndOfState(T::INIT_TASK);
-                
-            
+
+
             }
+
             /**
              *  Starts the state of the device.
              *  Will return when the abort signal is called.
              * */
-            void run(){
-                
+            void run() {
+
                 device->ChangeState(T::RUN);
 
-                while(!device->needToStop() && !shouldStop){
-                    if(device->needRefresh()){
+                while (!device->needToStop() && !shouldStop) {
+                    if (device->needRefresh()) {
                         device->restartDevice();
                     }
                 }
-                
+
                 LOG(INFO) << "Stopping";
-             
+
                 device->ChangeState(T::STOP);
 
                 device->ChangeState(T::RESET_TASK);
@@ -100,7 +102,7 @@ namespace O2{
             }
         };
     }
-   
+
 }
 
 #endif

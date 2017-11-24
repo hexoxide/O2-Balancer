@@ -16,14 +16,14 @@
 #include <vector>
 
 //forward declaration
-namespace YAML{
+namespace YAML {
     class Node;
 }
 
-namespace O2{
-    namespace Balancer{
+namespace O2 {
+    namespace Balancer {
         class DeviceSetting;
-        
+
         /**
          *  Utilities for loading configuration files for the derived programs of O2 Balancer.
          *  Since the FairRoot json loader was quite hard to adapt for custom purposes, a new library has been adapted.
@@ -31,7 +31,7 @@ namespace O2{
          *  @author H.J.M van der Heijden
          *  @date 10 October 2017
          * */
-        class Settings{
+        class Settings {
         private:
             std::shared_ptr<DeviceSetting> informationSettings;
             std::shared_ptr<DeviceSetting> settingsServer;
@@ -47,11 +47,15 @@ namespace O2{
              *  Load the settings file, and sets up the general required options.
              *  Such as own IP address and the informationnode. 
              * */
-            YAML::Node load(const boost::program_options::variables_map& settings);
+            YAML::Node load(const boost::program_options::variables_map &settings);
+
         public:
             std::shared_ptr<DeviceSetting> getSettingsServer() const;
+
             std::shared_ptr<DeviceSetting> getInformationNodeSetting() const;
+
             std::string getIPAddress() const;
+
             Settings();
 
         };

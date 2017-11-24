@@ -12,13 +12,13 @@
 
 #include <O2/Balancer/Devices/Connection.h>
 
-namespace O2{
-    namespace FLP{
+namespace O2 {
+    namespace FLP {
         class FLPSettings;
 
-        class HeartbeatConnection : public Balancer::Connection{
+        class HeartbeatConnection : public Balancer::Connection {
         public:
-            HeartbeatConnection(std::shared_ptr<FLPSettings> settings, Balancer::AbstractDevice* device);
+            HeartbeatConnection(std::shared_ptr<FLPSettings> settings, Balancer::AbstractDevice *device);
         };
     }
 }

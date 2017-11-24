@@ -12,14 +12,14 @@
 
 #include "./ClusterHandlerException.h"
 
-namespace O2{
+namespace O2 {
 
-    namespace Balancer{
-        namespace Exceptions{
+    namespace Balancer {
+        namespace Exceptions {
 
-            class ClusterTypeException : public ClusterHandlerException{
+            class ClusterTypeException : public ClusterHandlerException {
             public:
-                ClusterTypeException(const std::string& msg);
+                ClusterTypeException(const std::string &msg);
             };
         }
     }

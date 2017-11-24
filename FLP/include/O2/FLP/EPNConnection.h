@@ -17,18 +17,45 @@
 #include <string>
 
 
-namespace O2{
-    namespace FLP{
+namespace O2 {
+    namespace FLP {
         class FLPSettings;
+
         class DeviceSetting;
-        class EPNConnection : public Balancer::Connection{
+
+        /**
+         *  The class that manages the connection between the EPN and the FLP.
+         *  Also responsible of load balancing.
+         *  @author H.J.M van der Heijden
+         */
+        class EPNConnection : public Balancer::Connection {
             std::vector<std::string> offlineEPNS;
-            size_t incrementer = 0;
         public:
-            EPNConnection(std::shared_ptr<FLPSettings> settings, Balancer::AbstractDevice* device);
+            EPNConnection(std::shared_ptr<FLPSettings> settings, Balancer::AbstractDevice *device);
+
+            /**
+             * Get the amount of EPNs registered by FairMQ
+             * @return Amount of epns
+             */
             size_t amountOfEpns() const;
+
+            /**
+             * Method for spreading the sub time frames equally while sending it to the same EPN as other FLPs.
+             * @param id The heartbeat required to calculate the round robin
+             * @return Target index to send the STF to
+             */
             size_t balance(O2::Balancer::heartbeatID id);
+
+            /**
+             * Updates the channels from FairMQ.
+             * If called while FairMQ is running, behaviour is undefined.
+             * @warning Don't call this while fairMQ is running.
+             */
             void updateConnection();
+
+            /**
+             * Updates the blacklist from zookeeper.
+             */
             void updateBlacklist();
         };
     }

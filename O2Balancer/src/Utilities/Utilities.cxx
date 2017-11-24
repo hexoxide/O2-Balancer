@@ -112,3 +112,4 @@ void Balancer::crashAfterAmountOfBeats(int heartrate,
 
     }, heartrate, amount, terminate);
 }
+

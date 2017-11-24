@@ -22,6 +22,8 @@ namespace O2{
          * */
         void daemonize();
 
+
+
         /**
          * Adds the start up variables that are similair to all the derived programs from the O2 Balancer.
          * Such as versioning, daemonizing and ip addresses.

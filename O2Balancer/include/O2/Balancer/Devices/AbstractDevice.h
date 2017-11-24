@@ -20,9 +20,9 @@
 #include <functional>
 #include "../Remote/ClusterManager.h"
 
-namespace O2{   
-    namespace Balancer{
-             
+namespace O2 {
+    namespace Balancer {
+
         class Connection;
 
         class Settings;
@@ -31,26 +31,42 @@ namespace O2{
         private:
             friend Connection;
             std::thread zooThread;
+
             void checkZooKeeper();
+
             std::string defaultTransport;
-            std::string getProperty(const std::string& varName, const std::string& defValue); 
+
+            std::string getProperty(const std::string &varName, const std::string &defValue);
+
             bool restartOnUpdate;
             std::mutex zoolock;
             std::shared_ptr<ClusterManager> clusterManager;
+
             virtual bool ConditionalRun() override final;
+
             virtual void PreRun() override final;
+
             virtual void PostRun() override final;
+
             virtual void Run() override final;
+
         protected:
             std::shared_ptr<Settings> settings;
             std::atomic<bool> nRefresh;
             std::atomic<bool> nStop;
+
             virtual void preRun();
+
             virtual void postRun();
+
             virtual void run();
+
             virtual bool conditionalRun();
+
             virtual void refreshDevice(bool inMainThread) = 0;
+
             void useClusterManager(std::function<void(std::shared_ptr<ClusterManager>)> cl);
+
         public:
             /**
              * Instantiates a device, setting all the FairMQ settings.
@@ -58,7 +74,8 @@ namespace O2{
              * @param settings The global settings used by each device
              * @param restartOnUpdate Does it need to restart when zookeeper has an update?
              */
-            AbstractDevice(const std::string& name, std::shared_ptr<Settings> settings, bool restartOnUpdate=false);
+            AbstractDevice(const std::string &name, std::shared_ptr<Settings> settings, bool restartOnUpdate = false);
+
             /**
              * Restarts FairMQ, getting all the new paths from FairRoot and updates the channels.
              * Should only be called from the main loop!
@@ -73,8 +90,11 @@ namespace O2{
 
 
             bool needToStop() const;
-            bool addHandle(const std::string& tag, const DeviceSetting& setting);
+
+            bool addHandle(const std::string &tag, const DeviceSetting &setting);
+
             std::string getDefaultTransport() const;
+
             void quit();
         };
     }

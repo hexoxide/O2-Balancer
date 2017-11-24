@@ -12,14 +12,18 @@
 
 #include <O2/Balancer/Devices/Connection.h>
 
-namespace O2{
-    namespace EPN{
+namespace O2 {
+    namespace EPN {
 
         class EPNSettings;
 
-        class FLPConnection : public Balancer::Connection{
+        /**
+         * Manages the connection between the FLP.
+         * @author H.J.M van der Heijden
+         */
+        class FLPConnection : public Balancer::Connection {
         public:
-            FLPConnection(Balancer::AbstractDevice* device, std::shared_ptr<EPNSettings> settings);
+            FLPConnection(Balancer::AbstractDevice *device, std::shared_ptr<EPNSettings> settings);
         };
     }
 }

@@ -7,25 +7,21 @@
 // In applying this license CERN does not waive the privileges and immunities
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
+#include "O2/FLP/Utils.h"
+#include <cmath>
+#include <random>
 
-#include "O2/Balancer/Utilities/DataTypes.h"
-#include <vector>
+using namespace O2;
 
-#include <boost/algorithm/string.hpp>
+int FLP::generateSineSize(int average, O2::Balancer::heartbeatID heartbeat) {
+    const auto res = std::sin(heartbeat) * 2;
 
-using namespace O2::Balancer;
-
-DeviceSetting::DeviceSetting(const int port,
-                             const std::string &ip) {
-    this->port = port;
-    this->ip = ip;
+    return (res > 0)? res * average : - res * average ;
 }
 
-DeviceSetting::DeviceSetting(const std::string &setting) {
-    std::vector<std::string> x;
-    boost::split(x, setting, boost::is_any_of(":"));
-    this->ip = x[0];
-    this->port = std::stoi(x[1]);
+std::default_random_engine generator;
 
+int FLP::generateRandomSize(int average) {
+    std::uniform_real_distribution<float> distribution(average * 0.5f, average * 1.5f);
+    return (int) distribution(generator);
 }
-

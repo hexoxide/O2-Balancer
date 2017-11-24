@@ -1,12 +1,13 @@
 PROJECT(FLP)
 
 SET(
-    FLP_SOURCES
-    ./src/FLPDevice.cxx
-    ./src/Main.cxx
-    ./src/HeartBeatConnection.cxx
-    ./src/EPNConnection.cxx
-    ./src/FLPSettings.cxx
+        FLP_SOURCES
+        ./src/FLPDevice.cxx
+        ./src/Main.cxx
+        ./src/HeartBeatConnection.cxx
+        ./src/EPNConnection.cxx
+        ./src/FLPSettings.cxx
+        ./src/Utils.cxx
 )
 
 SET(
@@ -15,7 +16,8 @@ SET(
         ./include/O2/FLP/FLPDevice.h
         ./include/O2/FLP/FLPSettings.h
         ./include/O2/FLP/HeartBeatConnection.h
-)
+        ./include/O2/FLP/Utils.h
+        )
 
 GET_DIRECTORY_PROPERTY(
     O2Balancer_INCLUDE_DIRS 

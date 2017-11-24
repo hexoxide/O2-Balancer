@@ -15,16 +15,16 @@
 using namespace O2;
 using namespace O2::EPN;
 
-EPNSettings::EPNSettings(const boost::program_options::variables_map& settings) : Settings() {
+EPNSettings::EPNSettings(const boost::program_options::variables_map &settings) : Settings() {
     YAML::Node config = this->load(settings);
     this->amountOfFLPs = settings["amount-flps"].as<int>();
     this->flpConnectionPort = config["FLPConnectionPort"].as<int>();
     this->outputConnectionPort = config["OutputPort"].as<int>();
-    if(settings["flp-port"].as<int>() != 0){
+    if (settings["flp-port"].as<int>() != 0) {
         this->flpConnectionPort = settings["flp-port"].as<int>();
     }
-       
-    if(config["Goat"]) {
+
+    if (config["Goat"]) {
         this->goatIP = config["Goat"]["IP"].as<std::string>();
         this->amountAfterSignal = config["Goat"]["amount_after_signal"].as<int>();
         this->amountBeforeCrash = config["Goat"]["amount_before_signal"].as<int>();
@@ -59,11 +59,11 @@ int EPNSettings::FLPConnectionPort() const {
 }
 
 int EPNSettings::OutputConnectionPort() const {
-    return this->outputConnectionPort;    
+    return this->outputConnectionPort;
 }
 
 int EPNSettings::getAmountOfFLPs() const {
-    if(this->amountOfFLPs == 0) {
+    if (this->amountOfFLPs == 0) {
         throw Balancer::Exceptions::InitException("There need to be at least one FLP defined");
     }
     return this->amountOfFLPs;

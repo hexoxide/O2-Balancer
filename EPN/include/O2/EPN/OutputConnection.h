@@ -13,14 +13,14 @@
 
 #include <O2/Balancer/Devices/Connection.h>
 
-namespace O2{
-    namespace EPN{
+namespace O2 {
+    namespace EPN {
 
         class EPNSettings;
-        
-        class OutputConnection : public Balancer::Connection{
+
+        class OutputConnection : public Balancer::Connection {
         public:
-            OutputConnection(Balancer::AbstractDevice* device, std::shared_ptr<EPNSettings> settings);
+            OutputConnection(Balancer::AbstractDevice *device, std::shared_ptr<EPNSettings> settings);
         };
     }
 }

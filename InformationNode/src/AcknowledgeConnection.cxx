@@ -11,16 +11,18 @@
 #include "O2/InformationNode/AcknowledgeConnection.h"
 #include "O2/InformationNode/InformationDevice.h"
 #include <O2/Balancer/Utilities/DataTypes.h>
+
 using namespace O2;
 using namespace O2::InformationNode;
 
-AcknowledgeConnection::AcknowledgeConnection(std::string ip, int port, Balancer::AbstractDevice* device) : Balancer::Connection("ack",device){
-    
+AcknowledgeConnection::AcknowledgeConnection(std::string ip, int port, Balancer::AbstractDevice *device)
+        : Balancer::Connection("ack", device) {
+
     this->addOutputChannel(
-        Balancer::ConnectionType::Pull,
-        Balancer::ConnectionMethod::Bind,
-        ip,
-        port
+            Balancer::ConnectionType::Pull,
+            Balancer::ConnectionMethod::Bind,
+            ip,
+            port
     );
 
     this->updateAllReceiveBuffer(10);

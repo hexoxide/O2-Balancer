@@ -3,6 +3,8 @@ Settings:
 
 restartFairRoot: true
 
+sampleType: Sine
+
 SettingsServer:
   Port: 2181
   IP: localhost

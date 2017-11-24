@@ -44,7 +44,7 @@ namespace O2 {
              *  Variables that can be set within the environment.
              * */
             namespace EnvironmentVariables {
-                constexpr char O2_TRANSPORT_VAR[] =  "O2Transport";
+                constexpr char O2_TRANSPORT_VAR[] = "O2Transport";
             }
 
             /**

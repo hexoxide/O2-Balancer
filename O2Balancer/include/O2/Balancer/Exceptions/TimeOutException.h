@@ -12,17 +12,17 @@
 
 #include "./ClusterHandlerException.h"
 
-namespace O2{
+namespace O2 {
 
-    namespace Balancer{
-        namespace Exceptions{
+    namespace Balancer {
+        namespace Exceptions {
 
             /**
              *
              */
-            class TimeOutException : public ClusterHandlerException{
+            class TimeOutException : public ClusterHandlerException {
             public:
-                TimeOutException(const std::string& msg);
+                TimeOutException(const std::string &msg);
             };
         }
     }

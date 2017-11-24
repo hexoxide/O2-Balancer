@@ -16,13 +16,23 @@
 
 namespace O2{
     namespace FLP{
+
+        enum class SampleType{
+            Equal,
+            Sine,
+            Random
+        };
+
         class FLPSettings : public Balancer::Settings{
         protected:
             std::string getSettingsFile() const override;
             bool vRestartFairRoot;
+            SampleType sampleType;
         public:
             FLPSettings(const boost::program_options::variables_map& settings);
             bool restartFairRoot() const;
+            SampleType getSampleType() const;
+
         };
     }
 }

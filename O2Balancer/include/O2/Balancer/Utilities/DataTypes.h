@@ -12,28 +12,30 @@
 
 #include <string>
 
-namespace O2{
-    namespace Balancer{
+namespace O2 {
+    namespace Balancer {
 
         //The type used for all the heartbeats. Allows for easy adapting the size and type
         typedef uint16_t heartbeatID;
 
         struct f2eHeader {
             heartbeatID timeFrameId;
-            int      flpIndex;
-          };
-          
+            int flpIndex;
+        };
+
         /**
         *   Small classes to interchange data.
         *   @author H.J.M van der Heijden
         *   @date 11 October 2017
         **/
-        struct DeviceSetting{
+        struct DeviceSetting {
             int port;
             std::string ip;
-            DeviceSetting(const int port, const std::string& ip);
-            DeviceSetting(const std::string& setting);
-            
+
+            DeviceSetting(const int port, const std::string &ip);
+
+            DeviceSetting(const std::string &setting);
+
         };
     }
 }

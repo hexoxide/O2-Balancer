@@ -12,14 +12,14 @@
 
 #include "./AbstractException.h"
 
-namespace O2{
+namespace O2 {
 
-    namespace Balancer{
-        namespace Exceptions{
+    namespace Balancer {
+        namespace Exceptions {
 
-            class ClusterHandlerException : public AbstractException{
+            class ClusterHandlerException : public AbstractException {
             public:
-                ClusterHandlerException(const std::string& msg);
+                ClusterHandlerException(const std::string &msg);
             };
         }
     }

@@ -29,43 +29,42 @@
 using namespace O2;
 using namespace O2::InformationNode;
 
-InformationDevice::InformationDevice(std::shared_ptr<InfoSettings> settings) :  Balancer::AbstractDevice(O2::Balancer::Globals::DeviceNames::INFORMATION_NAME, settings){
-  this->timeFrameId = 0;
-  this->heartbeat = settings->getHeartRate();
-  this->useClusterManager([this, settings](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void {
-    for(;;){  
-      try{
-          manager->addGlobalInteger("sampleSize", settings->getSampleSize());
-          break;
-        } catch (const O2::Balancer::Exceptions::AbstractException& exc){
-            LOG(ERROR) << exc.getMessage(); 
-            std::this_thread::sleep_for(std::chrono::milliseconds(3));
-      }
-    }
-  });
+InformationDevice::InformationDevice(std::shared_ptr<InfoSettings> settings) : Balancer::AbstractDevice(
+        O2::Balancer::Globals::DeviceNames::INFORMATION_NAME, settings) {
+    this->timeFrameId = 0;
+    this->heartbeat = settings->getHeartRate();
+    this->useClusterManager([this, settings](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void {
+        for (;;) {
+            try {
+                manager->addGlobalInteger("sampleSize", settings->getSampleSize());
+                break;
+            } catch (const O2::Balancer::Exceptions::AbstractException &exc) {
+                LOG(ERROR) << exc.getMessage();
+                std::this_thread::sleep_for(std::chrono::milliseconds(3));
+            }
+        }
+    });
 
 
-  this->heartbeatConnection = std::unique_ptr<HeartbeatConnection>(new HeartbeatConnection(
-    settings->getIPAddress(), settings->getHeartBeatPort(), this
-  )); 
+    this->heartbeatConnection = std::unique_ptr<HeartbeatConnection>(new HeartbeatConnection(
+            settings->getIPAddress(), settings->getHeartBeatPort(), this
+    ));
 
-  this->acknowledgeConnection = std::unique_ptr<AcknowledgeConnection>(new AcknowledgeConnection(
-    settings->getIPAddress(),settings->getAcknowledgePort(),this
-  ));
+    this->acknowledgeConnection = std::unique_ptr<AcknowledgeConnection>(new AcknowledgeConnection(
+            settings->getIPAddress(), settings->getAcknowledgePort(), this
+    ));
 }
-
 
 
 InformationDevice::~InformationDevice()
 = default;
 
 
-
-void InformationDevice::refreshDevice(bool inMainThread){
+void InformationDevice::refreshDevice(bool inMainThread) {
 
 }
 
-void InformationDevice::preRun(){
+void InformationDevice::preRun() {
 
     mLeaving = false;
     mAckListener = std::thread(&InformationDevice::ListenForAcknowledgement, this);
@@ -73,51 +72,53 @@ void InformationDevice::preRun(){
 
 }
 
-bool InformationDevice::conditionalRun(){
-  FairMQMessagePtr msg(NewSimpleMessage(timeFrameId));
-  
-  if (fChannels.at(heartbeatConnection->getName()).at(0).Send(msg) >= 0) {
+bool InformationDevice::conditionalRun() {
+    FairMQMessagePtr msg(NewSimpleMessage(timeFrameId));
 
-    mTimeframeRTT[timeFrameId].start = std::chrono::steady_clock::now();
+    if (fChannels.at(heartbeatConnection->getName()).at(0).Send(msg) >= 0) {
 
-    this->timeFrameId = (timeFrameId == UINT16_MAX - 1)? 0 : timeFrameId + 1;
-  } else {
-    LOG(ERROR) << "Could not send :(";
-  }
+        mTimeframeRTT[timeFrameId].start = std::chrono::steady_clock::now();
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(heartbeat));
+        this->timeFrameId = (timeFrameId == UINT16_MAX - 1) ? 0 : timeFrameId + 1;
+    } else {
+        LOG(ERROR) << "Could not send :(";
+    }
 
-  return true;
+    std::this_thread::sleep_for(std::chrono::milliseconds(heartbeat));
+
+    return true;
 }
 
-void InformationDevice::postRun(){
+void InformationDevice::postRun() {
     LOG(INFO) << "Stopping";
     mLeaving = true;
-    if(mAckListener.joinable()){
-      mAckListener.join();
+    if (mAckListener.joinable()) {
+        mAckListener.join();
     }
 
 }
 
 
-void InformationDevice::ListenForAcknowledgement(){
-  
-  O2::Balancer::heartbeatID id = 0;
+void InformationDevice::ListenForAcknowledgement() {
+
+    O2::Balancer::heartbeatID id = 0;
 
 
-  while (!mLeaving) {
-    FairMQMessagePtr idMsg(NewMessage());
+    while (!mLeaving) {
+        FairMQMessagePtr idMsg(NewMessage());
 
-    if (Receive(idMsg, this->acknowledgeConnection->getName(), 0, 1000) >= 0) {
-      std::string dat = std::string(static_cast<char*>(idMsg->GetData()), idMsg->GetSize());
-      std::vector<std::string> x;
-      boost::split(x, dat, boost::is_any_of("#"));
-      id = std::atoi(x[1].c_str());
-      mTimeframeRTT.at(id).end = std::chrono::steady_clock::now();
-      auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(mTimeframeRTT.at(id).end - mTimeframeRTT.at(id).start);
-      LOG(INFO) << "Timeframe #" << id << " received from " << x[0] << "  acknowledged after " << elapsed.count() << " μs.";
+        if (Receive(idMsg, this->acknowledgeConnection->getName(), 0, 1000) >= 0) {
+            std::string dat = std::string(static_cast<char *>(idMsg->GetData()), idMsg->GetSize());
+            std::vector<std::string> x;
+            boost::split(x, dat, boost::is_any_of("#"));
+            id = std::atoi(x[1].c_str());
+            mTimeframeRTT.at(id).end = std::chrono::steady_clock::now();
+            auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(
+                    mTimeframeRTT.at(id).end - mTimeframeRTT.at(id).start);
+            LOG(INFO) << "Timeframe #" << id << " received from " << x[0] << "  acknowledged after " << elapsed.count()
+                      << " μs.";
+        }
     }
-  }
-  
-  LOG(INFO) << "Exiting Ack listener";
+
+    LOG(INFO) << "Exiting Ack listener";
 }

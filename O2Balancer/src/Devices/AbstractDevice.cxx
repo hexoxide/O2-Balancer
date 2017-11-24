@@ -22,7 +22,7 @@ using namespace O2::Balancer;
 
 constexpr char EXCEPTION_MESSAGE[] = "The following exception occurred ";
 
-AbstractDevice::AbstractDevice(const std::string& name,
+AbstractDevice::AbstractDevice(const std::string &name,
                                std::shared_ptr<Settings> settings,
                                bool restartOnUpdate) {
     this->fId = name;
@@ -33,69 +33,69 @@ AbstractDevice::AbstractDevice(const std::string& name,
 
 
     this->clusterManager = std::shared_ptr<ClusterManager>(new ClusterManager(
-        settings->getSettingsServer()->ip,
-        settings->getSettingsServer()->port
+            settings->getSettingsServer()->ip,
+            settings->getSettingsServer()->port
     ));
 
-    this->zooThread = std::thread(&AbstractDevice::checkZooKeeper,this );
-    
+    this->zooThread = std::thread(&AbstractDevice::checkZooKeeper, this);
+
     // this->fNetworkInterface = "default";
- //   this->fNumIoThreads = 1;
-   // this->fPortRangeMin = 22000;
-   // this->fPortRangeMax = 32000;
-   // this->fInitializationTimeoutInS = 1;
+    //   this->fNumIoThreads = 1;
+    // this->fPortRangeMin = 22000;
+    // this->fPortRangeMax = 32000;
+    // this->fInitializationTimeoutInS = 1;
     this->defaultTransport = this->getProperty(
-        Globals::EnvironmentVariables::O2_TRANSPORT_VAR,
-        Globals::FairMessageOptions::ZERO_MQ
+            Globals::EnvironmentVariables::O2_TRANSPORT_VAR,
+            Globals::FairMessageOptions::ZERO_MQ
     );
     variableChecksOut(
-        this->defaultTransport, 
-        Globals::FairMessageOptions::ZERO_MQ,
-        Globals::FairMessageOptions::NANO_MSG,
-        Globals::FairMessageOptions::SHARED_MEMORY
+            this->defaultTransport,
+            Globals::FairMessageOptions::ZERO_MQ,
+            Globals::FairMessageOptions::NANO_MSG,
+            Globals::FairMessageOptions::SHARED_MEMORY
     );
 
-    if(this->defaultTransport != Globals::FairMessageOptions::ZERO_MQ){
+    if (this->defaultTransport != Globals::FairMessageOptions::ZERO_MQ) {
         LOG(WARN) << "ZeroMQ is the recommended transport, using " << this->defaultTransport << " might contain bugs";
     }
 }
 
 
 void AbstractDevice::useClusterManager(std::function<void(std::shared_ptr<ClusterManager>)> cl) {
-    std::unique_lock<std::mutex> lck (this->zoolock);
+    std::unique_lock<std::mutex> lck(this->zoolock);
 
     cl(this->clusterManager);
 }
 
 bool AbstractDevice::ConditionalRun() {
-    try{
+    try {
         return this->conditionalRun();
-    } catch (const O2::Balancer::Exceptions::AbstractException& exception) {
+    } catch (const O2::Balancer::Exceptions::AbstractException &exception) {
         LOG(ERROR) << EXCEPTION_MESSAGE << exception.getMessage();
         return false;
     }
 }
 
 void AbstractDevice::PreRun() {
-    try{
+    try {
         this->preRun();
-    } catch (const O2::Balancer::Exceptions::AbstractException& exception) {
+    } catch (const O2::Balancer::Exceptions::AbstractException &exception) {
         LOG(ERROR) << EXCEPTION_MESSAGE << exception.getMessage();
     }
 }
 
 void AbstractDevice::Run() {
-    try{
+    try {
         this->run();
-    } catch (const O2::Balancer::Exceptions::AbstractException& exception){
+    } catch (const O2::Balancer::Exceptions::AbstractException &exception) {
         LOG(ERROR) << EXCEPTION_MESSAGE << exception.getMessage();
     }
 }
 
 void AbstractDevice::PostRun() {
-    try{
+    try {
         this->postRun();
-    } catch (const O2::Balancer::Exceptions::AbstractException& exception) {
+    } catch (const O2::Balancer::Exceptions::AbstractException &exception) {
         LOG(ERROR) << EXCEPTION_MESSAGE << exception.getMessage();
     }
 }
@@ -111,17 +111,18 @@ void AbstractDevice::run() {
 void AbstractDevice::postRun() {
     FairMQDevice::PostRun();
 }
+
 bool AbstractDevice::conditionalRun() {
     FairMQDevice::ConditionalRun();
 }
 
 
 void AbstractDevice::checkZooKeeper() {
-    while(!this->nStop) {
-        std::unique_lock<std::mutex> lck (this->zoolock);
+    while (!this->nStop) {
+        std::unique_lock<std::mutex> lck(this->zoolock);
         this->nRefresh = this->clusterManager->requiresUpdate() && this->restartOnUpdate;
         lck.unlock();
-        if(this->clusterManager->requiresUpdate() && !this->restartOnUpdate) {
+        if (this->clusterManager->requiresUpdate() && !this->restartOnUpdate) {
             this->refreshDevice(false);
         }
     }
@@ -144,10 +145,10 @@ void AbstractDevice::restartDevice() {
     WaitForEndOfState(AbstractDevice::RESET_DEVICE);
     this->refreshDevice(true);
     ChangeState(AbstractDevice::INIT_DEVICE);
-   
+
     WaitForInitialValidation();
     WaitForEndOfState(AbstractDevice::INIT_DEVICE);
-       
+
     ChangeState(AbstractDevice::INIT_TASK);
     WaitForEndOfState(AbstractDevice::INIT_TASK);
 
@@ -157,13 +158,13 @@ void AbstractDevice::restartDevice() {
     LOG(INFO) << "Reset time: " << elapsed_seconds.count() << " seconds";
 }
 
-bool AbstractDevice::addHandle(const std::string& tag, const DeviceSetting& setting) {
-    std::unique_lock<std::mutex> lck (this->zoolock);
+bool AbstractDevice::addHandle(const std::string &tag, const DeviceSetting &setting) {
+    std::unique_lock<std::mutex> lck(this->zoolock);
 
     return this->clusterManager->registerConnection(
-        this->fId,
-        tag,
-        setting
+            this->fId,
+            tag,
+            setting
     );
 }
 
@@ -171,7 +172,7 @@ bool AbstractDevice::needRefresh() const {
     return this->nRefresh;
 }
 
-     
+
 bool AbstractDevice::needToStop() const {
     return this->nStop;
 }
@@ -181,13 +182,13 @@ std::string AbstractDevice::getDefaultTransport() const {
     return this->defaultTransport;
 }
 
-std::string AbstractDevice::getProperty(const std::string& varName, const std::string& defValue) {
+std::string AbstractDevice::getProperty(const std::string &varName, const std::string &defValue) {
     auto result = std::getenv(varName.c_str());
 
-    if(result == nullptr && !defValue.empty()){
+    if (result == nullptr && !defValue.empty()) {
         return defValue;
     }
-    if(result == nullptr){
+    if (result == nullptr) {
         throw Exceptions::InitException("Could not load " + varName + "property");
     }
     return result;
@@ -197,7 +198,7 @@ std::string AbstractDevice::getProperty(const std::string& varName, const std::s
 void AbstractDevice::quit() {
     this->nStop = true;
     LOG(INFO) << "closing thread";
-    if(this->zooThread.joinable()){
+    if (this->zooThread.joinable()) {
         this->zooThread.join();
     }
     this->clusterManager->close();

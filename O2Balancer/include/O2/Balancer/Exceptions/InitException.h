@@ -12,19 +12,19 @@
 
 #include "./AbstractException.h"
 
-namespace O2{
+namespace O2 {
 
-    namespace Balancer{
-        namespace Exceptions{
+    namespace Balancer {
+        namespace Exceptions {
             /**
              * The exception that halted the initialization of the library. 
              * When a setting is invalid, this exception should be thrown.
              * @author H.J.M van der Heijden
              * @date 10 October 2017
              * */
-            class InitException : public AbstractException{
+            class InitException : public AbstractException {
             public:
-                InitException(const std::string& msg);
+                InitException(const std::string &msg);
             };
         }
     }

@@ -17,44 +17,46 @@ using namespace O2::FLP;
 constexpr char EPN_TAG[] = "EPN";
 constexpr char EPN_CHANNEL[] = "stf2";
 
-EPNConnection::EPNConnection(std::shared_ptr<FLPSettings>, Balancer::AbstractDevice* device) : Balancer::Connection("stf2", device){
-    this->useClusterManager([this](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void{
-        auto dev = manager->getRegisteredConnections(EPN_TAG,EPN_CHANNEL);
-        while(dev.empty()){
+EPNConnection::EPNConnection(std::shared_ptr<FLPSettings>, Balancer::AbstractDevice *device) : Balancer::Connection(
+        "stf2", device) {
+    this->useClusterManager([this](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void {
+        auto dev = manager->getRegisteredConnections(EPN_TAG, EPN_CHANNEL);
+        while (dev.empty()) {
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
             dev = manager->getRegisteredConnections(EPN_TAG, EPN_CHANNEL);
         }
-    
-        for(auto& epn : dev){
+
+        for (auto &epn : dev) {
             LOG(INFO) << "sending data to : " << epn.ip << ":" << epn.port;
             this->addInputChannel(
-                Balancer::ConnectionType::Push,
-                Balancer::ConnectionMethod::Connect,
-                epn.ip,
-                epn.port
+                    Balancer::ConnectionType::Push,
+                    Balancer::ConnectionMethod::Connect,
+                    epn.ip,
+                    epn.port
             );
         }
-        
+
         this->updateAllSendBuffer(100000);
         this->updateAllRateLogging(1);
 
     });
 }
 
-void EPNConnection::updateBlacklist(){
+void EPNConnection::updateBlacklist() {
     this->useClusterManager([this](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void {
         const std::string classification = manager->pathThatNeedsUpdate();
-        const std::string name =  this->getName();
-        std::vector<std::string> offline = this->getOfflineDevices(manager->getRegisteredConnections(classification,name));
+        const std::string name = this->getName();
+        std::vector<std::string> offline = this->getOfflineDevices(
+                manager->getRegisteredConnections(classification, name));
         this->offlineEPNS.swap(offline);
     });
 }
 
-size_t EPNConnection::balance(O2::Balancer::heartbeatID id){
+size_t EPNConnection::balance(O2::Balancer::heartbeatID id) {
 
-    if(this->offlineEPNS.empty()) {
+    if (this->offlineEPNS.empty()) {
         return id % this->amountOfEpns();
-    } else if(this->offlineEPNS.size() == this->getChannels().size()) {
+    } else if (this->offlineEPNS.size() == this->getChannels().size()) {
         LOG(WARN) << "No EPN is online... ";
         return id % this->amountOfEpns();
     } else {
@@ -91,7 +93,7 @@ size_t EPNConnection::balance(O2::Balancer::heartbeatID id){
     }
 }
 
-void EPNConnection::updateConnection(){
+void EPNConnection::updateConnection() {
     this->useClusterManager([this](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void {
         const std::string tmp = manager->pathThatNeedsUpdate();//only the epn path needs update
         this->updateChannels(manager->getRegisteredConnections(tmp, this->getName()));
@@ -100,6 +102,6 @@ void EPNConnection::updateConnection(){
     });
 }
 
-size_t EPNConnection::amountOfEpns() const{
+size_t EPNConnection::amountOfEpns() const {
     return this->channelSize();
 }

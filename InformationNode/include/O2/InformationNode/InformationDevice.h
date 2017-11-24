@@ -20,53 +20,60 @@
 #include "O2/InformationNode/HeartbeatConnection.h"
 #include <O2/Balancer/Remote/ClusterManager.h>
 
-namespace O2{
+namespace O2 {
 
-  namespace InformationNode{
-    class InfoSettings;
-    
-    class AcknowledgeConnection;
-    class HeartbeatConnection;
+    namespace InformationNode {
+        class InfoSettings;
 
-    struct timeframeDuration{
-        std::chrono::steady_clock::time_point start;
-        std::chrono::steady_clock::time_point end;
-    };
-    
-    /// Publishes timeframes IDs for flpSenders (used only in test mode)
-    
-    class InformationDevice : public Balancer::AbstractDevice{
-    private:
-        std::unique_ptr<AcknowledgeConnection> acknowledgeConnection;
-        std::unique_ptr<HeartbeatConnection> heartbeatConnection;
-    public:
-        /// Default constructor
-        //InformationDevice(std::string ip, int heartbeat, int acknowledgePort, int heartbeatPort);
-        InformationDevice(std::shared_ptr<InfoSettings> settings);
-        /// Default destructor
-        ~InformationDevice() override;
-    
-        void refreshDevice(bool inMainThread) override;
-        /// Listens for acknowledgements from the epnReceivers when they collected full timeframe
-        void ListenForAcknowledgement();
-      protected:
-        bool conditionalRun() override;
-        void preRun() override;
-        void postRun() override;
-        std::array<timeframeDuration, UINT16_MAX> mTimeframeRTT; ///< Container for the roundtrip values per timeframe ID
-  
-        int heartbeat;
-        uint16_t timeFrameId;
-        std::thread mAckListener;
-        std::atomic<bool> mLeaving;
-    
-        std::string mAckChannelName;
-        std::string mOutChannelName;
-    };
-  }
+        class AcknowledgeConnection;
+
+        class HeartbeatConnection;
+
+        struct timeframeDuration {
+            std::chrono::steady_clock::time_point start;
+            std::chrono::steady_clock::time_point end;
+        };
+
+        /// Publishes timeframes IDs for flpSenders (used only in test mode)
+
+        class InformationDevice : public Balancer::AbstractDevice {
+        private:
+            std::unique_ptr<AcknowledgeConnection> acknowledgeConnection;
+            std::unique_ptr<HeartbeatConnection> heartbeatConnection;
+        public:
+            /// Default constructor
+            //InformationDevice(std::string ip, int heartbeat, int acknowledgePort, int heartbeatPort);
+            InformationDevice(std::shared_ptr<InfoSettings> settings);
+
+            /// Default destructor
+            ~InformationDevice() override;
+
+            void refreshDevice(bool inMainThread) override;
+
+            /// Listens for acknowledgements from the epnReceivers when they collected full timeframe
+            void ListenForAcknowledgement();
+
+        protected:
+            bool conditionalRun() override;
+
+            void preRun() override;
+
+            void postRun() override;
+
+            std::array<timeframeDuration, UINT16_MAX> mTimeframeRTT; ///< Container for the roundtrip values per timeframe ID
+
+            int heartbeat;
+            uint16_t timeFrameId;
+            std::thread mAckListener;
+            std::atomic<bool> mLeaving;
+
+            std::string mAckChannelName;
+            std::string mOutChannelName;
+        };
+    }
 
 
-} 
+}
 
 
 #endif
