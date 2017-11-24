@@ -15,6 +15,8 @@
 #include <O2/Balancer/Remote/ClusterManager.h>
 #include <O2/Balancer/Globals.h>
 #include <O2/Balancer/Exceptions/ClusterHandlerException.h>
+#include <O2/Balancer/Devices/DeviceManager.h>
+#include <O2/Balancer/Utilities/Utilities.h>
 #include <boost/format.hpp>
 #include <FairMQProgOptions.h>
 #include <queue>
@@ -62,7 +64,7 @@ namespace O2 {
             uint16_t mTimeFrameId;
 
         };
-    }
-}
+    } // namespace FLP
+} // namespace O2
 
-#endif
+#endif // O2_FLP_DEVICE_H

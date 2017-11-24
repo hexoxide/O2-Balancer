@@ -14,14 +14,15 @@
 using namespace O2;
 
 int FLP::generateSineSize(int average, O2::Balancer::heartbeatID heartbeat) {
-    const auto res = std::sin(heartbeat) * 2;
-
-    return (res > 0)? res * average : - res * average ;
+    const double multiplier = std::sin(heartbeat) * 2;
+    const double result = multiplier * average;
+    return static_cast<int>((result >= 0 )? result : -result );
 }
 
-std::default_random_engine generator;
 
 int FLP::generateRandomSize(int average) {
+    std::random_device device;
+    std::default_random_engine generator(device());
     std::uniform_real_distribution<float> distribution(average * 0.5f, average * 1.5f);
-    return (int) distribution(generator);
+    return static_cast<int>(distribution(generator));
 }

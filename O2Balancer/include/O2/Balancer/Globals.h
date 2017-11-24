@@ -7,8 +7,8 @@
 // In applying this license CERN does not waive the privileges and immunities
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
-#ifndef O2BALANCER_GLOBALS_H
-#define O2BALANCER_GLOBALS_H
+#ifndef O2_BALANCER_GLOBALS_H
+#define O2_BALANCER_GLOBALS_H
 
 
 namespace O2 {
@@ -58,4 +58,4 @@ namespace O2 {
     }
 }
 
-#endif
+#endif //O2_BALANCER_GLOBALS_H

@@ -10,9 +10,11 @@
 #ifndef O2_EPN_EPNSETTINGS_H
 #define O2_EPN_EPNSETTINGS_H
 
-#include <vector>
 #include <O2/Balancer/Utilities/DataTypes.h>
 #include <O2/Balancer/Utilities/Settings.h>
+#include <vector>
+#include <string>
+
 
 namespace O2 {
     namespace EPN {
@@ -31,6 +33,7 @@ namespace O2 {
             int amountAfterSignal;
             int amountBeforeCrash;
 
+
         protected:
             std::string getSettingsFile() const override;
 
@@ -39,7 +42,7 @@ namespace O2 {
              * Only constructor, with boost command line arguments
              * @param settings Containing the preparsed command line arguments from boost.
              */
-            EPNSettings(const boost::program_options::variables_map &settings);
+            explicit EPNSettings(const boost::program_options::variables_map &settings);
 
             /**
              * Gets port that the FLPs can use
@@ -82,7 +85,7 @@ namespace O2 {
              */
             int getAmountBeforeCrash() const;
         };
-    }
-}
+    } // namespace EPN
+} // namespace O2
 
-#endif
+#endif // O2_EPN_EPNSETTINGS_H

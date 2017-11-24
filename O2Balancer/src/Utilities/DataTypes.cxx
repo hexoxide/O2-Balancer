@@ -13,7 +13,7 @@
 
 #include <boost/algorithm/string.hpp>
 
-using namespace O2::Balancer;
+using O2::Balancer::DeviceSetting;
 
 DeviceSetting::DeviceSetting(const int port,
                              const std::string &ip) {

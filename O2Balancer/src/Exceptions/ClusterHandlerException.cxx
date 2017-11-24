@@ -10,7 +10,7 @@
 
 #include "O2/Balancer/Exceptions/ClusterHandlerException.h"
 
-using namespace O2::Balancer::Exceptions;
+using O2::Balancer::Exceptions::ClusterHandlerException;
 
 ClusterHandlerException::ClusterHandlerException(const std::string& msg) : AbstractException(msg) {
     

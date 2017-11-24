@@ -65,7 +65,7 @@ namespace O2 {
 
             virtual void refreshDevice(bool inMainThread) = 0;
 
-            void useClusterManager(std::function<void(std::shared_ptr<ClusterManager>)> cl);
+
 
         public:
             /**
@@ -76,6 +76,7 @@ namespace O2 {
              */
             AbstractDevice(const std::string &name, std::shared_ptr<Settings> settings, bool restartOnUpdate = false);
 
+            void useClusterManager(std::function<void(std::shared_ptr<ClusterManager>)> cl);
             /**
              * Restarts FairMQ, getting all the new paths from FairRoot and updates the channels.
              * Should only be called from the main loop!

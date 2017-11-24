@@ -10,8 +10,7 @@
 
 #include "O2/Balancer/Exceptions/AbstractException.h"
 
-using namespace O2::Balancer::Exceptions;
-
+using O2::Balancer::Exceptions::AbstractException;
 
 AbstractException::AbstractException(const std::string& message) {
     this->msg = message;

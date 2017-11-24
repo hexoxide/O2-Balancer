@@ -22,6 +22,9 @@ namespace O2 {
 
     namespace Balancer {
 
+        namespace {
+            std::vector<std::string> changedPaths;
+        }
 
         class DeviceSetting;
 

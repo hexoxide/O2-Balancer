@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
 echo "Compiled on: ${CMAKE_SYSTEM}"
-echo "Version: ${AliceO2_Balancer_MAJOR_VERSION}.${AliceO2_Balancer_MINOR_VERSION}.${AliceO2_Balancer_PATCH_VERSION}"
+echo "Version: ${O2_Balancer_MAJOR_VERSION}.${O2_Balancer_MINOR_VERSION}.${O2_Balancer_PATCH_VERSION}"

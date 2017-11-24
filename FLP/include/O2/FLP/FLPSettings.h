@@ -10,9 +10,9 @@
 #ifndef O2_FLP_FLP_SETTINGS_H
 #define O2_FLP_FLP_SETTINGS_H
 
-#include <vector>
 #include <O2/Balancer/Utilities/DataTypes.h>
 #include <O2/Balancer/Utilities/Settings.h>
+#include <vector>
 
 namespace O2{
     namespace FLP{
@@ -34,7 +34,7 @@ namespace O2{
             SampleType getSampleType() const;
 
         };
-    }
-}
+    } // namespace FLP
+} // namespace O2
 
-#endif
+#endif // O2_FLP_FLP_SETTINGS_H

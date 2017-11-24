@@ -9,13 +9,21 @@
 // or submit itself to any jurisdiction.
 #ifndef O2_EPN_EPNDEVICE_H
 #define O2_EPN_EPNDEVICE_H
-
-#include <O2/Balancer/Devices/AbstractDevice.h>
-#include "./EPNSettings.h"
+#include <boost/format.hpp>
+#include <future>
+#include <queue>
 #include <unordered_map>
 #include <string>
 #include <chrono>
 #include <unordered_set>
+#include <O2/Balancer/Devices/AbstractDevice.h>
+#include <O2/Balancer/Globals.h>
+#include <O2/Balancer/Utilities/Utilities.h>
+#include <O2/Balancer/Devices/DeviceManager.h>
+#include <FairMQProgOptions.h>
+#include "./EPNSettings.h"
+
+
 
 namespace O2 {
     namespace EPN {
@@ -42,9 +50,9 @@ namespace O2 {
             };
 
         public:
-            EPNDevice(std::shared_ptr<EPNSettings> settings);
+            explicit EPNDevice(std::shared_ptr<EPNSettings> settings);
 
-            virtual ~EPNDevice();
+            ~EPNDevice() override;
 
             /// Discared incomplete timeframes after \p fBufferTimeoutInMs.
             void DiscardIncompleteTimeframes();
@@ -60,7 +68,7 @@ namespace O2 {
             int mNumFLPs; ///< Number of flpSenders
             int mBufferTimeoutInMs; ///< Time after which incomplete timeframes are dropped
         };
-    }
-}
+    } // namespace EPN
+} // namespace O2
 
 #endif

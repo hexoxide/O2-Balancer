@@ -20,7 +20,7 @@ namespace O2 {
         public:
             HeartbeatConnection(std::shared_ptr<FLPSettings> settings, Balancer::AbstractDevice *device);
         };
-    }
-}
+    } // namespace FLP
+} // namespace O2
 
-#endif
+#endif // O2_FLP_HEARTBEAT_CONNECTION_H

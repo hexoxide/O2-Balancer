@@ -20,9 +20,10 @@ namespace O2 {
 
         class OutputConnection : public Balancer::Connection {
         public:
-            OutputConnection(Balancer::AbstractDevice *device, std::shared_ptr<EPNSettings> settings);
+            OutputConnection(Balancer::AbstractDevice *device,
+                             std::shared_ptr<EPNSettings> settings);
         };
-    }
-}
+    } // namespace EPN
+} // namespace O2
 
-#endif
+#endif // O2_EPN_OUTPUTCONNECTION_H

@@ -23,9 +23,10 @@ namespace O2 {
          */
         class FLPConnection : public Balancer::Connection {
         public:
-            FLPConnection(Balancer::AbstractDevice *device, std::shared_ptr<EPNSettings> settings);
+            FLPConnection(Balancer::AbstractDevice *device,
+                          std::shared_ptr<EPNSettings> settings);
         };
     }
 }
 
-#endif
+#endif // O2_EPN_FLPCONNECTION_H

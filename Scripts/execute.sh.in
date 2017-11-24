@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
 
-cfg="@CMAKE_SOURCE_DIR@/Config/epnflpconfig.json"
-
 export O2Transport=zeromq
 
 SAMPLER="InformationNode"

@@ -9,22 +9,23 @@
 // or submit itself to any jurisdiction.
 
 #include "O2/Balancer/Remote/ClusterManager.h"
-#include <boost/format.hpp>
 #include "O2/Balancer/Exceptions/ClusterTypeException.h"
 #include "O2/Balancer/Utilities/DataTypes.h"
 #include "O2/Balancer/Exceptions/TimeOutException.h"
 #include "O2/Balancer/Exceptions/UnimplementedException.h"
-#include "FairMQLogger.h"
-#include <zookeeper/zookeeper.h>
 #include "O2/Balancer/Globals.h"
+#include <FairMQLogger.h>
+#include <zookeeper/zookeeper.h>
 
+#include <boost/format.hpp>
 #include <chrono>
 #include <thread>
 #include <regex>
 
-using namespace O2::Balancer;
-//For events
-std::vector<std::string> changedPaths;
+//using namespace O2::Balancer;
+using O2::Balancer::ClusterManager;
+using O2::Balancer::DeviceSetting;
+
 
 ClusterManager::ClusterManager(const std::string &zooServer,
                                const int &port) {
@@ -35,7 +36,7 @@ ClusterManager::ClusterManager(const std::string &zooServer,
                                                  void *watcherCtx) -> void {
         if (type == ZOO_CHILD_EVENT) {
             LOG(INFO) << boost::format("Child event happened at %s") % std::string(path);
-            changedPaths.emplace_back(path);
+            O2::Balancer::changedPaths.emplace_back(path);
         }
 
     }, 5000, nullptr, nullptr, 0);
@@ -59,7 +60,7 @@ std::string ClusterManager::pathThatNeedsUpdate() {
 void ClusterManager::addGlobalString(const std::string &name,
                                      const std::string &value) {
 
-    const std::string dir = std::string(Globals::ZooKeeperTopology::VAR_ZNODE_ROOT) + "/" + name;
+    const std::string dir = std::string(O2::Balancer::Globals::ZooKeeperTopology::VAR_ZNODE_ROOT) + "/" + name;
     int rc = zoo_create(zh, dir.c_str(), value.c_str(), value.length(), &ZOO_OPEN_ACL_UNSAFE, ZOO_EPHEMERAL,
                         nullptr, 0);
     if (rc != ZOK) {
@@ -95,7 +96,7 @@ std::string ClusterManager::addRootIfNecessary(const std::string &name) const {
 std::string ClusterManager::getGlobalString(const std::string &name,
                                             int timeout) {
 
-    const std::string directory = std::string(Globals::ZooKeeperTopology::VAR_ZNODE_ROOT) + "/" + name;
+    const std::string directory = std::string(O2::Balancer::Globals::ZooKeeperTopology::VAR_ZNODE_ROOT) + "/" + name;
     constexpr int JUMP = 100;
     int currentWaitTime = 0;
     int done = 0;
@@ -126,9 +127,17 @@ std::string ClusterManager::getGlobalString(const std::string &name,
 void ClusterManager::setupDirectories() {
 
     struct Stat v;
-    if (zoo_exists(zh, Globals::ZooKeeperTopology::VAR_ZNODE_ROOT, true, &v) != ZOK) {
+    if (zoo_exists(zh,
+                   O2::Balancer::Globals::ZooKeeperTopology::VAR_ZNODE_ROOT,
+                   true,
+                   &v) != ZOK) {
 
-        int rc = zoo_create(zh, Globals::ZooKeeperTopology::VAR_ZNODE_ROOT, "", 0, &ZOO_OPEN_ACL_UNSAFE, 0, nullptr, 0);
+        int rc = zoo_create(zh,
+                            O2::Balancer::Globals::ZooKeeperTopology::VAR_ZNODE_ROOT,
+                            "",
+                            0,
+                            &ZOO_OPEN_ACL_UNSAFE,
+                            0, nullptr, 0);
 
         if (rc != ZOK) {
             LOG(ERROR) << "Could not create the globals directory";

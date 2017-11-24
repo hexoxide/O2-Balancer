@@ -14,7 +14,9 @@
 #include <yaml-cpp/yaml.h>
 #include <iostream>
 
-using namespace O2::Balancer;
+
+using O2::Balancer::Settings;
+using O2::Balancer::DeviceSetting;
 
 Settings::Settings() {
 
@@ -24,14 +26,14 @@ YAML::Node Settings::load(const boost::program_options::variables_map &settings)
     try {
         YAML::Node config = YAML::LoadFile(settings[getSettingsFile()].as<std::string>());
         this->ipAddress = settings["ip"].as<std::string>();
-        this->settingsServer = std::shared_ptr<Balancer::DeviceSetting>(
-                new Balancer::DeviceSetting(
+        this->settingsServer = std::shared_ptr<DeviceSetting>(
+                new DeviceSetting(
                         config["SettingsServer"]["Port"].as<int>(),
                         config["SettingsServer"]["IP"].as<std::string>()
                 )
         );
 
-        this->informationSettings = std::shared_ptr<Balancer::DeviceSetting>(new Balancer::DeviceSetting(
+        this->informationSettings = std::shared_ptr<DeviceSetting>(new DeviceSetting(
                 config["InformationNode"]["Port"].as<int>(),
                 config["InformationNode"]["Ip"].as<std::string>()
         ));

@@ -17,8 +17,11 @@
 #include "O2/Balancer/Exceptions/UnimplementedException.h"
 
 
-using namespace O2::Balancer;
 
+using O2::Balancer::AbstractDevice;
+using O2::Balancer::Settings;
+using O2::Balancer::ClusterManager;
+using O2::Balancer::Exceptions::AbstractException;
 
 constexpr char EXCEPTION_MESSAGE[] = "The following exception occurred ";
 
@@ -45,17 +48,17 @@ AbstractDevice::AbstractDevice(const std::string &name,
     // this->fPortRangeMax = 32000;
     // this->fInitializationTimeoutInS = 1;
     this->defaultTransport = this->getProperty(
-            Globals::EnvironmentVariables::O2_TRANSPORT_VAR,
-            Globals::FairMessageOptions::ZERO_MQ
+            O2::Balancer::Globals::EnvironmentVariables::O2_TRANSPORT_VAR,
+            O2::Balancer::Globals::FairMessageOptions::ZERO_MQ
     );
     variableChecksOut(
             this->defaultTransport,
-            Globals::FairMessageOptions::ZERO_MQ,
-            Globals::FairMessageOptions::NANO_MSG,
-            Globals::FairMessageOptions::SHARED_MEMORY
+            O2::Balancer::Globals::FairMessageOptions::ZERO_MQ,
+            O2::Balancer::Globals::FairMessageOptions::NANO_MSG,
+            O2::Balancer::Globals::FairMessageOptions::SHARED_MEMORY
     );
 
-    if (this->defaultTransport != Globals::FairMessageOptions::ZERO_MQ) {
+    if (this->defaultTransport != O2::Balancer::Globals::FairMessageOptions::ZERO_MQ) {
         LOG(WARN) << "ZeroMQ is the recommended transport, using " << this->defaultTransport << " might contain bugs";
     }
 }
@@ -63,14 +66,13 @@ AbstractDevice::AbstractDevice(const std::string &name,
 
 void AbstractDevice::useClusterManager(std::function<void(std::shared_ptr<ClusterManager>)> cl) {
     std::unique_lock<std::mutex> lck(this->zoolock);
-
     cl(this->clusterManager);
 }
 
 bool AbstractDevice::ConditionalRun() {
     try {
         return this->conditionalRun();
-    } catch (const O2::Balancer::Exceptions::AbstractException &exception) {
+    } catch (const AbstractException &exception) {
         LOG(ERROR) << EXCEPTION_MESSAGE << exception.getMessage();
         return false;
     }
@@ -79,7 +81,7 @@ bool AbstractDevice::ConditionalRun() {
 void AbstractDevice::PreRun() {
     try {
         this->preRun();
-    } catch (const O2::Balancer::Exceptions::AbstractException &exception) {
+    } catch (const AbstractException &exception) {
         LOG(ERROR) << EXCEPTION_MESSAGE << exception.getMessage();
     }
 }
@@ -87,7 +89,7 @@ void AbstractDevice::PreRun() {
 void AbstractDevice::Run() {
     try {
         this->run();
-    } catch (const O2::Balancer::Exceptions::AbstractException &exception) {
+    } catch (const AbstractException &exception) {
         LOG(ERROR) << EXCEPTION_MESSAGE << exception.getMessage();
     }
 }
@@ -95,7 +97,7 @@ void AbstractDevice::Run() {
 void AbstractDevice::PostRun() {
     try {
         this->postRun();
-    } catch (const O2::Balancer::Exceptions::AbstractException &exception) {
+    } catch (const AbstractException &exception) {
         LOG(ERROR) << EXCEPTION_MESSAGE << exception.getMessage();
     }
 }

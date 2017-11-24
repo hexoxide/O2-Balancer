@@ -8,25 +8,23 @@
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
 #include "O2/EPN/EPNDevice.h"
-#include <boost/format.hpp>
-#include <FairMQProgOptions.h>
-#include <future>
-#include <queue>
+#include <boost/make_unique.hpp>
 #include "O2/EPN/FLPConnection.h"
 #include "O2/EPN/AcknowledgeConnection.h"
 #include "O2/EPN/OutputConnection.h"
-#include <O2/Balancer/Globals.h>
-#include <O2/Balancer/Utilities/Utilities.h>
 
-
-using namespace O2::EPN;
+using O2::EPN::EPNDevice;
+using O2::EPN::EPNSettings;
+using O2::EPN::FLPConnection;
+using O2::EPN::AcknowledgeConnection;
+using O2::EPN::OutputConnection;
 
 
 EPNDevice::EPNDevice(std::shared_ptr<EPNSettings> settings) : Balancer::AbstractDevice(
         O2::Balancer::Globals::DeviceNames::EPN_NAME, settings) {
-    this->flpConnection = std::unique_ptr<FLPConnection>(new FLPConnection(this, settings));
-    this->acknowledgeConnection = std::unique_ptr<AcknowledgeConnection>(new AcknowledgeConnection(this, settings));
-    this->outputConnection = std::unique_ptr<OutputConnection>(new OutputConnection(this, settings));
+    this->flpConnection = boost::make_unique<FLPConnection>(this,settings);
+    this->acknowledgeConnection = boost::make_unique<AcknowledgeConnection>(this,settings);
+    this->outputConnection = boost::make_unique<OutputConnection>(this,settings);
     this->mNumFLPs = settings->getAmountOfFLPs();
     this->mBufferTimeoutInMs = 900000;
 }
@@ -105,8 +103,7 @@ void EPNDevice::run() {
                             Balancer::crashAfterAmountOfBeats(
                                     settings->getHeartrate(),
                                     settings->getAmountAfterSignal(),
-                                    true
-                            );
+                                    true);
                             crashing = true;
                         }
                     }

@@ -12,6 +12,7 @@
 #define O2_FLP_EPN_CONNECTION_H
 
 #include <O2/Balancer/Devices/Connection.h>
+#include <O2/Balancer/Exceptions/UnimplementedException.h>
 #include <O2/Balancer/Utilities/DataTypes.h>
 #include <vector>
 #include <string>
@@ -58,7 +59,7 @@ namespace O2 {
              */
             void updateBlacklist();
         };
-    }
-}
+    } // namespace FLP
+} // namespace O2
 
-#endif
+#endif // O2_FLP_EPN_CONNECTION_H

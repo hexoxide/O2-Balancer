@@ -13,10 +13,11 @@
 #include <yaml-cpp/yaml.h>
 #include "FairMQLogger.h"
 
-using namespace O2;
-using namespace O2::FLP;
+using O2::FLP::FLPSettings;
+using O2::FLP::SampleType;
 
-FLPSettings::FLPSettings(const boost::program_options::variables_map &settings) : Settings() {
+FLPSettings::FLPSettings(
+        const boost::program_options::variables_map &settings) : Settings() {
     YAML::Node config = this->load(settings);
     if (config["restartFairRoot"]) {
         this->vRestartFairRoot = config["restartFairRoot"].as<bool>();
@@ -40,7 +41,6 @@ FLPSettings::FLPSettings(const boost::program_options::variables_map &settings) 
             LOG(INFO) << "Using flatline sampling";
             this->sampleType = SampleType::Equal;
         }
-
     }
 }
 

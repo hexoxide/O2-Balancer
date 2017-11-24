@@ -17,8 +17,7 @@ namespace O2 {
         int generateSineSize(int average, O2::Balancer::heartbeatID heartbeat);
 
         int generateRandomSize(int average);
-    }
-}
-
+    } // namespace FLP
+} // namepace O2
 
 #endif //O2_BALANCER_UTILS_H

@@ -31,7 +31,8 @@ namespace O2 {
         public:
             AcknowledgeConnection(Balancer::AbstractDevice *device, std::shared_ptr<EPNSettings> settings);
         };
-    }
-}
+    } // namespace EPN
+} // namespace O2
 
-#endif
+#endif // O2_EPN_EPNACKNOWLEDGE_CONNECTION_H
+

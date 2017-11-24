@@ -19,10 +19,6 @@
 
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
-#define AT __FILE__ ":" TOSTRING(__LINE__)
-
-using namespace O2;
-
 
 namespace po = boost::program_options;
 
@@ -64,7 +60,7 @@ po::variables_map O2::Balancer::AddO2Options(boost::program_options::options_des
 
 }
 
-void Balancer::daemonize() {
+void O2::Balancer::daemonize() {
     pid_t pid,sid;
     //Fork the program
     pid = fork();
@@ -87,7 +83,7 @@ void Balancer::daemonize() {
 
 
 
-void Balancer::crashAfterAmountOfBeats(int heartrate,
+void O2::Balancer::crashAfterAmountOfBeats(int heartrate,
                                        int amount,
                                        bool terminate) {
     LOG(ERROR) << boost::format("Initializing crash in %i ms") % (heartrate * amount);

@@ -12,8 +12,7 @@
 #include <yaml-cpp/yaml.h>
 #include <iostream>
 
-using namespace O2;
-using namespace O2::EPN;
+using O2::EPN::EPNSettings;
 
 EPNSettings::EPNSettings(const boost::program_options::variables_map &settings) : Settings() {
     YAML::Node config = this->load(settings);
@@ -30,7 +29,6 @@ EPNSettings::EPNSettings(const boost::program_options::variables_map &settings) 
         this->amountBeforeCrash = config["Goat"]["amount_before_signal"].as<int>();
         this->heartrate = config["Goat"]["heartbeat"].as<int>();
     }
-
 }
 
 
@@ -64,7 +62,9 @@ int EPNSettings::OutputConnectionPort() const {
 
 int EPNSettings::getAmountOfFLPs() const {
     if (this->amountOfFLPs == 0) {
-        throw Balancer::Exceptions::InitException("There need to be at least one FLP defined");
+        throw Balancer::Exceptions::InitException(
+                "There need to be at least one FLP defined"
+        );
     }
     return this->amountOfFLPs;
 }

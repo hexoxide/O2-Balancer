@@ -14,7 +14,14 @@
 #include "O2/Balancer/Utilities/DataTypes.h"
 #include <boost/format.hpp>
 
-using namespace O2::Balancer;
+
+using O2::Balancer::AbstractDevice;
+using O2::Balancer::Connection;
+using O2::Balancer::ClusterManager;
+using O2::Balancer::ConnectionType;
+using O2::Balancer::ConnectionMethod;
+using O2::Balancer::DeviceSetting;
+using O2::Balancer::Exceptions::UnimplementedException;
 
 Connection::Connection(const std::string &name, AbstractDevice *device) {
     this->name = name;
@@ -54,8 +61,7 @@ void Connection::updateAllReceiveKernelSize(const int &size) {
 }
 
 void Connection::useClusterManager(std::function<void(std::shared_ptr<ClusterManager>)> cl) {
-    std::unique_lock<std::mutex> lck(this->device->zoolock);
-    cl(this->device->clusterManager);
+    this->device->useClusterManager(cl);
 }
 
 std::string Connection::typeToString(ConnectionType type) const {
@@ -70,7 +76,7 @@ std::string Connection::typeToString(ConnectionType type) const {
         case ConnectionType::Push:
             return "push";
         default:
-            throw Exceptions::UnimplementedException("typeToString doesn't implement this case");
+            throw UnimplementedException("typeToString doesn't implement this case");
     }
 }
 
@@ -82,7 +88,7 @@ std::string Connection::methodToString(ConnectionMethod method) const {
         case ConnectionMethod::Connect:
             return "connect";
         default:
-            throw Exceptions::UnimplementedException("MethodToString doesn't implement this case");
+            throw UnimplementedException("MethodToString doesn't implement this case");
     }
 }
 

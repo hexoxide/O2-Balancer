@@ -3,7 +3,7 @@ Settings:
 
 restartFairRoot: true
 
-sampleType: Sine
+sampleType: Random
 
 SettingsServer:
   Port: 2181

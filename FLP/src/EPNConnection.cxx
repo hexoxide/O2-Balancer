@@ -10,16 +10,18 @@
 
 #include "O2/FLP/EPNConnection.h"
 #include "O2/FLP/FLPDevice.h"
-#include <O2/Balancer/Exceptions/UnimplementedException.h>
 
-using namespace O2::FLP;
 
+using O2::FLP::EPNConnection;
+using O2::Balancer::AbstractDevice;
+using O2::Balancer::ClusterManager;
+using O2::Balancer::Exceptions::UnimplementedException;
 constexpr char EPN_TAG[] = "EPN";
 constexpr char EPN_CHANNEL[] = "stf2";
 
-EPNConnection::EPNConnection(std::shared_ptr<FLPSettings>, Balancer::AbstractDevice *device) : Balancer::Connection(
-        "stf2", device) {
-    this->useClusterManager([this](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void {
+EPNConnection::EPNConnection(std::shared_ptr<FLPSettings>, AbstractDevice *device)
+        : Balancer::Connection("stf2", device) {
+    this->useClusterManager([this](std::shared_ptr<ClusterManager> manager) -> void {
         auto dev = manager->getRegisteredConnections(EPN_TAG, EPN_CHANNEL);
         while (dev.empty()) {
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -32,18 +34,16 @@ EPNConnection::EPNConnection(std::shared_ptr<FLPSettings>, Balancer::AbstractDev
                     Balancer::ConnectionType::Push,
                     Balancer::ConnectionMethod::Connect,
                     epn.ip,
-                    epn.port
-            );
+                    epn.port);
         }
 
         this->updateAllSendBuffer(100000);
         this->updateAllRateLogging(1);
-
     });
 }
 
 void EPNConnection::updateBlacklist() {
-    this->useClusterManager([this](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void {
+    this->useClusterManager([this](std::shared_ptr<ClusterManager> manager) -> void {
         const std::string classification = manager->pathThatNeedsUpdate();
         const std::string name = this->getName();
         std::vector<std::string> offline = this->getOfflineDevices(
@@ -77,7 +77,7 @@ size_t EPNConnection::balance(O2::Balancer::heartbeatID id) {
             }
         }
 
-        //do the round robin on the filtered list
+        // Do the round robin on the filtered list
         const size_t storedList = id % filteredList.size();
 
         // Detect to which channel it points
@@ -88,14 +88,13 @@ size_t EPNConnection::balance(O2::Balancer::heartbeatID id) {
         }
         // This shouldn't be called.
         // But just in case throw an error
-        throw Balancer::Exceptions::UnimplementedException("Could choose a index");
-
+        throw UnimplementedException("Could not choose a index");
     }
 }
 
 void EPNConnection::updateConnection() {
-    this->useClusterManager([this](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void {
-        const std::string tmp = manager->pathThatNeedsUpdate();//only the epn path needs update
+    this->useClusterManager([this](std::shared_ptr<ClusterManager> manager) -> void {
+        const std::string tmp = manager->pathThatNeedsUpdate();// only the epn path needs update
         this->updateChannels(manager->getRegisteredConnections(tmp, this->getName()));
         this->updateAllSendBuffer(100000);
         this->updateAllRateLogging(1);

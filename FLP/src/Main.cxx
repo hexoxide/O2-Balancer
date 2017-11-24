@@ -9,15 +9,17 @@
 // or submit itself to any jurisdiction.
 
 #include "O2/FLP/FLPDevice.h"
-#include <O2/Balancer/Devices/DeviceManager.h>
-#include <O2/Balancer/Utilities/Utilities.h>
+#include <boost/make_shared.hpp>
 
 namespace po = boost::program_options;
+using O2::Balancer::AddO2Options;
+using O2::Balancer::DeviceManager;
+using O2::Balancer::Exceptions::AbstractException;
+using O2::FLP::FLPSettings;
+using O2::FLP::FLPDevice;
 
 
 int main(int argc, char **argv) {
-    using namespace O2;
-    using namespace O2::FLP;
     po::options_description options("FLP options");
     constexpr char CONFIG_FILE[] = "flp-config";
     options.add_options()
@@ -25,22 +27,18 @@ int main(int argc, char **argv) {
             ("restartFairRoot", po::value<std::string>()->default_value(""))
             (CONFIG_FILE, po::value<std::string>()->default_value("./flp.yaml"), "Configuration file");
 
-    auto vm = Balancer::AddO2Options(options, argc, argv);
+    auto vm = AddO2Options(options, argc, argv);
 
 
     reinit_logger(true, "FLP", SEVERITY_MINIMUM);
 
     auto settings = std::shared_ptr<FLPSettings>(new FLPSettings(vm));
     try {
-        Balancer::DeviceManager<FLPDevice> manager(
-                settings
-        );
+        DeviceManager<FLPDevice> manager(settings);
         manager.run();
-    } catch (const O2::Balancer::Exceptions::AbstractException &exception) {
+    } catch (const AbstractException &exception) {
         LOG(ERROR) << exception.getMessage();
         return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;
-
 }
-

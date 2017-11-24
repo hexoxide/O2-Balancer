@@ -10,7 +10,7 @@
 
 #include "O2/Balancer/Exceptions/TimeOutException.h"
 
-using namespace O2::Balancer::Exceptions;
+using O2::Balancer::Exceptions::TimeOutException;
 
 TimeOutException::TimeOutException(const std::string& msg) : ClusterHandlerException(msg) {
     

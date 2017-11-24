@@ -9,9 +9,11 @@
 // or submit itself to any jurisdiction.
 #include "O2/EPN/OutputConnection.h"
 #include "O2/EPN/EPNSettings.h"
-using namespace O2::EPN;
 
-OutputConnection::OutputConnection(Balancer::AbstractDevice* device, std::shared_ptr<EPNSettings>) : Balancer::Connection("tf", device){
+using O2::EPN::OutputConnection;
+
+
+OutputConnection::OutputConnection(Balancer::AbstractDevice* device, std::shared_ptr<EPNSettings>) : Balancer::Connection("tf", device) {
  /*   this->addOutputChannel(
         Balancer::ConnectionType::Publish,
         Balancer::ConnectionMethod::Bind,

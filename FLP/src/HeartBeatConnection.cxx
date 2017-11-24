@@ -11,10 +11,15 @@
 #include "O2/FLP/HeartBeatConnection.h"
 #include "O2/FLP/FLPDevice.h"
 
-using namespace O2::FLP;
+//using namespace O2::FLP;
 
-HeartbeatConnection::HeartbeatConnection(std::shared_ptr<FLPSettings> settings, Balancer::AbstractDevice *device)
-        : Balancer::Connection("stf1", device) {
+using O2::FLP::HeartbeatConnection;
+using O2::Balancer::AbstractDevice;
+using O2::Balancer::Connection;
+
+HeartbeatConnection::HeartbeatConnection(std::shared_ptr<FLPSettings> settings,
+                                         AbstractDevice *device)
+        : Connection("stf1", device) {
     this->addInputChannel(
             Balancer::ConnectionType::Subscribe,
             Balancer::ConnectionMethod::Connect,

@@ -10,9 +10,12 @@
 #include "O2/EPN/FLPConnection.h"
 #include "O2/EPN/EPNSettings.h"
 
-using namespace O2::EPN;
+using O2::EPN::FLPConnection;
+using O2::Balancer::AbstractDevice;
 
-FLPConnection::FLPConnection(Balancer::AbstractDevice *device, std::shared_ptr<EPNSettings> settings)
+
+FLPConnection::FLPConnection(AbstractDevice *device,
+                             std::shared_ptr<EPNSettings> settings)
         : Balancer::Connection("stf2", device) {
     this->addOutputChannel(
             Balancer::ConnectionType::Pull,

@@ -17,7 +17,8 @@ SET(
         ./include/O2/FLP/FLPSettings.h
         ./include/O2/FLP/HeartBeatConnection.h
         ./include/O2/FLP/Utils.h
-        )
+        ./include/O2/FLP/Globals.h
+)
 
 GET_DIRECTORY_PROPERTY(
     O2Balancer_INCLUDE_DIRS 

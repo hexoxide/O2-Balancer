@@ -12,10 +12,15 @@
 #include "O2/EPN/EPNSettings.h"
 
 
-using namespace O2::EPN;
+//using namespace O2::EPN;
+using O2::EPN::AcknowledgeConnection;
+using O2::EPN::EPNSettings;
+using O2::Balancer::AbstractDevice;
 
-AcknowledgeConnection::AcknowledgeConnection(Balancer::AbstractDevice *device,
-                                             std::shared_ptr<EPNSettings>) : Balancer::Connection("ack", device) {
+
+
+AcknowledgeConnection::AcknowledgeConnection(AbstractDevice *device,
+                                             std::shared_ptr<EPNSettings>) : Connection("ack", device) {
     this->useClusterManager([this](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void {
         auto dev = manager->getRegisteredConnections("InformationNode", "ack");
         while (dev.empty()) {
@@ -26,8 +31,7 @@ AcknowledgeConnection::AcknowledgeConnection(Balancer::AbstractDevice *device,
                 Balancer::ConnectionType::Push,
                 Balancer::ConnectionMethod::Connect,
                 dev[0].ip,
-                dev[0].port
-        );
+                dev[0].port);
     });
     this->updateAllSendBuffer(10000);
 }

@@ -13,9 +13,9 @@
 
 namespace O2{
     namespace Balancer{
-        constexpr int VERSION_MAJOR = ${AliceO2_Balancer_MAJOR_VERSION};
-        constexpr int VERSION_MINOR = ${AliceO2_Balancer_MINOR_VERSION};
-        constexpr int VERSION_PATCH = ${AliceO2_Balancer_PATCH_VERSION};
+        constexpr int VERSION_MAJOR = ${O2_Balancer_MAJOR_VERSION};
+        constexpr int VERSION_MINOR = ${O2_Balancer_MINOR_VERSION};
+        constexpr int VERSION_PATCH = ${O2_Balancer_PATCH_VERSION};
 
     }
 }

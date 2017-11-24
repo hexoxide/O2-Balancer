@@ -16,9 +16,15 @@
 #include "O2/FLP/Utils.h"
 
 
-using namespace O2::FLP;
+using O2::FLP::FLPDevice;
+using O2::FLP::FLPSettings;
+using O2::FLP::HeartbeatConnection;
+using O2::FLP::EPNConnection;
+using O2::Balancer::AbstractDevice;
+using O2::Balancer::ClusterManager;
+using O2::Balancer::Exceptions::ClusterHandlerException;
 
-FLPDevice::FLPDevice(std::shared_ptr<FLPSettings> settings) : Balancer::AbstractDevice(
+FLPDevice::FLPDevice(std::shared_ptr<FLPSettings> settings) : AbstractDevice(
         O2::Balancer::Globals::DeviceNames::FLP_NAME, settings, settings->restartFairRoot()) {
 
     this->heartBeatConnection = std::unique_ptr<HeartbeatConnection>(
@@ -35,10 +41,10 @@ FLPDevice::FLPDevice(std::shared_ptr<FLPSettings> settings) : Balancer::Abstract
 
 
 void FLPDevice::preRun() {
-    this->useClusterManager([this](std::shared_ptr<O2::Balancer::ClusterManager> manager) -> void {
+    this->useClusterManager([this](std::shared_ptr<ClusterManager> manager) -> void {
         try {
             this->averageSampleSize = manager->getGlobalInteger("sampleSize", 1000);
-        } catch (const O2::Balancer::Exceptions::ClusterHandlerException &ex) {
+        } catch (const ClusterHandlerException &ex) {
             LOG(ERROR) << ex.getMessage();
         }
     });
@@ -107,7 +113,6 @@ bool FLPDevice::conditionalRun() {
             if (Send(parts, this->epnConnection->getName(), direction, 0) < 0) {
                 LOG(ERROR) << boost::format("could not send to EPN %i") % direction;
             }
-
         }
     }
     fstream.close();
@@ -117,5 +122,4 @@ bool FLPDevice::conditionalRun() {
 
 FLPDevice::~FLPDevice() {
     LOG(INFO) << "closing";
-
 }
