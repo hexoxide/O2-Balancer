@@ -135,13 +135,28 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a035a8f85bf53bf426acb809a96dbda24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae987bfcbe7cc219832b80fffce0432e1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o2_1_1_e_p_n_1_1_e_p_n_settings.html#ae987bfcbe7cc219832b80fffce0432e1">amountBeforeCrash</a></td></tr>
 <tr class="separator:ae987bfcbe7cc219832b80fffce0432e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pro_attribs_class_o2_1_1_balancer_1_1_settings"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_class_o2_1_1_balancer_1_1_settings')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_o2_1_1_balancer_1_1_settings.html">O2::Balancer::Settings</a></td></tr>
+<tr class="memitem:ad40b2d1b70f868e0fb01a1b013dabd65 inherit pro_attribs_class_o2_1_1_balancer_1_1_settings"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="struct_o2_1_1_balancer_1_1_device_setting.html">DeviceSetting</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o2_1_1_balancer_1_1_settings.html#ad40b2d1b70f868e0fb01a1b013dabd65">informationSettings</a></td></tr>
+<tr class="separator:ad40b2d1b70f868e0fb01a1b013dabd65 inherit pro_attribs_class_o2_1_1_balancer_1_1_settings"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66820395c0efc1035aeb3915fe6f83c5 inherit pro_attribs_class_o2_1_1_balancer_1_1_settings"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="struct_o2_1_1_balancer_1_1_device_setting.html">DeviceSetting</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o2_1_1_balancer_1_1_settings.html#a66820395c0efc1035aeb3915fe6f83c5">settingsServer</a></td></tr>
+<tr class="separator:a66820395c0efc1035aeb3915fe6f83c5 inherit pro_attribs_class_o2_1_1_balancer_1_1_settings"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5cacd6e90d5bac4853d714224355a7f0 inherit pro_attribs_class_o2_1_1_balancer_1_1_settings"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o2_1_1_balancer_1_1_settings.html#a5cacd6e90d5bac4853d714224355a7f0">ipAddress</a></td></tr>
+<tr class="separator:a5cacd6e90d5bac4853d714224355a7f0 inherit pro_attribs_class_o2_1_1_balancer_1_1_settings"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Loads, determines and collects all settings required to run the <a class="el" href="namespace_o2_1_1_e_p_n.html">EPN</a>. The <a class="el" href="namespace_o2_1_1_e_p_n.html">EPN</a> can be a goat. Which means that it call an abort on itself after a certain amount of heartbeats </p><dl class="section author"><dt>Author</dt><dd>H.J.M van der Heijden. </dd></dl>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a01aa3a513e570e91163b1626a74202b8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a01aa3a513e570e91163b1626a74202b8">&#9670;&nbsp;</a></span>EPNSettings()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">EPNSettings::EPNSettings </td>
@@ -151,7 +166,18 @@ Private Attributes</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
+<p>Only constructor, with boost command line arguments </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">settings</td><td>Containing the preparsed command line arguments from boost. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -170,6 +196,7 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Gets port that the FLPs can use </p><dl class="section return"><dt>Returns</dt><dd>The flp port </dd></dl>
 
 </div>
 </div>
@@ -187,6 +214,7 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>How long should the goat wait before it mimicks a crash </p><dl class="section return"><dt>Returns</dt><dd>Heartbeats to wait </dd></dl>
 
 </div>
 </div>
@@ -204,6 +232,7 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>How long should it wait after the signal to crash? </p><dl class="section return"><dt>Returns</dt><dd>Heartbeats to wait </dd></dl>
 
 </div>
 </div>
@@ -221,6 +250,7 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Get the amount of flps currently sending data to this <a class="el" href="namespace_o2_1_1_e_p_n.html">EPN</a>. This is required, otherwise there is no possibility to know if a full time frame is accepted </p><dl class="section return"><dt>Returns</dt><dd>The amount of online flps. </dd></dl>
 
 </div>
 </div>
@@ -238,6 +268,7 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>The IP that will be sacreficed and crashes. When the ip matches this machines ip. It will crash </p><dl class="section return"><dt>Returns</dt><dd>IP address of the <a class="el" href="namespace_o2_1_1_e_p_n.html">EPN</a> that will crash </dd></dl>
 
 </div>
 </div>
@@ -255,6 +286,7 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Gets the heartrate to be mimiced for the <a class="el" href="namespace_o2_1_1_e_p_n.html">EPN</a> crash when this is the Goat. </p><dl class="section return"><dt>Returns</dt><dd>Mimicked heartrate </dd></dl>
 
 </div>
 </div>
@@ -459,8 +491,8 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/hheijden/Desktop/O2-Balancer/EPN/include/O2/EPN/<a class="el" href="_e_p_n_settings_8h_source.html">EPNSettings.h</a></li>
-<li>/home/hheijden/Desktop/O2-Balancer/EPN/src/<a class="el" href="_e_p_n_settings_8cxx.html">EPNSettings.cxx</a></li>
+<li>/home/hheijden/Desktop/oud/O2-Balancer/EPN/include/O2/EPN/<a class="el" href="_e_p_n_settings_8h_source.html">EPNSettings.h</a></li>
+<li>/home/hheijden/Desktop/oud/O2-Balancer/EPN/src/<a class="el" href="_e_p_n_settings_8cxx.html">EPNSettings.cxx</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

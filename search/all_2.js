@@ -1,7 +1,6 @@
 var searchData=
 [
   ['c_5fdialect',['C_DIALECT',['../_c_make_c_compiler_id_8c.html#a07f8e5783674099cd7f5110e22a78cdb',1,'CMakeCCompilerId.c']]],
-  ['changedpaths',['changedPaths',['../_cluster_manager_8cxx.html#a20c523c6c8fda96138e6b8d6bb57b77e',1,'ClusterManager.cxx']]],
   ['channelsize',['channelSize',['../class_o2_1_1_balancer_1_1_connection.html#a6e80814b07c2b28c856b55bee689cd5e',1,'O2::Balancer::Connection']]],
   ['checkzookeeper',['checkZooKeeper',['../class_o2_1_1_balancer_1_1_abstract_device.html#a39b2eb6f1efde124bd396b60de589af4',1,'O2::Balancer::AbstractDevice']]],
   ['close',['close',['../class_o2_1_1_balancer_1_1_cluster_manager.html#aa8dced1dd0d068119fa24d4b2d43a8db',1,'O2::Balancer::ClusterManager']]],
@@ -16,6 +15,7 @@ var searchData=
   ['clustertypeexception_2eh',['ClusterTypeException.h',['../_cluster_type_exception_8h.html',1,'']]],
   ['cmakeccompilerid_2ec',['CMakeCCompilerId.c',['../_c_make_c_compiler_id_8c.html',1,'']]],
   ['cmakecxxcompilerid_2ecpp',['CMakeCXXCompilerId.cpp',['../_c_make_c_x_x_compiler_id_8cpp.html',1,'']]],
+  ['compilation_2emd',['Compilation.md',['../_compilation_8md.html',1,'']]],
   ['compiler_5fid',['COMPILER_ID',['../_c_make_c_compiler_id_8c.html#a81dee0709ded976b2e0319239f72d174',1,'COMPILER_ID():&#160;CMakeCCompilerId.c'],['../_c_make_c_x_x_compiler_id_8cpp.html#a81dee0709ded976b2e0319239f72d174',1,'COMPILER_ID():&#160;CMakeCXXCompilerId.cpp']]],
   ['conditionalrun',['conditionalRun',['../class_o2_1_1_f_l_p_1_1_f_l_p_device.html#a8bcfa6d94e94df1ef293b449fa94a9e5',1,'O2::FLP::FLPDevice::conditionalRun()'],['../class_o2_1_1_information_node_1_1_information_device.html#a000f40a3e8f89bfd5f44465828e823b4',1,'O2::InformationNode::InformationDevice::conditionalRun()'],['../class_o2_1_1_balancer_1_1_abstract_device.html#ab0e1f75423ade2a63ee9aac732d8d32b',1,'O2::Balancer::AbstractDevice::conditionalRun()'],['../class_o2_1_1_balancer_1_1_abstract_device.html#a4115dc6bddcb62d595f11fd68cd08ad3',1,'O2::Balancer::AbstractDevice::ConditionalRun() override final']]],
   ['connect',['Connect',['../namespace_o2_1_1_balancer.html#a1577a642a00a6f4311dc71b681192f27a49ab28040dfa07f53544970c6d147e1e',1,'O2::Balancer']]],
@@ -25,5 +25,6 @@ var searchData=
   ['connectionmethod',['ConnectionMethod',['../namespace_o2_1_1_balancer.html#a1577a642a00a6f4311dc71b681192f27',1,'O2::Balancer']]],
   ['connectiontype',['ConnectionType',['../namespace_o2_1_1_balancer.html#a53848acbd1b980016b6d834f761c6c32',1,'O2::Balancer']]],
   ['crashafteramountofbeats',['crashAfterAmountOfBeats',['../namespace_o2_1_1_balancer.html#a6c44494bf959bbf50f05bea73958edd1',1,'O2::Balancer']]],
-  ['configuration_20files_20for_20several_20experiments',['Configuration files for several experiments',['../md__home_hheijden__desktop__o2-_balancer__config__r_e_a_d_m_e.html',1,'']]]
+  ['configuration_20files_20for_20several_20experiments',['Configuration files for several experiments',['../md__home_hheijden__desktop_oud__o2-_balancer__config__r_e_a_d_m_e.html',1,'']]],
+  ['compiling_20o2_2dbalancer',['Compiling O2-Balancer',['../md__home_hheijden__desktop_oud__o2-_balancer__docs__compilation.html',1,'']]]
 ];

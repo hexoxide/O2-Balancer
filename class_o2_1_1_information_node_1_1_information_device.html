@@ -103,6 +103,8 @@ Public Member Functions</h2></td></tr>
 <tr class="inherit_header pub_methods_class_o2_1_1_balancer_1_1_abstract_device"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_o2_1_1_balancer_1_1_abstract_device')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_o2_1_1_balancer_1_1_abstract_device.html">O2::Balancer::AbstractDevice</a></td></tr>
 <tr class="memitem:a9674cabe9179fdaea59c6bede2459ce0 inherit pub_methods_class_o2_1_1_balancer_1_1_abstract_device"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o2_1_1_balancer_1_1_abstract_device.html#a9674cabe9179fdaea59c6bede2459ce0">AbstractDevice</a> (const std::string &amp;name, std::shared_ptr&lt; <a class="el" href="class_o2_1_1_balancer_1_1_settings.html">Settings</a> &gt; <a class="el" href="class_o2_1_1_balancer_1_1_abstract_device.html#a1d9b9b9387841e3733830e943ea4f9c3">settings</a>, bool <a class="el" href="class_o2_1_1_balancer_1_1_abstract_device.html#a29de62602d16e9fdf367f327c37c37d9">restartOnUpdate</a>=false)</td></tr>
 <tr class="separator:a9674cabe9179fdaea59c6bede2459ce0 inherit pub_methods_class_o2_1_1_balancer_1_1_abstract_device"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b016ce8e187533bf5fb6c06695de415 inherit pub_methods_class_o2_1_1_balancer_1_1_abstract_device"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o2_1_1_balancer_1_1_abstract_device.html#a2b016ce8e187533bf5fb6c06695de415">useClusterManager</a> (std::function&lt; void(std::shared_ptr&lt; <a class="el" href="class_o2_1_1_balancer_1_1_cluster_manager.html">ClusterManager</a> &gt;)&gt; cl)</td></tr>
+<tr class="separator:a2b016ce8e187533bf5fb6c06695de415 inherit pub_methods_class_o2_1_1_balancer_1_1_abstract_device"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a25b44584696c1d255927379ff6b674a4 inherit pub_methods_class_o2_1_1_balancer_1_1_abstract_device"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o2_1_1_balancer_1_1_abstract_device.html#a25b44584696c1d255927379ff6b674a4">restartDevice</a> ()</td></tr>
 <tr class="separator:a25b44584696c1d255927379ff6b674a4 inherit pub_methods_class_o2_1_1_balancer_1_1_abstract_device"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa3b6e87178fd6d775098744da8a6f681 inherit pub_methods_class_o2_1_1_balancer_1_1_abstract_device"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o2_1_1_balancer_1_1_abstract_device.html#aa3b6e87178fd6d775098744da8a6f681">needRefresh</a> () const</td></tr>
@@ -127,8 +129,6 @@ Protected Member Functions</h2></td></tr>
 <tr class="inherit_header pro_methods_class_o2_1_1_balancer_1_1_abstract_device"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_class_o2_1_1_balancer_1_1_abstract_device')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="class_o2_1_1_balancer_1_1_abstract_device.html">O2::Balancer::AbstractDevice</a></td></tr>
 <tr class="memitem:a911821bed9a17dc7efda4076a13b29bc inherit pro_methods_class_o2_1_1_balancer_1_1_abstract_device"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o2_1_1_balancer_1_1_abstract_device.html#a911821bed9a17dc7efda4076a13b29bc">run</a> ()</td></tr>
 <tr class="separator:a911821bed9a17dc7efda4076a13b29bc inherit pro_methods_class_o2_1_1_balancer_1_1_abstract_device"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b016ce8e187533bf5fb6c06695de415 inherit pro_methods_class_o2_1_1_balancer_1_1_abstract_device"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o2_1_1_balancer_1_1_abstract_device.html#a2b016ce8e187533bf5fb6c06695de415">useClusterManager</a> (std::function&lt; void(std::shared_ptr&lt; <a class="el" href="class_o2_1_1_balancer_1_1_cluster_manager.html">ClusterManager</a> &gt;)&gt; cl)</td></tr>
-<tr class="separator:a2b016ce8e187533bf5fb6c06695de415 inherit pro_methods_class_o2_1_1_balancer_1_1_abstract_device"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -543,8 +543,8 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/hheijden/Desktop/O2-Balancer/InformationNode/include/O2/InformationNode/<a class="el" href="_information_device_8h_source.html">InformationDevice.h</a></li>
-<li>/home/hheijden/Desktop/O2-Balancer/InformationNode/src/<a class="el" href="_information_device_8cxx.html">InformationDevice.cxx</a></li>
+<li>/home/hheijden/Desktop/oud/O2-Balancer/InformationNode/include/O2/InformationNode/<a class="el" href="_information_device_8h_source.html">InformationDevice.h</a></li>
+<li>/home/hheijden/Desktop/oud/O2-Balancer/InformationNode/src/<a class="el" href="_information_device_8cxx.html">InformationDevice.cxx</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

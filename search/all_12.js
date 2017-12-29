@@ -13,5 +13,7 @@ var searchData=
   ['updateconnection',['updateConnection',['../class_o2_1_1_f_l_p_1_1_e_p_n_connection.html#a26d4f01d4cafa97a884fa8259b5a5b97',1,'O2::FLP::EPNConnection']]],
   ['useclustermanager',['useClusterManager',['../class_o2_1_1_balancer_1_1_abstract_device.html#a2b016ce8e187533bf5fb6c06695de415',1,'O2::Balancer::AbstractDevice::useClusterManager()'],['../class_o2_1_1_balancer_1_1_connection.html#a9f8dd293853e0ebfb406692eefa14f98',1,'O2::Balancer::Connection::useClusterManager()']]],
   ['utilities_2ecxx',['Utilities.cxx',['../_utilities_8cxx.html',1,'']]],
-  ['utilities_2eh',['Utilities.h',['../_utilities_8h.html',1,'']]]
+  ['utilities_2eh',['Utilities.h',['../_utilities_8h.html',1,'']]],
+  ['utils_2ecxx',['Utils.cxx',['../_utils_8cxx.html',1,'']]],
+  ['utils_2eh',['Utils.h',['../_utils_8h.html',1,'']]]
 ];

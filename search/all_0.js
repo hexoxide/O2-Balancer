@@ -23,6 +23,5 @@ var searchData=
   ['amountofepns',['amountOfEpns',['../class_o2_1_1_f_l_p_1_1_e_p_n_connection.html#af5cb69c2eb472806811df471b30a2af4',1,'O2::FLP::EPNConnection']]],
   ['amountofflps',['amountOfFLPs',['../class_o2_1_1_e_p_n_1_1_e_p_n_settings.html#a90a44ec6f116d5f473e9b1909d7bd145',1,'O2::EPN::EPNSettings']]],
   ['architecture_5fid',['ARCHITECTURE_ID',['../_c_make_c_compiler_id_8c.html#aba35d0d200deaeb06aee95ca297acb28',1,'ARCHITECTURE_ID():&#160;CMakeCCompilerId.c'],['../_c_make_c_x_x_compiler_id_8cpp.html#aba35d0d200deaeb06aee95ca297acb28',1,'ARCHITECTURE_ID():&#160;CMakeCXXCompilerId.cpp']]],
-  ['at',['AT',['../_utilities_8cxx.html#ad37a804df2a1060b453ce07fe0ee3cbc',1,'Utilities.cxx']]],
-  ['aliceo2_20general_20library',['AliceO2 general library',['../md__home_hheijden__desktop__o2-_balancer__o2_balancer__r_e_a_d_m_e.html',1,'']]]
+  ['averagesamplesize',['averageSampleSize',['../class_o2_1_1_f_l_p_1_1_f_l_p_device.html#afd09c2394f70fd3666f597784e84711d',1,'O2::FLP::FLPDevice']]]
 ];

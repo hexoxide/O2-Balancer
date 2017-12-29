@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['o2_5ftransport_5fvar',['O2_TRANSPORT_VAR',['../namespace_o2_1_1_balancer_1_1_globals_1_1_environment_variables.html#a5d78f20404ef870f9769c4f8598204e9',1,'O2::Balancer::Globals::EnvironmentVariables']]],
-  ['offlineepns',['offlineEPNS',['../class_o2_1_1_f_l_p_1_1_e_p_n_connection.html#a1f76714d1d96fe31be8d20080733fb61',1,'O2::FLP::EPNConnection']]],
-  ['outputconnection',['outputConnection',['../class_o2_1_1_e_p_n_1_1_e_p_n_device.html#a0733e0aaa69e2711de78315a6d588f7a',1,'O2::EPN::EPNDevice']]],
-  ['outputconnectionport',['outputConnectionPort',['../class_o2_1_1_e_p_n_1_1_e_p_n_settings.html#a6cc8dc86284c20f9530eb6f1a65e4d57',1,'O2::EPN::EPNSettings']]]
+  ['name',['name',['../class_o2_1_1_balancer_1_1_connection.html#ac73fc56cbee5aa0ad8b2b8b6007193b6',1,'O2::Balancer::Connection']]],
+  ['nano_5fmsg',['NANO_MSG',['../namespace_o2_1_1_balancer_1_1_globals_1_1_fair_message_options.html#ab34301590490418fac5e788a372ff4c7',1,'O2::Balancer::Globals::FairMessageOptions']]],
+  ['nrefresh',['nRefresh',['../class_o2_1_1_balancer_1_1_abstract_device.html#a0b0db050a9fe49c0e6daffcba2a68027',1,'O2::Balancer::AbstractDevice']]],
+  ['nstop',['nStop',['../class_o2_1_1_balancer_1_1_abstract_device.html#adb216a717ef3b3f371adba6fac33c75c',1,'O2::Balancer::AbstractDevice']]]
 ];

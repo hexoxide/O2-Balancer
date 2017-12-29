@@ -5,5 +5,6 @@ var searchData=
   ['acknowledgeport',['acknowledgePort',['../class_o2_1_1_information_node_1_1_info_settings.html#ad62992dc2fdeddb259cccbdb4f112cb2',1,'O2::InformationNode::InfoSettings']]],
   ['amountaftersignal',['amountAfterSignal',['../class_o2_1_1_e_p_n_1_1_e_p_n_settings.html#a035a8f85bf53bf426acb809a96dbda24',1,'O2::EPN::EPNSettings']]],
   ['amountbeforecrash',['amountBeforeCrash',['../class_o2_1_1_e_p_n_1_1_e_p_n_settings.html#ae987bfcbe7cc219832b80fffce0432e1',1,'O2::EPN::EPNSettings']]],
-  ['amountofflps',['amountOfFLPs',['../class_o2_1_1_e_p_n_1_1_e_p_n_settings.html#a90a44ec6f116d5f473e9b1909d7bd145',1,'O2::EPN::EPNSettings']]]
+  ['amountofflps',['amountOfFLPs',['../class_o2_1_1_e_p_n_1_1_e_p_n_settings.html#a90a44ec6f116d5f473e9b1909d7bd145',1,'O2::EPN::EPNSettings']]],
+  ['averagesamplesize',['averageSampleSize',['../class_o2_1_1_f_l_p_1_1_f_l_p_device.html#afd09c2394f70fd3666f597784e84711d',1,'O2::FLP::FLPDevice']]]
 ];

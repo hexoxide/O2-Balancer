@@ -65,6 +65,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="class_o2_1_1_f_l_p_1_1_f_l_p_device-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -92,6 +93,8 @@ Public Member Functions</h2></td></tr>
 <tr class="inherit_header pub_methods_class_o2_1_1_balancer_1_1_abstract_device"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_o2_1_1_balancer_1_1_abstract_device')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_o2_1_1_balancer_1_1_abstract_device.html">O2::Balancer::AbstractDevice</a></td></tr>
 <tr class="memitem:a9674cabe9179fdaea59c6bede2459ce0 inherit pub_methods_class_o2_1_1_balancer_1_1_abstract_device"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o2_1_1_balancer_1_1_abstract_device.html#a9674cabe9179fdaea59c6bede2459ce0">AbstractDevice</a> (const std::string &amp;name, std::shared_ptr&lt; <a class="el" href="class_o2_1_1_balancer_1_1_settings.html">Settings</a> &gt; <a class="el" href="class_o2_1_1_balancer_1_1_abstract_device.html#a1d9b9b9387841e3733830e943ea4f9c3">settings</a>, bool <a class="el" href="class_o2_1_1_balancer_1_1_abstract_device.html#a29de62602d16e9fdf367f327c37c37d9">restartOnUpdate</a>=false)</td></tr>
 <tr class="separator:a9674cabe9179fdaea59c6bede2459ce0 inherit pub_methods_class_o2_1_1_balancer_1_1_abstract_device"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b016ce8e187533bf5fb6c06695de415 inherit pub_methods_class_o2_1_1_balancer_1_1_abstract_device"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o2_1_1_balancer_1_1_abstract_device.html#a2b016ce8e187533bf5fb6c06695de415">useClusterManager</a> (std::function&lt; void(std::shared_ptr&lt; <a class="el" href="class_o2_1_1_balancer_1_1_cluster_manager.html">ClusterManager</a> &gt;)&gt; cl)</td></tr>
+<tr class="separator:a2b016ce8e187533bf5fb6c06695de415 inherit pub_methods_class_o2_1_1_balancer_1_1_abstract_device"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a25b44584696c1d255927379ff6b674a4 inherit pub_methods_class_o2_1_1_balancer_1_1_abstract_device"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o2_1_1_balancer_1_1_abstract_device.html#a25b44584696c1d255927379ff6b674a4">restartDevice</a> ()</td></tr>
 <tr class="separator:a25b44584696c1d255927379ff6b674a4 inherit pub_methods_class_o2_1_1_balancer_1_1_abstract_device"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa3b6e87178fd6d775098744da8a6f681 inherit pub_methods_class_o2_1_1_balancer_1_1_abstract_device"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o2_1_1_balancer_1_1_abstract_device.html#aa3b6e87178fd6d775098744da8a6f681">needRefresh</a> () const</td></tr>
@@ -118,11 +121,18 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:aaaaeeea448afcff768e5f8f443e9e983 inherit pro_methods_class_o2_1_1_balancer_1_1_abstract_device"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a911821bed9a17dc7efda4076a13b29bc inherit pro_methods_class_o2_1_1_balancer_1_1_abstract_device"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o2_1_1_balancer_1_1_abstract_device.html#a911821bed9a17dc7efda4076a13b29bc">run</a> ()</td></tr>
 <tr class="separator:a911821bed9a17dc7efda4076a13b29bc inherit pro_methods_class_o2_1_1_balancer_1_1_abstract_device"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b016ce8e187533bf5fb6c06695de415 inherit pro_methods_class_o2_1_1_balancer_1_1_abstract_device"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o2_1_1_balancer_1_1_abstract_device.html#a2b016ce8e187533bf5fb6c06695de415">useClusterManager</a> (std::function&lt; void(std::shared_ptr&lt; <a class="el" href="class_o2_1_1_balancer_1_1_cluster_manager.html">ClusterManager</a> &gt;)&gt; cl)</td></tr>
-<tr class="separator:a2b016ce8e187533bf5fb6c06695de415 inherit pro_methods_class_o2_1_1_balancer_1_1_abstract_device"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:afbd5e220d7c8140276bfcc6540d177dc"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o2_1_1_f_l_p_1_1_f_l_p_device.html#afbd5e220d7c8140276bfcc6540d177dc">getSampleSize</a> () const</td></tr>
+<tr class="separator:afbd5e220d7c8140276bfcc6540d177dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
+<tr class="memitem:aa052074241070ec921e1dbca1e6066e9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_o2_1_1_balancer.html#ae22f05390aa2c9fcb571d9fe24759a38">O2::Balancer::heartbeatID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o2_1_1_f_l_p_1_1_f_l_p_device.html#aa052074241070ec921e1dbca1e6066e9">lastHeartbeat</a></td></tr>
+<tr class="separator:aa052074241070ec921e1dbca1e6066e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a208ab6c3bdfc260a12115a81c768d8b4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_o2_1_1_f_l_p.html#a3da370bce7ed69535b60db94cecec7b0">SampleType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o2_1_1_f_l_p_1_1_f_l_p_device.html#a208ab6c3bdfc260a12115a81c768d8b4">sampleType</a></td></tr>
+<tr class="separator:a208ab6c3bdfc260a12115a81c768d8b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab265805ebcdec8b3c3a0f1c0028142ab"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="class_o2_1_1_f_l_p_1_1_heartbeat_connection.html">HeartbeatConnection</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o2_1_1_f_l_p_1_1_f_l_p_device.html#ab265805ebcdec8b3c3a0f1c0028142ab">heartBeatConnection</a></td></tr>
 <tr class="separator:ab265805ebcdec8b3c3a0f1c0028142ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc56677dc8c85c7f33f36384fb79f230"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="class_o2_1_1_f_l_p_1_1_e_p_n_connection.html">EPNConnection</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o2_1_1_f_l_p_1_1_f_l_p_device.html#acc56677dc8c85c7f33f36384fb79f230">epnConnection</a></td></tr>
@@ -136,9 +146,9 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a490a35fd7dbcaa8dae8d8a5c6321b751"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o2_1_1_f_l_p_1_1_f_l_p_device.html#a490a35fd7dbcaa8dae8d8a5c6321b751">mNumEPNs</a></td></tr>
 <tr class="memdesc:a490a35fd7dbcaa8dae8d8a5c6321b751"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of epnReceivers.  <a href="#a490a35fd7dbcaa8dae8d8a5c6321b751">More...</a><br /></td></tr>
 <tr class="separator:a490a35fd7dbcaa8dae8d8a5c6321b751"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d0a6f135d18f9744c07cd8d560550b0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o2_1_1_f_l_p_1_1_f_l_p_device.html#a1d0a6f135d18f9744c07cd8d560550b0">mEventSize</a></td></tr>
-<tr class="memdesc:a1d0a6f135d18f9744c07cd8d560550b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Size of the sub-timeframe body (only for test mode)  <a href="#a1d0a6f135d18f9744c07cd8d560550b0">More...</a><br /></td></tr>
-<tr class="separator:a1d0a6f135d18f9744c07cd8d560550b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd09c2394f70fd3666f597784e84711d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o2_1_1_f_l_p_1_1_f_l_p_device.html#afd09c2394f70fd3666f597784e84711d">averageSampleSize</a></td></tr>
+<tr class="memdesc:afd09c2394f70fd3666f597784e84711d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Size of the sub-timeframe body (only for test mode)  <a href="#afd09c2394f70fd3666f597784e84711d">More...</a><br /></td></tr>
+<tr class="separator:afd09c2394f70fd3666f597784e84711d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a055a0852211e54e13c0e967a7c8c5f4c"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_o2_1_1_f_l_p_1_1_f_l_p_device.html#a055a0852211e54e13c0e967a7c8c5f4c">mTimeFrameId</a></td></tr>
 <tr class="separator:a055a0852211e54e13c0e967a7c8c5f4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -224,6 +234,31 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="afbd5e220d7c8140276bfcc6540d177dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbd5e220d7c8140276bfcc6540d177dc">&#9670;&nbsp;</a></span>getSampleSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int FLPDevice::getSampleSize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a320aba9623431c6d46d76b9144f5f90f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a320aba9623431c6d46d76b9144f5f90f">&#9670;&nbsp;</a></span>preRun()</h2>
 
@@ -280,6 +315,30 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="afd09c2394f70fd3666f597784e84711d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd09c2394f70fd3666f597784e84711d">&#9670;&nbsp;</a></span>averageSampleSize</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int O2::FLP::FLPDevice::averageSampleSize</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Size of the sub-timeframe body (only for test mode) </p>
+
+</div>
+</div>
 <a id="acc56677dc8c85c7f33f36384fb79f230"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acc56677dc8c85c7f33f36384fb79f230">&#9670;&nbsp;</a></span>epnConnection</h2>
 
@@ -324,6 +383,28 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="aa052074241070ec921e1dbca1e6066e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa052074241070ec921e1dbca1e6066e9">&#9670;&nbsp;</a></span>lastHeartbeat</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_o2_1_1_balancer.html#ae22f05390aa2c9fcb571d9fe24759a38">O2::Balancer::heartbeatID</a> O2::FLP::FLPDevice::lastHeartbeat</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a5b0fd92b4f960f49b5106016776a9041"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5b0fd92b4f960f49b5106016776a9041">&#9670;&nbsp;</a></span>mArrivalTime</h2>
 
@@ -345,30 +426,6 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Stores arrival times of sub-timeframes. </p>
-
-</div>
-</div>
-<a id="a1d0a6f135d18f9744c07cd8d560550b0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1d0a6f135d18f9744c07cd8d560550b0">&#9670;&nbsp;</a></span>mEventSize</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int O2::FLP::FLPDevice::mEventSize</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Size of the sub-timeframe body (only for test mode) </p>
 
 </div>
 </div>
@@ -442,9 +499,31 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a208ab6c3bdfc260a12115a81c768d8b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a208ab6c3bdfc260a12115a81c768d8b4">&#9670;&nbsp;</a></span>sampleType</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_o2_1_1_f_l_p.html#a3da370bce7ed69535b60db94cecec7b0">SampleType</a> O2::FLP::FLPDevice::sampleType</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/hheijden/Desktop/O2-Balancer/FLP/include/O2/FLP/<a class="el" href="_f_l_p_device_8h_source.html">FLPDevice.h</a></li>
-<li>/home/hheijden/Desktop/O2-Balancer/FLP/src/<a class="el" href="_f_l_p_device_8cxx.html">FLPDevice.cxx</a></li>
+<li>/home/hheijden/Desktop/oud/O2-Balancer/FLP/include/O2/FLP/<a class="el" href="_f_l_p_device_8h_source.html">FLPDevice.h</a></li>
+<li>/home/hheijden/Desktop/oud/O2-Balancer/FLP/src/<a class="el" href="_f_l_p_device_8cxx.html">FLPDevice.cxx</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
