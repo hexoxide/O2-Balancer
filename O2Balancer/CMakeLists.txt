@@ -4,6 +4,8 @@ PROJECT(O2Balancer)
 SET(header_version_in ${O2Balancer_SOURCE_DIR}/cmake/Balancer.h.in)
 SET(header_version_out ${CMAKE_CURRENT_BINARY_DIR}/include/O2/Balancer/Balancer.h)
 
+
+
 CONFIGURE_FILE(${header_version_in} ${header_version_out})
 
 SET(O2Balancer_INCLUDE_DIRS 

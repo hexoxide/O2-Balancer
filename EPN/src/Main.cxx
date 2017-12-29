@@ -8,7 +8,7 @@
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
 #include "O2/EPN/EPNDevice.h"
-#include <boost/make_shared.hpp>
+
 
 using O2::Balancer::AddO2Options;
 using O2::EPN::EPNSettings;

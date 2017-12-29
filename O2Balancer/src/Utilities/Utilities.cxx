@@ -14,11 +14,26 @@
 #include <FairVersion.h>
 #include "FairMQLogger.h"
 #include <zookeeper/zookeeper_version.h>
+#include <yaml-cpp/yaml.h>
 #include "O2/Balancer/Balancer.h"
 #include <thread>
-
+#include <sstream>
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
+
+std::string getCompilerInformation(){
+    std::stringstream dat;
+#ifdef __GNUC__
+    dat << "g++ "<< __GNUC__ << "." << __GNUC_MINOR__ << "." << __GNUC_PATCHLEVEL__;
+
+#elif __clang__
+    dat << "Clang++ " << __clang_major__ << "." << __clang_minor__ << "." << __clang_patchlevel__;
+#else
+    dat << "Unknown";
+#endif
+    return dat.str();
+}
+
 
 namespace po = boost::program_options;
 
@@ -39,12 +54,14 @@ po::variables_map O2::Balancer::AddO2Options(boost::program_options::options_des
             std::cout << "O2 Balancer prototype version: " << O2::Balancer::VERSION_MAJOR << "." <<  O2::Balancer::VERSION_MINOR << "." << O2::Balancer::VERSION_PATCH << "\n" ;
             std::cout << "Using FairRoot version : " << TOSTRING(FAIRROOT_VERSION) << "\n";
             std::cout << "Using ZooKeeper version : " << ZOO_MAJOR_VERSION << "." << ZOO_MINOR_VERSION << "." << ZOO_PATCH_VERSION << "\n";
-            std::cout << "Using Boost : "     
+
+            std::cout << "Using Boost : "
             << BOOST_VERSION / 100000     << "."  // major version
             << BOOST_VERSION / 100 % 1000 << "."  // minor version
             << BOOST_VERSION % 100                // patch level
             << std::endl;
             std::cout << "Compiled on : " << __DATE__ << "\n";
+            std::cout << "Compiled by : " << getCompilerInformation() << "\n";
             std::exit(EXIT_SUCCESS);
         }
         po::notify(vm);   

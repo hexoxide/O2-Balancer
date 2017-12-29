@@ -8,8 +8,9 @@
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
 
+#include "O2/FLP/Globals.h"
 #include "O2/FLP/FLPDevice.h"
-#include <boost/make_shared.hpp>
+
 
 namespace po = boost::program_options;
 using O2::Balancer::AddO2Options;
@@ -21,10 +22,11 @@ using O2::FLP::FLPDevice;
 
 int main(int argc, char **argv) {
     po::options_description options("FLP options");
+    using O2::FLP::Options::RESTART_FAIR_ROOT;
     constexpr char CONFIG_FILE[] = "flp-config";
     options.add_options()
             ("sample-size", po::value<int>()->default_value(1))
-            ("restartFairRoot", po::value<std::string>()->default_value(""))
+            (RESTART_FAIR_ROOT, po::value<std::string>()->default_value(""))
             (CONFIG_FILE, po::value<std::string>()->default_value("./flp.yaml"), "Configuration file");
 
     auto vm = AddO2Options(options, argc, argv);

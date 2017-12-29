@@ -16,11 +16,14 @@ using O2::FLP::EPNConnection;
 using O2::Balancer::AbstractDevice;
 using O2::Balancer::ClusterManager;
 using O2::Balancer::Exceptions::UnimplementedException;
+
 constexpr char EPN_TAG[] = "EPN";
 constexpr char EPN_CHANNEL[] = "stf2";
+constexpr int STF_SEND_BUFFER = 1000000;
+constexpr int STF_RATE_LOG = 1;
 
 EPNConnection::EPNConnection(std::shared_ptr<FLPSettings>, AbstractDevice *device)
-        : Balancer::Connection("stf2", device) {
+        : Balancer::Connection(EPN_CHANNEL, device) {
     this->useClusterManager([this](std::shared_ptr<ClusterManager> manager) -> void {
         auto dev = manager->getRegisteredConnections(EPN_TAG, EPN_CHANNEL);
         while (dev.empty()) {
@@ -37,8 +40,8 @@ EPNConnection::EPNConnection(std::shared_ptr<FLPSettings>, AbstractDevice *devic
                     epn.port);
         }
 
-        this->updateAllSendBuffer(100000);
-        this->updateAllRateLogging(1);
+        this->updateAllSendBuffer(STF_SEND_BUFFER);
+        this->updateAllRateLogging(STF_RATE_LOG);
     });
 }
 

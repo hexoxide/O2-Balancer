@@ -32,11 +32,10 @@ namespace O2 {
          *  @date 10 October 2017
          * */
         class Settings {
-        private:
+        protected:
             std::shared_ptr<DeviceSetting> informationSettings;
             std::shared_ptr<DeviceSetting> settingsServer;
             std::string ipAddress;
-        protected:
             /**
              * This class must be derived by the child. 
              * When this parent class requires the settings file.

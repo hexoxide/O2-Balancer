@@ -9,28 +9,31 @@
 // or submit itself to any jurisdiction.
 
 #include "O2/FLP/FLPSettings.h"
-#include <O2/Balancer/Exceptions/InitException.h>
 #include <yaml-cpp/yaml.h>
 #include "FairMQLogger.h"
+#include "O2/FLP/Globals.h"
 
 using O2::FLP::FLPSettings;
 using O2::FLP::SampleType;
 
 FLPSettings::FLPSettings(
         const boost::program_options::variables_map &settings) : Settings() {
+
+    using O2::FLP::Options::RESTART_FAIR_ROOT;
+    using O2::FLP::Options::SAMPLE_TYPE;
     YAML::Node config = this->load(settings);
-    if (config["restartFairRoot"]) {
-        this->vRestartFairRoot = config["restartFairRoot"].as<bool>();
+    if (config[RESTART_FAIR_ROOT]) {
+        this->vRestartFairRoot = config[RESTART_FAIR_ROOT].as<bool>();
     } else {
         this->vRestartFairRoot = true;
     }
 
-    if (settings["restartFairRoot"].as<std::string>() != "") {
-        this->vRestartFairRoot = (settings["restartFairRoot"].as<std::string>() != "false");
+    if (settings[RESTART_FAIR_ROOT].as<std::string>() != "") {
+        this->vRestartFairRoot = (settings[RESTART_FAIR_ROOT].as<std::string>() != "false");
     }
 
-    if (config["sampleType"]) {
-        const auto type = config["sampleType"].as<std::string>();
+    if (config[SAMPLE_TYPE]) {
+        const auto type = config[SAMPLE_TYPE].as<std::string>();
         if (type == "Sine") {
             LOG(INFO) << "Using sampling type of sine";
             this->sampleType = SampleType::Sine;

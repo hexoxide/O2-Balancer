@@ -2,10 +2,14 @@ PROJECT(O2Balancer_tests)
 
 
 SET(
-    O2Balancer_tests_sources
-  #  ./TestsSettings.cxx
-    ./TestExceptions.cxx
+        O2Balancer_tests_sources
+        ./TestMain.cxx
+
+        ./TestExceptions.cxx
+        ./TestDevice.cxx
 )
+
+
 
 ADD_EXECUTABLE(Tests ${O2Balancer_tests_sources})
 

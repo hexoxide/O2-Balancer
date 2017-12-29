@@ -12,6 +12,7 @@
 
 #include "O2/FLP/HeartBeatConnection.h"
 #include "O2/FLP/EPNConnection.h"
+#include <boost/make_unique.hpp>
 
 #include "O2/FLP/Utils.h"
 
@@ -27,12 +28,8 @@ using O2::Balancer::Exceptions::ClusterHandlerException;
 FLPDevice::FLPDevice(std::shared_ptr<FLPSettings> settings) : AbstractDevice(
         O2::Balancer::Globals::DeviceNames::FLP_NAME, settings, settings->restartFairRoot()) {
 
-    this->heartBeatConnection = std::unique_ptr<HeartbeatConnection>(
-            new HeartbeatConnection(settings, this)
-    );
-    this->epnConnection = std::unique_ptr<EPNConnection>(
-            new EPNConnection(settings, this)
-    );
+    this->heartBeatConnection = boost::make_unique<HeartbeatConnection>(settings,this);
+    this->epnConnection = boost::make_unique<EPNConnection>(settings,this);
 
     this->averageSampleSize = 0;
     this->sampleType = settings->getSampleType();
@@ -41,9 +38,12 @@ FLPDevice::FLPDevice(std::shared_ptr<FLPSettings> settings) : AbstractDevice(
 
 
 void FLPDevice::preRun() {
+    constexpr char SAMPLE_GLOBAL_NAME[] = "sampleSize";
+    constexpr int MAXIMUM_TIME_OUT = 1000;
     this->useClusterManager([this](std::shared_ptr<ClusterManager> manager) -> void {
         try {
-            this->averageSampleSize = manager->getGlobalInteger("sampleSize", 1000);
+            this->averageSampleSize = manager->getGlobalInteger(SAMPLE_GLOBAL_NAME,
+                                                                MAXIMUM_TIME_OUT);
         } catch (const ClusterHandlerException &ex) {
             LOG(ERROR) << ex.getMessage();
         }
@@ -84,9 +84,6 @@ bool FLPDevice::conditionalRun() {
     if (fstream.good()) {
         FairMQParts parts;
         const int generatedSize = getSampleSize();
-
-        //const int generatedSize = generateRandomSize(this->averageSampleSize);//generateSineSize(this->averageSampleSize, 1);
-
         const int size = generatedSize * 1024 * 1024;
         auto buffer = new char[size];
         fstream.read(buffer, size);

@@ -1,9 +1,10 @@
-#define BOOST_TEST_MODULE "Testing Exceptions"
-//#define BOOST_TEST_DYN_LINK
-#include <boost/test/included/unit_test.hpp>
+#define BOOST_TEST_DYN_LINK
+//#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include <O2/Balancer/Exceptions/InitException.h>
 #include <O2/Balancer/Exceptions/UnimplementedException.h>
-
+//
+BOOST_AUTO_TEST_SUITE(Exception_Tests)
 using namespace O2::Balancer::Exceptions;
 
 template<typename T>
@@ -21,3 +22,4 @@ BOOST_AUTO_TEST_CASE(testUnimplementedException){
 }
 
 
+BOOST_AUTO_TEST_SUITE_END()
