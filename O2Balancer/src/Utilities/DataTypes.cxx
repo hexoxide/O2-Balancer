@@ -10,13 +10,19 @@
 
 #include "O2/Balancer/Utilities/DataTypes.h"
 #include <vector>
-
+#include "O2/Balancer/Exceptions/InitException.h"
+#include "O2/Balancer/Exceptions/UnimplementedException.h"
 #include <boost/algorithm/string.hpp>
 
 using O2::Balancer::DeviceSetting;
 
 DeviceSetting::DeviceSetting(const int port,
                              const std::string &ip) {
+    if(ip.empty()){
+        throw O2::Balancer::Exceptions::UnimplementedException(
+                "No device exists with an empty IP..."
+        );
+    }
     this->port = port;
     this->ip = ip;
 }
@@ -24,6 +30,9 @@ DeviceSetting::DeviceSetting(const int port,
 DeviceSetting::DeviceSetting(const std::string &setting) {
     std::vector<std::string> x;
     boost::split(x, setting, boost::is_any_of(":"));
+    if(x.size() != 2){
+        throw O2::Balancer::Exceptions::InitException("Could not parse string");
+    }
     this->ip = x[0];
     this->port = std::stoi(x[1]);
 

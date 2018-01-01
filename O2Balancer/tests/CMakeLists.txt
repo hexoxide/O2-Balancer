@@ -7,6 +7,7 @@ SET(
 
         ./TestExceptions.cxx
         ./TestDevice.cxx
+        ./TestData.cxx
 )
 
 

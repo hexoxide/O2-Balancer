@@ -41,6 +41,7 @@ public:
 
 BOOST_AUTO_TEST_CASE(BasicTest){
         TestDevice device(true);
+        device.SetTransport(device.getDefaultTransport());
         device.restartDevice();
         device.ChangeState(TestDevice::STOP);
 
