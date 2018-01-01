@@ -17,6 +17,7 @@ SET(
         ./include/O2/EPN/EPNSettings.h
         ./include/O2/EPN/FLPConnection.h
         ./include/O2/EPN/OutputConnection.h
+        ./include/O2/EPN/EPNGlobals.h
 )
 
 

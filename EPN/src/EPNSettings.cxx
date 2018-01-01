@@ -10,24 +10,38 @@
 #include "O2/EPN/EPNSettings.h"
 #include <O2/Balancer/Exceptions/InitException.h>
 #include <yaml-cpp/yaml.h>
-#include <iostream>
+#include "O2/EPN/EPNGlobals.h"
 
 using O2::EPN::EPNSettings;
 
+
 EPNSettings::EPNSettings(const boost::program_options::variables_map &settings) : Settings() {
+    using O2::EPN::AMOUNT_OF_FLPS_SETTING;
+    using O2::EPN::FLP_PORT_SETTING;
     YAML::Node config = this->load(settings);
-    this->amountOfFLPs = settings["amount-flps"].as<int>();
-    this->flpConnectionPort = config["FLPConnectionPort"].as<int>();
-    this->outputConnectionPort = config["OutputPort"].as<int>();
-    if (settings["flp-port"].as<int>() != 0) {
-        this->flpConnectionPort = settings["flp-port"].as<int>();
+
+    constexpr char FLP_CONNECTION_PORT_SETTING[] = "FLPConnectionPort";
+    constexpr char OUTPUT_PORT_SETTING[] = "OutputPort";
+
+    this->amountOfFLPs = settings[AMOUNT_OF_FLPS_SETTING].as<int>();
+    this->flpConnectionPort = config[FLP_CONNECTION_PORT_SETTING].as<int>();
+    this->outputConnectionPort = config[OUTPUT_PORT_SETTING].as<int>();
+    if (settings[FLP_PORT_SETTING].as<int>() != 0) {
+        this->flpConnectionPort = settings[FLP_PORT_SETTING].as<int>();
     }
 
-    if (config["Goat"]) {
-        this->goatIP = config["Goat"]["IP"].as<std::string>();
-        this->amountAfterSignal = config["Goat"]["amount_after_signal"].as<int>();
-        this->amountBeforeCrash = config["Goat"]["amount_before_signal"].as<int>();
-        this->heartrate = config["Goat"]["heartbeat"].as<int>();
+    // YAML file variables
+    constexpr char GOAT_NODE_NAME[] = "Goat";
+    constexpr char GOAT_IP_SETTING[] = "IP";
+    constexpr char GOAT_AMOUNT_AFTER_SETTING[] = "amount_after_signal";
+    constexpr char GOAT_AMOUNT_BEFORE_SETTING[] = "amount_before_signal";
+    constexpr char GOAT_HEARTBEAT_SETTING[] = "heartbeat";
+
+    if (config[GOAT_NODE_NAME]) {
+        this->goatIP = config[GOAT_NODE_NAME][GOAT_IP_SETTING].as<std::string>();
+        this->amountAfterSignal = config[GOAT_NODE_NAME][GOAT_AMOUNT_AFTER_SETTING].as<int>();
+        this->amountBeforeCrash = config[GOAT_NODE_NAME][GOAT_AMOUNT_BEFORE_SETTING].as<int>();
+        this->heartrate = config[GOAT_NODE_NAME][GOAT_HEARTBEAT_SETTING].as<int>();
     }
 }
 

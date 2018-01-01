@@ -19,6 +19,7 @@ SET(
         ./include/O2/InformationNode/HeartbeatConnection.h
         ./include/O2/InformationNode/InformationDevice.h
         ./include/O2/InformationNode/InfoSettings.h
+        ./include/O2/InformationNode/InfoGlobals.h
 )
 
 GET_DIRECTORY_PROPERTY(

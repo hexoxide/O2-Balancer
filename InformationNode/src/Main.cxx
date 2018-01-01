@@ -17,6 +17,7 @@
 #include <O2/Balancer/Devices/DeviceManager.h>
 #include <O2/Balancer/Utilities/Utilities.h>
 #include "O2/InformationNode/InfoSettings.h"
+#include "O2/InformationNode/InfoGlobals.h"
 
 std::unique_ptr< O2::Balancer::DeviceManager<O2::InformationNode::InformationDevice>> deviceManager;
 
@@ -30,7 +31,8 @@ int main(int argc, char** argv){
         reinit_logger(true, "Information", SEVERITY_MINIMUM); 
         po::options_description options("Information node options");
         options.add_options()
-        ("sample-size", po::value<int>()->default_value(-1), "Sample size of all the flp")
+                // -1 is chosen because it's optional when the YAML files have a value
+        (SAMPLE_SIZE_SETTING, po::value<int>()->default_value(-1), "Sample size of all the flp")
         ("info-config", po::value<std::string>()->default_value("./information.yaml"), "Configuration file");
         auto vm = AddO2Options(options, argc, argv);
         
@@ -42,8 +44,6 @@ int main(int argc, char** argv){
             )
         );
 
-      
-
         deviceManager->run();
         
     } catch(const O2::Balancer::Exceptions::InitException& exception){
@@ -52,6 +52,9 @@ int main(int argc, char** argv){
         return EXIT_FAILURE;
     } catch (const O2::Balancer::Exceptions::AbstractException& exception){
         LOG(ERROR) << exception.getMessage();
+        return EXIT_FAILURE;
+    } catch (po::error const& e) {
+        LOG(ERROR) << e.what();
         return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;

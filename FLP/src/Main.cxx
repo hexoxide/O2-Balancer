@@ -8,7 +8,7 @@
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
 
-#include "O2/FLP/Globals.h"
+#include "O2/FLP/FLPGlobals.h"
 #include "O2/FLP/FLPDevice.h"
 
 
@@ -22,25 +22,31 @@ using O2::FLP::FLPDevice;
 
 int main(int argc, char **argv) {
     po::options_description options("FLP options");
-    using O2::FLP::Options::RESTART_FAIR_ROOT;
+    using O2::FLP::Options::RESTART_FAIR_ROOT_SETTING;
+
     constexpr char CONFIG_FILE[] = "flp-config";
     options.add_options()
-            ("sample-size", po::value<int>()->default_value(1))
-            (RESTART_FAIR_ROOT, po::value<std::string>()->default_value(""))
+          //  ("sample-size", po::value<int>()->default_value(1))
+            (RESTART_FAIR_ROOT_SETTING, po::value<std::string>()->default_value(""))
             (CONFIG_FILE, po::value<std::string>()->default_value("./flp.yaml"), "Configuration file");
 
-    auto vm = AddO2Options(options, argc, argv);
-
-
-    reinit_logger(true, "FLP", SEVERITY_MINIMUM);
-
-    auto settings = std::shared_ptr<FLPSettings>(new FLPSettings(vm));
     try {
-        DeviceManager<FLPDevice> manager(settings);
-        manager.run();
-    } catch (const AbstractException &exception) {
-        LOG(ERROR) << exception.getMessage();
+        auto vm = AddO2Options(options, argc, argv);
+
+        reinit_logger(true, "FLP", SEVERITY_MINIMUM);
+
+        auto settings = std::shared_ptr<FLPSettings>(new FLPSettings(vm));
+        try {
+            DeviceManager<FLPDevice> manager(settings);
+            manager.run();
+        } catch (const AbstractException &exception) {
+            LOG(ERROR) << exception.getMessage();
+            return EXIT_FAILURE;
+        }
+        return EXIT_SUCCESS;
+    }
+    catch (po::error const& e) {
+        LOG(ERROR) << e.what();
         return EXIT_FAILURE;
     }
-    return EXIT_SUCCESS;
 }
