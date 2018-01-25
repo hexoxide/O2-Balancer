@@ -18,6 +18,7 @@
 #include "O2/Balancer/Balancer.h"
 #include <thread>
 #include <sstream>
+#include <iostream>
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
 
