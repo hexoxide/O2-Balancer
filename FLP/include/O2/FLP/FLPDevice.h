@@ -18,7 +18,7 @@
 #include <O2/Balancer/Devices/DeviceManager.h>
 #include <O2/Balancer/Utilities/Utilities.h>
 #include <boost/format.hpp>
-#include <FairMQProgOptions.h>
+#include <options/FairMQProgOptions.h>
 #include <queue>
 #include <string>
 #include <memory>

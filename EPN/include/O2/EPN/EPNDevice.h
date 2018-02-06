@@ -20,7 +20,7 @@
 #include <O2/Balancer/Globals.h>
 #include <O2/Balancer/Utilities/Utilities.h>
 #include <O2/Balancer/Devices/DeviceManager.h>
-#include <FairMQProgOptions.h>
+#include <options/FairMQProgOptions.h>
 #include "./EPNSettings.h"
 
 

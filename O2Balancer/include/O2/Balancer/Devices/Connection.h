@@ -15,7 +15,7 @@
 #include <functional>
 #include <string>
 #include <vector>
-#include <FairMQChannel.h>
+#include <fairmq/FairMQChannel.h>
 
 namespace O2 {
     namespace Balancer {
@@ -64,8 +64,11 @@ namespace O2 {
             std::string name;
             AbstractDevice *device;
         protected:
+            /**
+             * Allows you to use the clustermanager without worrying about mutexes.
+             * @param cl
+             */
             void useClusterManager(std::function<void(std::shared_ptr<ClusterManager>)> cl);
-
 
         public:
             /**

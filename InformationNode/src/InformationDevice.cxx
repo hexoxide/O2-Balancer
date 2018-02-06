@@ -18,7 +18,7 @@
 #include <ctime>
 #include <boost/algorithm/string.hpp>
 #include <FairMQLogger.h>
-#include <FairMQProgOptions.h>
+#include <options/FairMQProgOptions.h>
 #include <O2/Balancer/Globals.h>
 #include <O2/Balancer/Exceptions/AbstractException.h>
 #include "O2/InformationNode/InformationDevice.h"

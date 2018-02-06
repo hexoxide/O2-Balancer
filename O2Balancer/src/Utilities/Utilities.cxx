@@ -13,6 +13,7 @@
 #include <sys/stat.h>
 #include <FairVersion.h>
 #include "FairMQLogger.h"
+#include <iostream>
 #include <zookeeper/zookeeper_version.h>
 #include <yaml-cpp/yaml.h>
 #include "O2/Balancer/Balancer.h"

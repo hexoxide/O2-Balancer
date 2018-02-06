@@ -46,7 +46,7 @@ namespace O2 {
                 shouldStop = false;
 
                 device = std::unique_ptr<T>(new T(args...));
-                device->CatchSignals();
+//                device->CatchSignals();
                 std::signal(SIGINT, [](int sig) -> void {
                     shouldStop = true;
                     LOG(INFO) << "Stopping device!";

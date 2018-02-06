@@ -27,6 +27,11 @@ namespace O2 {
 
         class Settings;
 
+        /**
+         * A wrapper around FairMQDevice.
+         * Making sure that Zookeeper can be used and exceptions specific to O2 are handled.
+         * @author H.J.M van der Heijden
+         */
         class AbstractDevice : public FairMQDevice {
         private:
             friend Connection;
@@ -55,14 +60,36 @@ namespace O2 {
             std::atomic<bool> nRefresh;
             std::atomic<bool> nStop;
 
+            /**
+             * Called when FairRoot calls PreRun.
+             * Difference is that this catches exceptions.
+             */
             virtual void preRun();
 
+            /**
+             * Called when FairRoot calls PostRun.
+             * Difference is that this closes correctly in case of an exception.
+             */
             virtual void postRun();
 
+            /**
+             * Called when FairRoot calls Run.
+             * Difference is that this correctly closes in case of an exception.
+             */
             virtual void run();
 
+            /**
+             * Called when FairRoot calls ConditionalRun.
+             * Difference is that this wraps up exceptions.
+             * @return
+             */
             virtual bool conditionalRun();
 
+            /**
+             * When Zookeeper detects an fail-over.
+             * This function is called to make sure the device is doing their stuff.
+             * @param inMainThread
+             */
             virtual void refreshDevice(bool inMainThread) = 0;
 
 

@@ -11,6 +11,7 @@ CONFIGURE_FILE(${header_version_in} ${header_version_out})
 SET(O2Balancer_INCLUDE_DIRS 
     ${O2Balancer_SOURCE_DIR}/include  
     ${CMAKE_CURRENT_BINARY_DIR}/include/
+    ${FAIRROOT_INCLUDE_DIR}/FairMQ
     ${FAIRROOT_INCLUDE_DIR}
     ${Boost_INCLUDE_DIR}
     ${ZOOKEEPER_INCLUDE_DIR}
@@ -80,7 +81,7 @@ TARGET_LINK_LIBRARIES(
     ${Boost_THREAD_LIBRARY}
     ${ZeroMQ_LIBRARY}
     ${ZOOKEEPER_LIBRARIES}
-    fairmq_logger
+#    fairmq_logger
     FairMQ
     Threads::Threads
     dl

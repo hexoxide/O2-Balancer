@@ -59,9 +59,17 @@ namespace O2 {
             ClusterManager(const std::string &zooServer, const int &port);
 
 
+            /**
+             * Returns true if Zookeeper detected an fail-over.
+             * @return
+             */
             bool requiresUpdate() const;
 
 
+            /**
+             * Returns the path that had an fail-over
+             * @return The path.
+             */
             std::string pathThatNeedsUpdate();
 
             /**

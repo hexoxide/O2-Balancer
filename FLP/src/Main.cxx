@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
     try {
         auto vm = AddO2Options(options, argc, argv);
 
-        reinit_logger(true, "FLP", SEVERITY_MINIMUM);
+//        reinit_logger(true, "FLP", SEVERITY_MINIMUM);
 
         auto settings = std::shared_ptr<FLPSettings>(new FLPSettings(vm));
         try {

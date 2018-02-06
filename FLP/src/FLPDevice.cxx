@@ -38,10 +38,12 @@ FLPDevice::FLPDevice(std::shared_ptr<FLPSettings> settings) : AbstractDevice(
 
 
 void FLPDevice::preRun() {
-    constexpr char SAMPLE_GLOBAL_NAME[] = "sampleSize";
-    constexpr int MAXIMUM_TIME_OUT = 1000;
+ //   constexpr char SAMPLE_GLOBAL_NAME[] = "sampleSize";
+ //   constexpr int MAXIMUM_TIME_OUT = 1000;
     this->useClusterManager([this](std::shared_ptr<ClusterManager> manager) -> void {
-        try {
+            constexpr int MAXIMUM_TIME_OUT = 1000;
+	    constexpr char SAMPLE_GLOBAL_NAME[] = "sampleSize";
+	try {
             this->averageSampleSize = manager->getGlobalInteger(SAMPLE_GLOBAL_NAME,
                                                                 MAXIMUM_TIME_OUT);
         } catch (const ClusterHandlerException &ex) {

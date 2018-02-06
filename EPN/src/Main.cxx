@@ -34,7 +34,7 @@ int main(int argc, char **argv) {
         auto vm = AddO2Options(options, argc, argv);
 
         auto settings = std::shared_ptr<EPNSettings>(new EPNSettings(vm));
-        reinit_logger(true, "EPN", SEVERITY_MINIMUM);
+//        reinit_logger(true, "EPN");
         DeviceManager<EPNDevice> device(settings);
         device.run();
     } catch (const AbstractException &ex) {

@@ -28,7 +28,7 @@ int main(int argc, char** argv){
     using namespace O2::Balancer;
 
     try{
-        reinit_logger(true, "Information", SEVERITY_MINIMUM); 
+//        reinit_logger(true, "Information", SEVERITY_MINIMUM); 
         po::options_description options("Information node options");
         options.add_options()
                 // -1 is chosen because it's optional when the YAML files have a value
