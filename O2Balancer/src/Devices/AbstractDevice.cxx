@@ -75,6 +75,8 @@ bool AbstractDevice::ConditionalRun() {
     } catch (const AbstractException &exception) {
         LOG(ERROR) << EXCEPTION_MESSAGE << exception.getMessage();
         return false;
+    }  catch (const std::exception& ex) {
+        LOG(ERROR) <<EXCEPTION_MESSAGE << ex.what();
     } catch (...) { // Catch all other exceptions.
         LOG(ERROR) << "Crashed with unknown exception in a conditional run";
         std::exit(EXIT_FAILURE);
@@ -109,6 +111,8 @@ void AbstractDevice::PostRun() {
         this->postRun();
     } catch (const AbstractException &exception) {
         LOG(ERROR) << EXCEPTION_MESSAGE << exception.getMessage();
+    } catch (const std::exception& ex) {
+	LOG(ERROR) << ex.what() << std::endl;
     } catch(...) { // Catch all the other exceptions.
         LOG(ERROR) << "Crashed with unknown exception in a post run";
         std::exit(EXIT_FAILURE);

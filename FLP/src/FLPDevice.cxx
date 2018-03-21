@@ -86,7 +86,7 @@ bool FLPDevice::conditionalRun() {
     if (fstream.good()) {
         FairMQParts parts;
         const int generatedSize = getSampleSize();
-        const int size = generatedSize * 1024 * 1024;
+        const int size = generatedSize * 1024;
         auto buffer = new char[size];
         fstream.read(buffer, size);
 

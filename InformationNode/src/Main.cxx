@@ -18,6 +18,7 @@
 #include <O2/Balancer/Utilities/Utilities.h>
 #include "O2/InformationNode/InfoSettings.h"
 #include "O2/InformationNode/InfoGlobals.h"
+#include "logger/logger.h"
 
 std::unique_ptr< O2::Balancer::DeviceManager<O2::InformationNode::InformationDevice>> deviceManager;
 
@@ -28,16 +29,16 @@ int main(int argc, char** argv){
     using namespace O2::Balancer;
 
     try{
-//        reinit_logger(true, "Information", SEVERITY_MINIMUM); 
+	fair::mq::logger::ReinitLogger(true, "Information", fair::mq::logger::SeverityLevel::INFO);
         po::options_description options("Information node options");
         options.add_options()
                 // -1 is chosen because it's optional when the YAML files have a value
         (SAMPLE_SIZE_SETTING, po::value<int>()->default_value(-1), "Sample size of all the flp")
         ("info-config", po::value<std::string>()->default_value("./information.yaml"), "Configuration file");
         auto vm = AddO2Options(options, argc, argv);
-        
+
         auto settings = std::shared_ptr<InfoSettings>(new InfoSettings(vm));
-        
+
         deviceManager = std::unique_ptr<DeviceManager<InformationDevice>>(
             new DeviceManager<InformationDevice>(
                 settings
@@ -45,7 +46,7 @@ int main(int argc, char** argv){
         );
 
         deviceManager->run();
-        
+
     } catch(const O2::Balancer::Exceptions::InitException& exception){
         LOG(ERROR) << "Failed to initialize due, error :" << exception.getMessage();
 

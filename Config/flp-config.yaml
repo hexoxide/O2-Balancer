@@ -12,5 +12,3 @@ SettingsServer:
 InformationNode:
   Port: 5550
   Ip: 127.0.0.1
-
-    

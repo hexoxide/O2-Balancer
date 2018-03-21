@@ -9,6 +9,7 @@
 // or submit itself to any jurisdiction.
 #include "O2/EPN/EPNDevice.h"
 #include "O2/EPN/EPNGlobals.h"
+#include "logger/logger.h"
 
 using O2::Balancer::AddO2Options;
 using O2::EPN::EPNSettings;
@@ -26,6 +27,7 @@ int main(int argc, char **argv) {
     using O2::EPN::AMOUNT_OF_FLPS_DEFAULT;
     using O2::EPN::FLP_PORT_SETTING;
 
+
     try {
         options.add_options()
                 (CONFIG_FILE_SETTING, po::value<std::string>()->default_value(CONFIG_FILE_DEFAULT), "Configuration file")
@@ -34,7 +36,7 @@ int main(int argc, char **argv) {
         auto vm = AddO2Options(options, argc, argv);
 
         auto settings = std::shared_ptr<EPNSettings>(new EPNSettings(vm));
-//        reinit_logger(true, "EPN");
+	fair::mq::logger::ReinitLogger(true, "EPN", fair::mq::logger::SeverityLevel::INFO);
         DeviceManager<EPNDevice> device(settings);
         device.run();
     } catch (const AbstractException &ex) {

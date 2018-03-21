@@ -11,7 +11,7 @@
 #include "O2/Balancer/Utilities/Utilities.h"
 #include <boost/format.hpp>
 #include <sys/stat.h>
-#include <FairVersion.h>
+//#include <FairVersion.h>
 #include "FairMQLogger.h"
 #include <iostream>
 #include <zookeeper/zookeeper_version.h>
@@ -50,11 +50,11 @@ po::variables_map O2::Balancer::AddO2Options(boost::program_options::options_des
 
         po::variables_map vm;
         po::store(po::parse_command_line(argc, argv, options), vm);
-     
-        
+
+
         if(vm.count("version")) {
             std::cout << "O2 Balancer prototype version: " << O2::Balancer::VERSION_MAJOR << "." <<  O2::Balancer::VERSION_MINOR << "." << O2::Balancer::VERSION_PATCH << "\n" ;
-            std::cout << "Using FairRoot version : " << TOSTRING(FAIRROOT_VERSION) << "\n";
+//            std::cout << "Using FairRoot version : " << TOSTRING(FAIRROOT_VERSION) << "\n";
             std::cout << "Using ZooKeeper version : " << ZOO_MAJOR_VERSION << "." << ZOO_MINOR_VERSION << "." << ZOO_PATCH_VERSION << "\n";
 
             std::cout << "Using Boost : "

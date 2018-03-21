@@ -10,7 +10,7 @@
 
 #include "O2/FLP/FLPGlobals.h"
 #include "O2/FLP/FLPDevice.h"
-
+#include "logger/logger.h"
 
 namespace po = boost::program_options;
 using O2::Balancer::AddO2Options;
@@ -33,8 +33,7 @@ int main(int argc, char **argv) {
     try {
         auto vm = AddO2Options(options, argc, argv);
 
-//        reinit_logger(true, "FLP", SEVERITY_MINIMUM);
-
+	fair::mq::logger::ReinitLogger(true, "FLP", fair::mq::logger::SeverityLevel::INFO);
         auto settings = std::shared_ptr<FLPSettings>(new FLPSettings(vm));
         try {
             DeviceManager<FLPDevice> manager(settings);

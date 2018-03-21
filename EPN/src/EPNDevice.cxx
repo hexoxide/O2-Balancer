@@ -88,7 +88,7 @@ void EPNDevice::run() {
                 for (int i = 0; i < mTimeframeBuffer[id].parts.Size(); i++) {
                     total += mTimeframeBuffer[id].parts.At(i)->GetSize();
                 }
-                LOG(INFO) << "Received " << (total / 1024 / 1024) << " Mega Bytes";
+                LOG(INFO) << "Received " << (total / 1024) << " Kilo Bytes";
                 // Send an acknowledgement back to the sampler to measure the round trip time
                 std::string result = IP + "#" + std::to_string(id);
                 std::unique_ptr<FairMQMessage> ack(NewMessage(sizeof(char) * result.length()));
