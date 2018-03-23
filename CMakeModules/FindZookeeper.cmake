@@ -2,8 +2,11 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.7 FATAL_ERROR)
 
 INCLUDE(FindPackageHandleStandardArgs)
-link_directories ("/usr/lib/arm-linux-gnueabihf/")
-FIND_LIBRARY(ZOOKEEPER_LIBRARY zookeeper_mt)
+find_library(ZOOKEEPER_LIBRARY zookeeper_mt)
+if(NOT ZOOKEEPER_LIBRARY)
+    link_directories ("/usr/lib/arm-linux-gnueabihf/")
+    find_library(ZOOKEEPER_LIBRARY zookeeper_mt)
+endif()
 FIND_PATH(ZOOKEEPER_INCLUDE_DIR "zookeeper/zookeeper.h")
 
 SET(ZOOKEEPER_LIBRARIES ${ZOOKEEPER_LIBRARY})
