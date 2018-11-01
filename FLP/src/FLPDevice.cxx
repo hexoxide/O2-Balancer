@@ -12,7 +12,7 @@
 
 #include "O2/FLP/HeartBeatConnection.h"
 #include "O2/FLP/EPNConnection.h"
-#include <boost/make_unique.hpp>
+#include <boost/smart_ptr/make_unique.hpp>
 
 #include "O2/FLP/Utils.h"
 

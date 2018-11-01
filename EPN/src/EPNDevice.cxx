@@ -8,7 +8,7 @@
 // granted to it by virtue of its status as an Intergovernmental Organization
 // or submit itself to any jurisdiction.
 #include "O2/EPN/EPNDevice.h"
-#include <boost/make_unique.hpp>
+#include <boost/smart_ptr/make_unique.hpp>
 #include "O2/EPN/FLPConnection.h"
 #include "O2/EPN/AcknowledgeConnection.h"
 #include "O2/EPN/OutputConnection.h"

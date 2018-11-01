@@ -39,6 +39,5 @@ ADD_EXECUTABLE(epn ${EPN_SOURCES} ${EPN_HEADERS})
 
 TARGET_LINK_LIBRARIES(
     epn
-    FairMQ
     O2Balancer
 )
