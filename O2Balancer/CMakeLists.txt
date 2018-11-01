@@ -11,7 +11,7 @@ CONFIGURE_FILE(${header_version_in} ${header_version_out})
 SET(O2Balancer_INCLUDE_DIRS 
     ${O2Balancer_SOURCE_DIR}/include  
     ${CMAKE_CURRENT_BINARY_DIR}/include/
-    ${FairMQ_INCDIR}/FairMQ
+    ${FairMQ_INCDIR}/fairmq
     ${Boost_INCLUDE_DIR}
     ${ZOOKEEPER_INCLUDE_DIR}
 )
