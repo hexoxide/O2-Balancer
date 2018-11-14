@@ -26,7 +26,7 @@ before_install:
   - git clone $DEPENDENCY_URL depdendency
   - cd depdendency
   - git submodule update --init --recursive
-  - sh install-dependencies.sh
+  - ./install-dependencies.sh
 script: 
   - if [ ! -d "build" ]; then mkdir build; fi
   - cd build
