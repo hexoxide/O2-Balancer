@@ -9,18 +9,18 @@ addons:
   apt:
     packages:
       - git
+      - ant
       - wget
       - htop
       - make
-      - icu-devtools
-      - python-dev
-      - ant
-      - libcppunit-dev
+      - libtool
       - doxygen
       - automake
       - autoconf
-      - libtool
-      - zookeepe
+      - zookeeper
+      - python-dev
+      - icu-devtools
+      - libcppunit-dev
       - libzookeeper-mt-dev
 before_install:
   - git clone $DEPENDENCY_URL depdendency
