@@ -9,19 +9,6 @@
 // or submit itself to any jurisdiction.
 
 #include "O2/Balancer/Remote/ClusterManager.h"
-#include "O2/Balancer/Exceptions/ClusterTypeException.h"
-#include "O2/Balancer/Utilities/DataTypes.h"
-#include "O2/Balancer/Exceptions/TimeOutException.h"
-#include "O2/Balancer/Exceptions/UnimplementedException.h"
-#include "O2/Balancer/Globals.h"
-#include <FairMQLogger.h>
-#include <zookeeper/zookeeper.h>
-
-#include <boost/format.hpp>
-#include <chrono>
-#include <thread>
-#include <regex>
-
 
 using O2::Balancer::ClusterManager;
 using O2::Balancer::DeviceSetting;
@@ -37,7 +24,7 @@ ClusterManager::ClusterManager(const std::string &zooServer,
     const std::string server = zooServer + ":" + std::to_string(port);
     zoo_set_debug_level(ZOO_LOG_LEVEL_INFO);
     this->zh = zookeeper_init(server.c_str(), [](zhandle_t *zzh, int type, int state, const char *path,
-                                                 void *watcherCtx) -> void {
+                                                void *watcherCtx) -> void {
         if (type == ZOO_CHILD_EVENT) {
             LOG(INFO) << boost::format("Child event happened at %s") % std::string(path);
             O2::Balancer::changedPaths.emplace_back(path);

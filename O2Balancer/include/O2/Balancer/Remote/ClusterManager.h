@@ -10,13 +10,25 @@
 #ifndef O2_BALANCER_REMOTE_CLUSTER_MANAGER_H
 #define O2_BALANCER_REMOTE_CLUSTER_MANAGER_H
 
+#include "O2/Balancer/Exceptions/ClusterTypeException.h"
+#include "O2/Balancer/Utilities/DataTypes.h"
+#include "O2/Balancer/Exceptions/TimeOutException.h"
+#include "O2/Balancer/Exceptions/UnimplementedException.h"
+#include "O2/Balancer/Globals.h"
+
+#include <FairMQLogger.h>
+#include <zookeeper/zookeeper.h>
+#include <boost/format.hpp>
+
 #include <string>
 #include <vector>
 #include <memory>
+#include <chrono>
+#include <thread>
+#include <regex>
 
 //forward declaration, containing ZooKeeper specification
 typedef struct _zhandle zhandle_t;
-
 
 namespace O2 {
 

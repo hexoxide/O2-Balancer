@@ -23,3 +23,10 @@ make -j 2
 sudo /usr/share/zookeeper/bin/zkServer.sh start
 ./execute.sh
 ```
+
+## Debugging
+Start individual applications of the O2 balancer using gdb and be sure to pipe the output to a file or null.
+```bash
+gdb -tui FILE
+run > output.log
+```

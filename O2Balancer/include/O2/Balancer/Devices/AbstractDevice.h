@@ -10,6 +10,14 @@
 #ifndef O2_BALANCER_DEVICES_ABSTRACT_DEVICE_H
 #define O2_BALANCER_DEVICES_ABSTRACT_DEVICE_H
 
+#include "O2/Balancer/Remote/ClusterManager.h"
+#include "O2/Balancer/Devices/Connection.h"
+#include "O2/Balancer/Utilities/Utilities.h"
+#include "O2/Balancer/Utilities/Settings.h"
+#include "O2/Balancer/Globals.h"
+#include "O2/Balancer/Utilities/DataTypes.h"
+#include "O2/Balancer/Exceptions/UnimplementedException.h"
+
 #include <FairMQDevice.h>
 #include <vector>
 #include <memory>
@@ -18,7 +26,6 @@
 #include <mutex>
 #include <thread>
 #include <functional>
-#include "../Remote/ClusterManager.h"
 
 namespace O2 {
     namespace Balancer {

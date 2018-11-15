@@ -12,10 +12,10 @@
 #ifndef O2_BALANCER_DEVICES_CONNECTION_H
 #define O2_BALANCER_DEVICES_CONNECTION_H
 
+#include <fairmq/FairMQChannel.h>
 #include <functional>
 #include <string>
 #include <vector>
-#include <fairmq/FairMQChannel.h>
 
 namespace O2 {
     namespace Balancer {

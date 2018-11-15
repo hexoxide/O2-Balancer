@@ -9,14 +9,6 @@
 // or submit itself to any jurisdiction.
 
 #include "O2/Balancer/Devices/AbstractDevice.h"
-#include "O2/Balancer/Devices/Connection.h"
-#include "O2/Balancer/Utilities/Utilities.h"
-#include "O2/Balancer/Utilities/Settings.h"
-#include "O2/Balancer/Globals.h"
-#include "O2/Balancer/Utilities/DataTypes.h"
-#include "O2/Balancer/Exceptions/UnimplementedException.h"
-
-
 
 using O2::Balancer::AbstractDevice;
 using O2::Balancer::Settings;
