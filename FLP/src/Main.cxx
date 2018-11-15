@@ -11,7 +11,6 @@
 #include "O2/FLP/FLPGlobals.h"
 #include "O2/FLP/FLPDevice.h"
 
-
 namespace po = boost::program_options;
 using O2::Balancer::AddO2Options;
 using O2::Balancer::DeviceManager;

@@ -10,9 +10,22 @@
 #ifndef O2_BALANCER_UTILITIES_H
 #define O2_BALANCER_UTILITIES_H
 
-#include "../Exceptions/InitException.h"
+#include "O2/Balancer/Balancer.h"
+#include "O2/Balancer/Exceptions/InitException.h"
+
+#include <fairmq/Tools.h>
+#include <FairMQLogger.h>
+#include <yaml-cpp/yaml.h>
+#include <boost/format.hpp>
 #include <boost/program_options.hpp>
+#include <zookeeper/zookeeper_version.h>
+
+#include <thread>
 #include <string>
+#include <sstream>
+#include <iostream>
+#include <sys/stat.h>
+
 namespace O2{
 
     namespace Balancer{
@@ -21,8 +34,6 @@ namespace O2{
          * This also closes stdin and stdout.
          * */
         void daemonize();
-
-
 
         /**
          * Adds the start up variables that are similair to all the derived programs from the O2 Balancer.
