@@ -44,7 +44,7 @@ po::variables_map O2::Balancer::AddO2Options(boost::program_options::options_des
         
         if(vm.count("version")) {
             std::cout << "O2 Balancer prototype version: " << O2::Balancer::VERSION_MAJOR << "." <<  O2::Balancer::VERSION_MINOR << "." << O2::Balancer::VERSION_PATCH << "\n" ;
-            std::cout << "Using FairMQ version : " << TOSTRING(fair::mq::tools::Version()) << "\n";
+            std::cout << "Using FairMQ version : " << FAIRMQ_VERSION << "\n";
             std::cout << "Using ZooKeeper version : " << ZOO_MAJOR_VERSION << "." << ZOO_MINOR_VERSION << "." << ZOO_PATCH_VERSION << "\n";
 
             std::cout << "Using Boost : "

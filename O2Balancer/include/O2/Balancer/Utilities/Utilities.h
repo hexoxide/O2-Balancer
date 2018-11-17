@@ -13,7 +13,7 @@
 #include "O2/Balancer/Balancer.h"
 #include "O2/Balancer/Exceptions/InitException.h"
 
-#include <fairmq/Tools.h>
+#include <fairmq/Version.h>
 #include <FairMQLogger.h>
 #include <yaml-cpp/yaml.h>
 #include <boost/format.hpp>
