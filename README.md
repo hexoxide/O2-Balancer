@@ -5,9 +5,20 @@ In collaboration with the Amsterdam University of Applied sciences and CERN a lo
 ## Operation
 The balancer is build out of three parts each with its own purposes and characteristics. 
 
-* InformationNode
-* FLP
-* EPN
+| Node                 | Purpose             | Status       |
+|----------------------|---------------------|--------------|
+| InformationNode      | C&C + Orchestration | Broken AF    |
+| FirstLineProccessing | Push data           | Mostly works |
+| EventProcessingNode  | Pull data           | Working      |
+
+### Configuration
+All binaries share some configuration parameters but have specific one's as well. Some of these parameters need to be supplied as commandline arguments and others are read from a yaml configuration file. Some of the arguments can be specified both as an argument and in the configuration file, it is unclear which value will be applied at that point.
+
+| Argument | Purpose                          | ICN | FLP | EPN |
+|----------|----------------------------------|-----|-----|-----|
+| --ip     | Likely the ip address to bind to |   X |  X  |  X  |
+|          |                                  |     |     |     |
+|          |                                  |     |     |     |
 
 ## Installation
 
